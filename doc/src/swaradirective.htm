@@ -1,0 +1,376 @@
+<h3 style="page-break-before:always;">Swara Directive</h3>
+The <span class="syntax2">S</span> (swara) directive can be used to specify notations for the song. You
+can specify as many such directives as you want - and the typesetter will combine the notations 
+specified in all such directives and lay them out as per the tala specified by the <b>Tala directive</b>
+<p>
+The <span class="syntax2">S</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">S: notations</span>
+<br>(or)<br>
+<span class="syntax2">S: "Label" notations</span>
+</div>
+where, 
+<ul>
+    <li><span class="syntax2">notations</span> is a space separated list of notations (swaras), whose
+    syntax is described in detail below.
+    <ul>
+	<li><i>swara</i>: Indicates a swara using the syntax indicated below
+	<li><i>tala marker</i>: One of | or || for tala markers. Note however that are 
+	only for clarity in the input for you as the user. They are simply skipped by the 
+	typesetter which automatically determines where tala markers fall for the 
+	current tala based on the duration of the swaras. In other words, you dont have
+	to specify these in the input, their presence/absence has no effect on the 
+	typeset output, but having them there may allow the input to be
+	more understandable. For example, you can specify <span class="syntax2">s r g m | p m | g r ||</span>
+	f
+    </ul>
+    <li><span class="syntax2">label</span> is a label that is applied to the swara (and associated
+    lyric line) and appears on the left. This can be used to be specify sangati numbers.
+</ul>
+<h3>Specifying Notations in a Swara directive</h3>
+Notations are specified in the swara directive as a space separated list of the following: 
+<i>Swaras</i>, <i>Pauses</i>, <i>Speed Change indicators</i> and <i>tala markers</i>. 
+<h4>Swaras</h4>
+The syntax of a <i>Swara</i> can be one of the following:<p>
+<span class="syntax2">	&lt;swara_indicator&gt;&lt;optional_stayi_indicator&gt;&lt;optional_gamaka_indicator&gt;&lt;optional_phrase_end_indicator&gt;</span><br><br>
+<span class="syntax2">	&lt;pause_or_continuation_indicator&gt;&lt;;optional_phrase_end_indicator&gt;</span><br>
+Where,
+<ul>
+<li><b><i>swara_indicator</i></b> is one of <span class="syntax2">s r g m p d n</span> to indicate
+normal swaras than span one mAtra in the current speed, or 
+<span class="syntax2">sa ri ga ma pa da ni</span> to indicate elongated or 
+dhIrga swaras that span two mAtras in the current speed.
+<li><b><i>pause_or_continuation_indicator</i></b> is either a comma (<span class="syntax2">,</span>)
+or a semicolon (<span class="syntax2">;</span>), which can be used to indicate a real pause,
+or a continuation of a swara when following it (and thus can be an alternate way of representing
+a dhIrga swara). The comma spans one mAtra in the current speed, and the semicolon spans two
+mAtras in the current speed.
+<li><b><i>Empty swara indicator</i></b> simply occupies space without a visual swara. It is 
+specified as either a single underscore (<span class="syntax2">_</span>) or two underscores 
+together (<span class="syntax2">__</span>). This can be useful for certain styles of
+notation where you want to indent the swaras by the eDuppu or start of point instead 
+of visually indicating pauses. One use is in Ata tala varnams which typically do not
+start at the tala cycle (i.e. not at <i>samam</i>). The pallavi will have 2 avarthanas
+where the line extends beyond the end of tala into the duration of the eduppu. While
+typically, people notate both the lines (spanning 2 avathanas plus eduppu) as a single 
+block. However, some may prefer to notate the first line (i.e. avarthana plus eduppu)
+as a block, introduce a break, and then notate the secnond line (indented to eduppu).
+This allows for the sahitya integriry to be better reflected in the notation. In such
+cases, for the second line you can use the empty swara indicators for the indent to
+the eduppu. Here is an example of usage of the empty swara indicators (although the
+context in which they are used may not be most appropriate):
+<p>
+<center>
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td>
+<center><b style="font-size:80%;">Explicit pause indicators before eduppu</b></center><br>
+<span id="ed1" class="syntax2">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 1
+Heading: "pallavi:",bold,left,12
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L: mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+S: m~  , ,
+L: mA  . .
+
+</span>
+</td>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="ed1_v">
+<script language="javascript">
+renderSongFragment("ed1_v", "ed1");
+</script>
+</span>
+</td>
+</tr>
+</table>
+<br>
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td>
+<center><b style="font-size:80%;">Empty swara indicators before eduppu</b></center><br>
+<span id="ed2" class="syntax2">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 1
+Heading: "pallavi:",bold,left,12
+S: __ _ ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L: mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+S: m~  , ,
+L: mA  . .
+</span>
+</td>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="ed2_v">
+<script language="javascript">
+renderSongFragment("ed2_v", "ed2");
+</script>
+</span>
+</td>
+</tr>
+</table>
+</center>
+<p>
+<li><b><i>optional_stayi_indicator</i></b> is used to indicate the stAyi (octave) of the swara. It 
+	is optional and so if not provided, the swara is taken to in the madya (middle) stayi. 
+	If specified, it should be either the forward tick (<span class="syntax2">'</span>)
+	for the tara (upper) stAyi (e.g. <span class="syntax2">s'</span> for the tara shadjam), or
+	the backward tick (<span class="syntax2">`</span>) to indicate the mandra (lower) stAyi
+	(e.g. <span class="syntax2">p`</span> for the mandra pancamam). Following standards
+	used in carnatic music books, the typesetter shows tara stAyi swaras by showing 
+	a dot above the swara, and mandra stAyi swaras by showing a dot below the swara. For example
+	<span class="syntax2" id="stayi">S: s' n d p m g r s n`</span> will be rendered as follows:
+	<center>
+	    <span id="stayi_v">
+		<script language="javascript">
+		    renderSongFragment("stayi_v", "stayi","Tala: Adi\nSpeedMarks: below");
+		</script>
+	    </span>
+	</center>
+	<li><b><i>optional_gamaka_indicator</i></b> is used to indicate a gamaka for the swara. This can be one 
+	of the following:
+	<ul>
+	    <li>A pre-defined symbol which corresponds on a pre-defined glyph (image) that is displayed
+	    above the swara. Currently, the following pre-defined swaras are supported:
+	    <p>
+	    <table class="mytable" style="position:relative;left:100;font-size:100%;width:75%">
+		<tr class="mytr">
+		    <td><b>Gamaka Indicator</b><td><b>Glyph</b><td><b>Example</b>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">~</span> (tilde)</span>
+		    <td style="text-align:center;">
+			<img src="../../src/l_and_f/kampitam2.png">
+		    <td>
+			<table>
+			<td>
+		        <span id="kampitam" class="syntax2">S: m~</span>
+			<td>
+			&#x21d4;
+			<td valign="top">
+			<span id="kampitam_v">
+			    <script language="javascript">
+				renderSongFragment("kampitam_v", "kampitam","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">~~</span> (two tilde)</span>
+		    <td style="text-align:center;">
+			<img src="../../src/l_and_f/kampitam3.png">
+		    <td>
+			<table>
+			<td>
+		        <span id="kampitam3" class="syntax2">S: ma~~ ,</span>
+			<td>
+			&#x21d4;
+			<td valign="top">
+			<span id="kampitam3_v">
+			    <script language="javascript">
+				renderSongFragment("kampitam3_v", "kampitam3","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">^</span> (caret)</span>
+		    <td style="text-align:center;">
+			<img src="../../src/l_and_f/tick.png">
+			<td>
+			<table>
+			<td>
+			<span id="tick" class="syntax2">S: r g^ m</span>
+			<td>
+			 &#x21d4;
+			 <td valign="top">
+			    <span id="tick_v">
+				<script language="javascript">
+				    renderSongFragment("tick_v", "tick","Tala: Adi\nSpeedMarks: below");
+				</script>
+			    </span>
+			</table>
+		 </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">/</span> (forward slash)</span>
+		    <td style="text-align:center;">
+			<img src="../../src/l_and_f/quickup.png">
+		    <td>
+		    	<table>
+			<td>
+		        <span id="qu" class="syntax2">S: s m/ g r</span>
+			<td>
+			 &#x21d4;
+			 <td valign="top">
+			<span id="qu_v">
+			    <script language="javascript">
+				renderSongFragment("qu_v", "qu","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">//</span> (two forward slashes)</span>
+		    <td style="text-align:center;">
+			<img src="../../src/l_and_f/slowup.png">
+		    <td>
+		    	<table>
+			<td>
+		        <span id="su" class="syntax2">S: s ma// g r</span>
+			<td>
+			 &#x21d4;
+			 <td valign="top">
+			<span id="su_v">
+			    <script language="javascript">
+				renderSongFragment("su_v", "su","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">\</span> (backslash)</span>
+		    <td style="text-align:center;">
+			<img src="../../src/l_and_f/quickdn.png">
+		    <td>
+		    <table>
+		    <td>
+		    <span id="qd" class="syntax2">S: n d\ p m</span> 
+		    <td>
+		    &#x21d4;
+		    <td valign="top">
+			<span id="qd_v">
+			    <script language="javascript">
+				renderSongFragment("qd_v", "qd","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+		    </td>
+		    </table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">\\</span> (two backslashes)</span>
+		    <td style="text-align:center;">
+			<img src="../../src/l_and_f/slowdn.png">
+		    <td>
+		    	<table>
+			<td>
+			<span id="sd" class="syntax2">S: n da\\ p</span>
+			<td>
+			&#x21d4;
+			<td valign="top">
+			<span id="sd_v">
+			    <script language="javascript">
+				renderSongFragment("sd_v", "sd","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+	    </table>
+	    <li>Any text enclosed in parenthesis as in <span id="tgamaka" class="syntax2">S: s' n(w) n d</span>, which will make that text appear above the swara as follows:
+	<center>
+	    <span id="tgamaka_v">
+		<script language="javascript">
+		    renderSongFragment("tgamaka_v", "tgamaka","Tala: Adi\nSpeedMarks: below");
+		</script>
+	    </span>
+	</center>
+	</ul>
+	<li><b><i>optional_phrase_end_indicator</i></b> is the minus/hypen <span class="syntax2">-</span> character, and is used to 
+	group swaras i.e. as in phrasing. For example, in 
+	<span id="phrasing" class="syntax2">S: ( s' n' d p- n d p m )</span>, 
+	the hyphen is used after the the panchamam to indicate that the phrase is divided 
+	internally into two sub-phrases <span>s' n d p</span>, and <span class="syntax2">n d p m</span> and
+	should be sung/played as such (<i>Note: the parantheses are speed change markers discussed below</i>). In many cases, phrasing indicators are used to indicate  where 
+	a pause for breath should be taken (vocal). The above example would be rended as follows:
+	<center>
+	    <span id="phrasing_v">
+		<script language="javascript">
+		    renderSongFragment("phrasing_v", "phrasing","Tala: Adi\nSpeedMarks: below");
+		</script>
+	    </span>
+	</center>
+	<p>
+	Note that the <b>PhraseEnds</b> directive can control whether the hyphen itself is to be displayed
+	or not.
+    </ul>
+<h4>Speed Change Indicators</h4>
+In the swara directive, the default speed is <b>always</b> predetermined. For
+krithis, this defaults speed is known colloquially as "second speed" where 
+in catusra gati, you can fit 2 swaras in an akshara. If you want to swaras 
+in "third speed" or mEl kAlam, you must enclose them in parantheses as shown 
+below:<br>
+<span id="schange" class="syntax2">
+S: g , m , ( p m g r s n` ) s , , ,
+</span>
+<p>
+In the above example the first 3 swaras <span class="syntax2">g - -</span> are
+in second speed. The swaras <span class="syntax2">p m g r s n`</span> is in 
+third speed, and the swaras following it are in second speed again. The above 
+notation would be rendered as follows:
+	<center>
+	    <span id="schange_v">
+		<script language="javascript">
+		    renderSongFragment("schange_v", "schange","Tala: Adi");
+		</script>
+	    </span>
+	</center>
+<h4>Tala Markers</h4>
+You can also use the special characters <span class="syntax2">|</span> and 
+<span class="syntax2">||</span> in the notations of a swara directive to serve
+as tala markers. However, you should note that these characters are 
+there for clarity in the input for you as the user. They are simply skipped by the 
+typesetter which automatically determines where tala markers fall for the 
+current tala based on the duration of the swaras. In other words, you dont have
+to specify these in the input, their presence/absence has no effect on the 
+typeset output, but having them there may allow the input to be
+more understandable.
+<h4>The equal sign (=), "same as previous sangati" indicator</h4>
+In notation, often you will find a need to simply indicate that a certain
+section of the avarthanam is simply the same as the last one. This is 
+especially true in sangatis where each sangati is a minor variation of the
+previous one. You can use the equal sign character 
+(<span class="syntax2">=</span>) for these purposes.
+<p>
+The equal sign is in reality a swara that takes up a full akshara. This
+means that if you want to indicate that the first half of the Adi tala
+in a certain notation line is the same as previous, you need to specify
+four separate equal signs for the four aksharas as illustrated in the
+following example:<br>
+<span id="eq" class="syntax2">
+DefaultSpeed: 1
+Tala: Adi
+S: p ; ( s' n d n ) p d n | s' , , , | , , , , ||
+S: =   =   =      =           | =    =   | ( d n s' ,- d n s' , ) ||
+</span>
+<p>
+The above example uses 6 equal signs for to indicate that the notation
+for the first 6 aksharas of Adi tala simply follows the previous line.
+It would be rendered as follows:
+	<center>
+	    <span id="eq_v">
+		<script language="javascript">
+		    renderSongFragment("eq_v", "eq");
+		</script>
+	    </span>
+	</center>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

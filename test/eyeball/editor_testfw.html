@@ -1,0 +1,21 @@
+<html>
+<head>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript" src="testengine.js"></script>
+<script type="text/javascript">
+TestEngine = new TestEngineDefn();
+TestEngine.addTestScript( "test_heading_set_bold_italic_left.html", "test_heading_set_bold_italic_left.html");
+TestEngine.addTestScript( "test_heading_set_right_font.html", 	    "test_heading_set_right_font.html");
+TestEngine.addTestScript( "test_heading_set_fontsize", "test_heading_set_fontsize.html");
+TestEngine.addTestScript( "test_heading_add_new_heading.html","test_heading_add_new_heading.html");
+TestEngine.addTestScript( "Add notations #1", "test_notation_add_new.html");
+TestEngine.addTestScript( "Add notations #2", "test_notation_add_new2.html");
+TestEngine.addTestScript( "Test navigation of notations", "test_notation_navigation.html");
+TestEngine.addTestScript( "Test stayi-selector display", "test_stayi_selector.html");
+TestEngine.addTestScript( "Test Insertion of text", "test_notation_insert.html");
+</script>
+</head>
+<body onload="TestEngine.runTests(document.body);">
+<b>Editor Tests:</b>
+</body>
+</html>

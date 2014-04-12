@@ -1,0 +1,67 @@
+<h2 style="page-break-before:always;">Assistance in entering directives</h2>
+As mentioned earlier, the input area of the typesetter application has an <b>Assist</b> button
+that can assist you in entering new directives, and editing already specified directives making
+it easy to specify the notation information without having to memorize the syntax of the various
+directives.  There are two kinds of assistance:
+<ul>
+    <li><b>Directive specific dialogs/forms:</b> Here assistance is provided via dialogs/forms
+    specific to a directive. 
+    <p>
+    In the example below, the <b>Assist</b> button is pressed when the cursor on an empty line:
+	<p><center><img src="select_directive.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;padding-bottom:5;">Fig A1</b></center>
+    <p>
+    As shown above, a dialog that asks you to select a directive that you wish to add is shown.
+    Pick a directive and click OK, and a dialog specific to that directive will be displayed. 
+    <p>
+    In the second example below, after "Heading: " was typed on a new line, the <b>
+	Assist</b> button was pressed:
+	<p><center><img src="newheading.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;padding-bottom:5;">Fig A1</b></center>
+    <p>As shown above, a form for entering the heading is shown. Here you can specify the 
+    heading text, the alignment, the formatting etc. After entering that, if you click "ok", 
+    then the contents of heading directive is appropriately constructed and placed in the
+    text area as shown below:
+	<p><center><img src="newheading2.png"/>
+	    <br><b style="font-size: 10pt;padding-top:5;padding-bottom:5;">Fig A2</b></center>
+    <p>
+    You can bring up the assistance dialogs when the line where the cursor is in the input 
+    area is one of the foollowing:
+    <ul>
+	<li>An empty line. In this case, as explained above a dialog that lets you firsy
+	pick a directive would be shown.
+	<li>Contains just the directive name: The dialog specific to the directive would be
+	shown and you can specify all the parameters for the directive.
+	<li>Contains a complete valid directive: Again, the dialog specific to the directive 
+	would be shown, and you can change the already specified parameters.
+    </ul>
+    <p>
+    <li><b>Inline assistance (TAB completion):</b> Once you get familiar with the syntax 
+    of the directives, some may find it faster to type in the raw directives rather than 
+    use the forms. You can press the tab key while typing in the directive, and the application
+    should complete the directive information wherever appropriate. For example, if on
+    a new line, you enter just the letter "t" and than press the TAB key (see Fig A3 below), 
+    the application will immediately fill "Tala: " as a beginning of a tala directive (see Fig
+    A4 below). Then for the value for the tala directive, if for example, you enter "k" and 
+    press TAB (Fig A5 below), the application will fill in "KhandaCapu" (Fig A6 below).
+    <p>
+    <table>
+	<tr>
+	    <td align="center"><img src="inlineassist1.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A3</b>
+	    <td>&nbsp;
+	    <td align="center"><img src="inlineassist2.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A4</b>
+	<tr>
+	    <td>&nbsp;
+	    <td>&nbsp;
+	    <td>&nbsp;
+	<tr>
+	    <td align="center"><img src="inlineassist3.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A5</b>
+	    <td>&nbsp;
+	    <td align="center"><img src="inlineassist4.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A6</b>
+	</tr>
+    </table>
+</ul>

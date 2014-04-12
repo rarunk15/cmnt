@@ -1,0 +1,488 @@
+<html>
+<head>
+<title>Transliterator for Carnatic Music Compositions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all">
+	@import "tabs.css";
+	@import "cmtranslit_editor.css";
+</style>
+<script language="javascript" type="text/javascript" src="cmtranslit_editor_tinymce.js"></script>
+<script language="javascript" type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
+<script language="javascript" type="text/javascript">
+/* REMOVE WHEN PACKAGING
+tinyMCE_GZ.init ({
+	plugins : 'style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,cmlangterms,searchreplace',
+	themes : 'simple,advanced',
+	languages : 'en',
+	disk_cache : true,
+	debug : false
+
+});
+REMOVE WHEN PACKAGING */
+</script>
+<script language="javascript" type="text/javascript">
+tinyMCE.init ({
+    theme : "advanced",
+    mode : "exact",
+    elements : "content",
+    plugins : "cmlangterms,inlinepopups,paste,save,searchreplace",
+    theme_advanced_toolbar_align : "left",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_buttons1 : "formatselect,fontsizeselect,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,separator,bullist,numlist,separator,outdent,indent",
+    theme_advanced_buttons2 : "cmload,save,cmtranslate,cmlangterms,cmcvtlangterm,cmcvtlangtermsall,cmcvttoscheme,cmhelp,separator,hr,sub,sup,forecolor,separator,code,removeformat,cleanup,pastetext,pasteword,selectall,newdocument,undo,redo,replace",
+    theme_advanced_buttons3 : "",
+    theme_advanced_disable : "strikethrough,justifyfull",
+    theme_advanced_statusbar_location : "bottom",
+    theme_advanced_path: "false",
+    extended_valid_elements: "-span[id|class|style|align]",
+    invalid_elements: "a,script,object,embed",
+    paste_autocleanup_onpaste: true,
+    paste_unindented_list_class: "unindentedList",
+    paste_use_dialog: true,
+    paste_create_paragraphs : false,
+    paste_create_linebreaks : false,
+    paste_convert_headers_to_strong : true,
+    content_css: "cmtranslit_editor_content.css",
+    apply_source_formatting: true
+});
+// save_onsavecallback : "saveContents",
+//force_br_newlines: true,
+//force_p_newlines: false,
+//cleanup_callback: "mycleanup" - note causes compilation prob for tinymce 2.1.3
+
+var CMTransliterationEditor;
+
+
+function FontSettingsObj() {
+    this.setFonts = function() {
+	var ids = [ "sanskrit", "telugu", "tamil", "kannada", "malayalam" ];
+	var override = [ "SanskritFont", "TeluguFont", "TamilFont", "KannadaFont", "MalayalamFont" ];
+	for( var i = 0; i < ids.length; i++ ) {
+	    var d = document.getElementById(ids[i]+"_content");
+	    if( d != null ) {
+		var f = this[override[i]];
+		if( !f ) f = this.DefaultFont;
+		if( !f ) f = ""
+		d.style.fontFamily = f;
+	    }
+	}
+    }
+    this.onFontsChanged = function() {
+	this.setFonts();
+	this.saveToCookies();
+    }
+
+    this.font_setting_props = [ "DefaultFont", "SanskritFont", "TeluguFont", "TamilFont", "KannadaFont", "MalayalamFont" ];
+
+    this.loadFromCookies = function() {
+	var l;
+	for(l = 0; l < this.font_setting_props.length; l++ ) {
+	    var cookie = "cmtranslit_" + this.font_setting_props[l];
+	    var f = CMTransliterationEditor.readCookie(cookie);
+	    if( f && f != "" ) {
+		this[this.font_setting_props[l]] = f;
+	    }
+	}
+    }
+
+    this.saveToCookies = function() {
+	var l;
+	for(l = 0; l < this.font_setting_props.length; l++ ) {
+	    var cookie = "cmtranslit_" + this.font_setting_props[l];
+	    CMTransliterationEditor.createCookie(cookie,this[this.font_setting_props[l]],60);
+	}
+    }
+
+    this.loadFromCookies();
+    this.setFonts();
+}
+
+FontSettingsObj.prototype.DefaultFont =  "";
+FontSettingsObj.prototype.SanskritFont =  "";
+FontSettingsObj.prototype.TeluguFont =  "";
+FontSettingsObj.prototype.TamilFont =  "";
+FontSettingsObj.prototype.KannadaFont =  "";
+FontSettingsObj.prototype.MalayalamFont =  "";
+FontSettingsObj.prototype.changed  =  false;
+
+var FontSettings = null;
+
+function init() {
+    CMTransliterationEditor = newEditor();
+    CMTransliterationEditor.init('TransliteratorContainer','TransliteratorBody','TransliteratorForm');
+
+    FontSettings = new FontSettingsObj();
+
+    var q = document.getElementById('tamilqualscheme');
+    if( q ) {
+	var scheme= CMTransliterationEditor.readCookie("cmtranslit_tamilqualscheme");
+	if(scheme && scheme != "" && scheme != "noqual" && CMTransliterationEditor.setTamilQualScheme(scheme,true)) {
+	    q.value = scheme;
+	}
+	else
+	    q.value = 'noqual';
+    }
+    q = document.getElementById('tamilgranthasa');
+    if( q ) {
+	var scheme= CMTransliterationEditor.readCookie("cmtranslit_tamilgranthasa");
+	if(scheme && scheme != "" && scheme != "noqual" && CMTransliterationEditor.setGranthaSa(scheme,true)) {
+	    q.value = scheme;
+	}
+	else
+	    q.value = false;
+    }
+
+    var s = document.getElementById('sanskritanuswara');
+    if( s ) {
+	var anuswara= CMTransliterationEditor.readCookie("cmtranslit_sanskritanuswara");
+	if(anuswara && anuswara != "" && anuswara != "auto" && CMTransliterationEditor.setSanskritAnuswaraOption(anuswara,true))
+	    s.value = anuswara;
+	else
+	    s.value = 'auto';
+	CMTransliterationEditor.createCookie("cmtranslit_sanskritanuswara",s.value,60);
+    }
+
+    var raw = false;
+    var englishraw = document.getElementById('englishraw');
+    if( englishraw ) {
+	var cookie = CMTransliterationEditor.readCookie("cmtranslit_englishraw");
+	if( cookie && cookie == "1" && CMTransliterationEditor.setEnglishRaw(true,true))
+	    raw = true;
+	englishraw.checked = raw;
+	CMTransliterationEditor.createCookie("cmtranslit_englishraw",((raw) ? "1" : "0"),60);
+    }
+
+    var curlang = CMTransliterationEditor.readCookie("cmtranslit_curlang");
+    if( curlang && curlang != "" )
+	CMTransliterationEditor.showLanguage(curlang);
+
+
+    var printform = document.getElementById("print_options_form");
+    if( printform ) {
+	var printorder= CMTransliterationEditor.readCookie("cmtranslit_printorder");
+	if( printorder ) {
+	    var np = new Array();
+	    var idx = 0;
+	    var l   = printorder.length;
+	    while( true ) {
+		var cidx = printorder.indexOf(',', idx);
+		var lang = "";
+		if( cidx >= 0 )
+		    lang = printorder.substring(idx,cidx);
+		else
+		    lang = printorder.substring(idx);
+
+		for( o = 0; o < printform.from.options.length; o++ ) {
+		    if( printform.from.options[o].text.toLowerCase() == lang.toLowerCase() ) 
+			np[np.length] = new Option(printform.from.options[o].text,
+						   printform.from.options[o].value);
+		}
+
+		if(cidx >= 0 ) {
+		    idx = cidx+1;
+		}
+		else
+		    break;
+	    }
+	    if( np.length > 0 ) {
+		printform.to.options.length = 0;
+		for(i in np) {
+		    printform.to.options[i] = np[i];
+		}
+	    }
+	}
+    }
+}
+
+function onTamilQualSchemeChange(val) 
+{
+    if(CMTransliterationEditor.setTamilQualScheme(val))
+	CMTransliterationEditor.createCookie("cmtranslit_tamilqualscheme",val,60);
+}
+
+function onTamilGranthaSa(val)
+{
+    if(CMTransliterationEditor.setTamilGranthaSa(val))
+	CMTransliterationEditor.createCookie("cmtranslit_tamilgranthasa",val,60);
+}
+
+function onFonts()
+{
+    TinyMCE_Engine.prototype.execInstanceCommand("content", "mceCMFonts", "", FontSettings);
+}
+
+function onSanskritAnuswaraChange(val)
+{
+    if( val && val != "" ) {
+	if( CMTransliterationEditor.setSanskritAnuswaraOption(val))
+	    CMTransliterationEditor.createCookie("cmtranslit_sanskritanuswara",val,60);
+    }
+}
+
+function onEnglishRaw(raw)
+{
+    if( raw == true || raw == false ) {
+	if( CMTransliterationEditor.setEnglishRaw(raw) ) {
+	    CMTransliterationEditor.createCookie("cmtranslit_englishraw",((raw) ? "1":"0"),60);
+	}
+    }
+}
+
+
+function showLanguage(val) {
+    CMTransliterationEditor.showLanguage(val);
+    CMTransliterationEditor.createCookie("cmtranslit_curlang",val,60);
+}
+
+function showHideOptions(but, id) {
+    var o = document.getElementById(id);
+    if(o ) {
+	if( o.style.display == "none" )
+	    o.style.display = "block";
+	else 
+	    o.style.display = "none";
+    }
+    if(but.innerHTML.indexOf("+") >= 0 )
+	but.innerHTML = "-";
+    else
+	but.innerHTML = "+";
+}
+
+function printableView(print_options_form) {
+    var o = document.getElementById(print_options_form);
+    if( !o ) return;
+    if( o.to.options.length == 0 ) {
+	alert("No languages selected to print!" );
+	return;
+    }
+    var cookie="";
+    var printAlways = new Array();
+    for(var i = 0; i < o.to.options.length; i++ ) {
+	printAlways[printAlways.length] = o.to.options[i].text;
+	if( cookie != "" ) cookie += ",";
+	cookie += o.to.options[i].text;
+    }
+    if( CMTransliterationEditor.printableView(printAlways)) {
+	CMTransliterationEditor.createCookie("cmtranslit_printorder",cookie,60);
+    }
+}
+
+function removeFromPrintAlways(print_options_form) {
+    var o = document.getElementById(print_options_form);
+    if( !o ) return;
+    if( o.to.selectedIndex >= 0 ) {
+	var val = o.to.value;
+	o.to.options[o.to.selectedIndex] = null;
+	for( var i = 0; i < o.from.options.length; i++ ) {
+	    if( o.from.options[i].value == val ) {
+		o.from.options[i].disabled = false;
+		return;
+	    }
+	}
+    }
+}
+
+function addToPrintAlways(print_options_form) {
+    var o = document.getElementById(print_options_form);
+    if( !o ) return;
+    if( o.from.selectedIndex >= 0 ) {
+	var fromopt = o.from.options[o.from.selectedIndex];
+	var found = false;
+	if(o.to.options) {
+	    for( var i = 0; i < o.to.options.length; i++ ) {
+		if(o.to.options[i].text == fromopt.text) {
+		    found = true;
+		    break;
+		}
+	    }
+	}
+	if( !found )
+	    o.to.options[o.to.options.length] = new Option(fromopt.text, fromopt.value);
+	o.from.options[o.from.selectedIndex].disabled = true;	// prevent furthet selection (doesnt
+								// work on IE)
+    }
+}
+
+function onLoad(f) {
+}
+
+</script>
+</head>
+<body onload="init();">
+<div id="ieformdiv" style="padding:10 10 10 10;width:100%;border:thick ridge #888888;background:#cccccc;z-index:5;position:absolute;top:0;left:0; display:none">
+    <form id="ieform">
+	<table style="width:100%;">
+	    <tr><td>
+		<b>Copy the DokuWiki text to clipboard to export:</b>
+	    <tr><td style="width:100%">
+		    <textarea id="ieform_textarea" style="overflow:scroll;word-wrap:normal;" name="textarea" type="textarea" rows="20" cols="80"></textarea>
+	    <tr><td>
+		    <center>
+		    <input id="ieform_ok" name="ok" type="button" value="&nbsp;OK&nbsp;" 
+		    onclick="CMTransliterationEditor.dismissDokuWiki();"> &nbsp;
+		    </center>
+	</table>
+    </form>
+</div>
+<div id="TransliteratorContainer">
+<div id="TransliteratorBody" width="100%">
+<center><h2>Carnatic Music Transliterator</h2></center>
+<i>Enter in the lyrics that needs to be transliterated following the <a href="cmtranslit_scheme.html" target="Legend">Unified Transliteration Scheme for Carnatic Music Compositions</a>, then click on the Translate button (<img align="top" src="translate.png"></img>). Click on the help button (<img align="top" src="cmhelp.png"></img>) for help</i>
+<table style="padding:0 0 0 0;border-collapse:collapse;" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+	<td>
+	</td>
+	<td>
+	</td>
+    </tr>
+    <tr>
+	<td style="height:0.3em"></td>
+	<td></td>
+    </tr>
+    <tr>
+	<td width="50%" valign="top">
+	    <form enctype="multipart/form-data" 
+			method="post" 
+			action="/cmtranslit/savefile.php" 
+			id="content_form" 
+			onsubmit="saveSubmit(this)">
+	    <input type="hidden" name="filename" value="">
+	    <input type="hidden" name="plaintextcontent" value="">
+	    <textarea type="textarea" id="content" name="content" style="width:100%;height:420;border:thin solid #000000;">
+<!-- LOAD_CONTENTS -->
+	    </textarea>
+	    </form>
+	</td>
+	<td width="50%" valign="top">
+	    <div class="tabBox" style="width:100%;">
+	      <div class="tabArea">
+		<a class="tab" id="sanskrit_tab" onclick="showLanguage('sanskrit');">Sanskrit</a>
+		<a class="tab" id="english_tab" onclick="showLanguage('english');">English</a>
+		<a class="tab" id="telugu_tab" onclick="showLanguage('telugu');">Telugu</a>
+		<a class="tab" id="kannada_tab" onclick="showLanguage('kannada');">Kannada</a>
+		<a class="tab" id="tamil_tab" onclick="showLanguage('tamil');">Tamil</a>
+		<a class="tab" id="malayalam_tab" onclick="showLanguage('malayalam');">Malayalam</a>
+	      </div>
+	      <div class="tabMain" style="overflow:auto;height:405;;">
+		  <div class="langArea" id="sanskrit">
+		      <div class="langAreaOptions">
+			    <i style="font-size:8pt;">Anuswara:</i>
+			    <select style="font-size:8pt" value="auto" id="sanskritanuswara" 
+					name="sanskritanuswara" onchange="onSanskritAnuswaraChange(this.value);">
+				<option value="allinclnasals">Use anuswara for M, and for all words ending with m, and all nasal combinations</option>
+				<option value="always">Use anuswara for M, and for all words ending with m</option>
+				<option selected value="auto">Use anuswara for M, and for words in the middle of sentences that end with m</option>
+				<option value="forced">Use anuswara only if explicitly specified by M</option>
+				<option value="never">Do not anuswara</option>
+			    </select>
+			    <hr/>
+		      </div>
+		      <div class="langAreaContent" id="sanskrit_content">
+		      </div>
+		  </div>
+		  <div class="langArea" id="english">
+		      <div class="langAreaOptions">
+			  <input type="checkbox" onclick="onEnglishRaw(this.checked)" id="englishraw" name="englishraw"></input>
+			  <i style="font-size:8pt;">Do not hide script specific indicators (e.g. ^n,n2 instead of n)</i>
+			  <hr/>
+		      </div>
+		      <div class="langAreaContent" id="english_content"></div>
+		  </div>
+		  <div class="langArea" id="telugu">
+		      <div class="langAreaContent" id="telugu_content"></div>
+		  </div>
+		  <div class="langArea" id="kannada">
+		      <div class="langAreaContent" id="kannada_content"></div>
+		  </div>
+		  <div class="langArea" id="tamil">
+		      <div class="langAreaOptions">
+			  <table>
+			  <tr>
+			  <td>
+			    <i style="font-size:8pt;">Qualifier Scheme:</i>
+			    <select style="font-size:8pt" value="noqual" 
+					id="tamilqualscheme" name="tamilqualscheme" onchange="onTamilQualSchemeChange(this.value);">
+				<option selected value="noqual">No Qualifiers</option>
+				<option value="nohard">None always implies hard sounds (ka, ca, Ta, ta, pa)</option>
+				<option value="natural">Qualifiers only when sound deviates from natural tamil rules</option>
+			    </select>
+			   <tr>
+			    <td style="font-size:8pt;">
+				<input type="checkbox" name="granthasa" onclick="onTamilGranthaSa(this.checked);">
+				</input>
+				<a href="/wordpress/cm-transliterator/cm-transliterator-articles/sa-in-tamil-grantha-sa-character-support/" style="color:black;">Use Grantha Sa!</a>
+			    </td>
+			    </table>
+			    <hr/>
+		      </div>
+			<div class="langAreaContent" id="tamil_content"></div>
+		  </div>
+		  <div class="langArea" id="malayalam">
+		      <div class="langAreaContent" id="malayalam_content"></div>
+		  </div>
+	      </div>
+	    </div>
+	</td>
+    </tr>
+    <tr>
+	<td></td>
+	<td style="font-size:75%;text-align:left;font-family:Lucida Grande,Verdana,Arial,Sans-Serif;">
+	    <input type="button" onclick="onFonts();" value="Fonts ..."></input>
+	    <span onclick="showHideOptions(this,'print_options');" class="button">+</span>
+	    <a href="#" onclick="printableView('print_options_form')">Printable View</a>
+	    <!--
+	    <span style="display:inline;width:100%;text-align:right">
+	    </span>
+	    -->
+	    <br>
+	    <div id="print_options" style="padding-top:0.5em;display:none;width:100%;">
+		<form id="print_options_form">
+		<i>Also include the following languages in the printable view (after the currently selected one):</i><br>
+		<table>
+		    <td>
+			<select size="6" style="font-size:8pt;font-family:Lucida Grande,Verdana,Arial,Sans-Serif;width:10em" name="from" value="sanskrit">
+			<option disabled="true" value="current">&lt;Current&gt;</option>
+			<option value="sanskrit">Sanskrit</option>
+			<option value="english">English</option>
+			<option value="telugu">Telugu</option>
+			<option value="kannada">Kannada</option>
+			<option value="malayalam">Malayalam</option>
+			
+			<option value="tamil">Tamil</option>
+		    </select>
+		    <td>
+			<input onclick="addToPrintAlways('print_options_form');" type="button" value=">>"></input><br>
+			<input onclick="removeFromPrintAlways('print_options_form');" type="button" value="<<"></input>
+		    <td>
+			<select size="6" value="current" style="font-size:8pt;font-family:Lucida Grande,Verdana,Arial,Sans-Serif;width:10em" name="to">
+			    <option value="current">&lt;Current&gt;</option>
+			</select>
+		    </td>
+		<!--
+		<tr>
+		    <td> <input type="checkbox" name="english"></input>&nbsp;English
+		    <td> <input type="checkbox" name="sanskrit"></input>&nbsp;Sanskrit
+		    <td> <input type="checkbox" name="telugu"></input>&nbsp;Telugu
+		<tr>
+		    <td> <input type="checkbox" name="kannada"></input>&nbsp;Kannada
+		    <td> <input type="checkbox" name="tamil"></input>&nbsp;Tamil
+		    <td> 
+			<input type="checkbox" name="malayalam"></input><td>Malayalam
+		-->
+		</table>
+	    </form>
+	    </div>
+	    <div id="loadshadow" style="display:none;width:100%;">
+		<form name="loadshadowform" id="loadshadowform" enctype="multipart/form-data" action="load.php" method="post">
+		    <input type="file" name="importfile" id="importfile" size="40">
+		    <input type="hidden" name="MAX_FILE_SIZE" value="20000">
+		    <input name="importcontents" id="importcontents" value="x" type="hidden" />
+		</form>
+	    </div>
+	</td>
+    </tr>
+</table>
+</div>
+</div>
+</body>
+</html>

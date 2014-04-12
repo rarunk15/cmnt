@@ -1,0 +1,125 @@
+<html>
+<head>
+<title>Common Transliteration Scheme for Carnatic Music - Legend</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script language="javascript" type="text/javascript" src="legend.js"></script>
+<link rel="stylesheet" type="text/css" href="legend.css"/>
+</head>
+<body style="font-family:'Lucida Grande', Verdana, Arial, Sans-Serif;">
+<p class="indicnote">
+<b>Note:</b>: This web-page contains characters in Devanagiri, Telugu, Kannada, Tamil and Malayalam. If they do not
+display correctly, then you need to install proper fonts on your computer.  On Firefox, if
+the Indian language characters do appear but are in the wrong order, please follow instructions given
+in this page: <a href="http://en.wikipedia.org/wiki/Wikipedia:Enabling_complex_text_support_for_Indic_scripts#Check_for_existing_support">http://en.wikipedia.org/wiki/Wikipedia:Enabling_complex_text_support_for_Indic_scripts#Check_for_existing_support</a>
+</p>
+<table id="legendTable" width="100%" border="1" style="font-family:'Lucida Grande', Verdana, Arial, Sans-Serif;">
+<thead>
+<tr class="headerRow">
+<td colspan="7"style="text-align:center">Unified transliteration Scheme for Carnatic Music Compositions <span style="font-size:75%;font-weight:normal;">(version 1.2)<span><br>
+<table width="100%">
+<script language="javascript">
+    genHeaderRow(true);
+</script>
+</table>
+<p class="qualnote">
+(Numbers in super-script forms are qualifiers to disambiguate the script or 
+ represent sounds not part of the script. For Tamil, qualifiers for certain 
+ letters may or may not  appear in certain contexts depending on the qualifier 
+ scheme)
+</p>
+</td></tr>
+</tr>
+<script language="javascript">
+    genHeaderRow(false);
+</script>
+</thead>
+<script language="javascript">
+    genCategoryRow("Vowels");
+    genRows("a,A,i,I,u,U,e,E,o,O,ai,au,R.",true);
+    genCategoryRow("consonants - 1st pentat");
+    genRows("ka,kha,ga,gha,#na");
+    genCategoryRow("consonants - 2nd pentat");
+    genRows("ca,cha,ja,jha,~na");
+    genCategoryRow("consonants - 3rd pentat");
+    genRows("Ta,Tha,Da,Dha,Na");
+    genCategoryRow("consonants - 4th pentat");
+    genRows("ta,tha,da,dha,na,^na,");
+    genCategoryRow("consonants - 5th pentat");
+    genRows("pa,pha,ba,bha,ma");
+    genCategoryRow("consonants - other");
+    genRows("ya,ra,Ra,la,La,va,sa,s2a,Sa,Sha,ha,za,ksha");
+    genCategoryRow("special");
+    genRows("M,H,H2,SrI,j~na,n.,.");
+</script>
+</table>
+<script language="javascript">
+var t = "<h3>Qualifiers</h3>" + 
+"The unified transliteration scheme for carnatic music uses qualifiers in the form of super-script numbers (e.g. " +
+indic(tm("kha","natural")) + ", " + indic(kn("za")) + ") for the following purposes:" +
+'<ol>\
+<li>Represent sounds that are not part of the language\
+<li>Resolve any ambiguities in the letters of the script (as in the case of Tamil)\
+</ol>\
+<p>\
+It should be noted that <u>the qualifier for a certain consonant/vowel (i.e. sound) assigned \
+by the transliteration scheme is fixed and constant</u>. This is so even in the case of Tamil, \
+where there are <i>qualifier schemes</i> that may deem a certain qualifier to be not shown in \
+certain contexts. So in tamil, for example the qualifiers for ' + 
+schchoice('ka, kha, ga, gha', ',') + ' are always 1, 2, 3 and 4 respectively. Some will always \
+appear, and others may not always but when they do they will have the pre-assigned number.\
+<p>\
+For languages other than tamil, there is only one case where qualifiers are used. That is the kannada and \
+telugu representation of the ' + 
+schchoice('za/zha') + ' consonant which occurs in tamil and malayalam. So this is a case of #1 above.' + '\
+<h4>Tamil Qualifiers and Qualifier Schemes</h4>\
+In the case of tamil, both cases #1 and #2 above are present. We have several letters that can represent \
+different sounds depending on the context in which they occur it as per certain rules of the language (although \
+these rules are applicable for native tamil words as opposed to imports). Also, the tamil language does not include several sounds found in the other languages like ' + schchoice('kha/gha/jha/bha/pha') + ' etc. The \
+transliteration scheme uses qualifiers for both cases. \
+As indicated above, while the qualifier for a certain consonant/vowel in the scheme (i.e. sound) is always \
+fixed, whether the qualifier is shown or not can be controlled by choosing one of three \
+qualifier schemes:\
+<ul>\
+<li style="padding-bottom:1em;"><b><i>Scheme</i>: None implies harder sounds</b>: In this scheme, qualifiers are always generated for the \
+softer sounds ' + schchoice('ga/Da/da/ba') + ' no matter where they occur. Also, qualifiers \
+would be included for sounds that are not part of the tamil language, \
+no matter where they occur.\
+<li style="padding-bottom:1em;"><b><i>Scheme</i>: Qualifiers only when sounds deviate from natural tamil rules</b>: As indicated earlier, when a particular tamil character \
+like ' + indicl(tm('ka')) + ' takes the sound of ' + sch('ka') + ' vs when it takes the sound of ' +
+sch('ga') + ' \
+follows certain rules which are followed by most tamil words (except imported ones which have \
+retained much of their original pronounciation). The harder sounds ' + schchoice('ka/Ta/ta/pa') + ' would \
+be used at the beginning of the word. The softer sounds ' + schchoice('ga/Da/da/ba') + ' would occur \
+in  the middle of the words <u>except</u> when following a mei of the same kind. One exception is the letter ' +
+indicl(tm('sa')) + ', which can represent either the ' + sch('sa') + ' or ' + sch('ca') + ' sounds. In \
+modern practice, at the beginning of the words also, the letter does take the soft sound. It takes \
+the harder sound only in the middle when preceding a mei ' + indicl(tm('accu','natural').substring(1,3)) + '. \
+<p>\
+The <i>Qualifiers only when sounds deviate when natural tamil rules</i> scheme will not put \
+qualifiers when the word follows these rules. For example, words like ' +
+schchoice('kAviyam, pakkam, nAgam, paTTam, pattu, sAvi', ',') + ' etc. conform to these rules and will \
+be rendered without qualifiers. This will be true for most tamil words in a tamil composition. \
+<p> \
+Instead, the scheme will put qualifiers if the \
+sound occurs contrary to these rules. This can happen for some Tamil words as in ' + 
+ sch('dAgam') + ' => ' + indicl(tm('dAgam','natural')) + ', where \
+the softer sound occurs at the beginning, and of course can happen more often for non-Tamil words as in ' +
+sch('pankajam') + ' => ' + indicl(tm('pankajam','natural')) + ', and ' + sch('vAtApi') +
+' => ' + indicl(tm('vAtApi','natural')) + '\
+, where the harder sounds ' + sch('ka') + ', ' + sch('tA') + ' and ' + sch('pi') + ' \
+occur in the middle without being preceded by a ' + indicl(tm('akka').substring(1,3)) + ' and ' +
+indicl(tm('atta').substring(1,3)) + ', and ' + indicl(tm('appa').substring(1,3)) + ' respectively.\
+<p>\
+Note that for sounds that are not part of the tamil language, the scheme will include qualifiers \
+no matter where they occur. For example, ' + schchoice('bhAvamu, nAbhi', ',') + ' would be rendered as ' +
+indicl(tm('bhAvamu','natural')) + ' and ' + indicl(tm('nAbhi','natural')) + ' respectively. Similarly, ' +
+sch('mR.du') + ' would be rendered as ' + indicl(tm('mR.du','natural')) + '. Note here that ' +
+sch('R.') + ' carries a slightly different pronounciation from ' + sch('Ru') + '.\
+	<li "style=padding-bottom:1em;"><b><i>Scheme:</i> No Qualifiers</b>: This implies no qualifiers would be shown. This \
+may be useful for tamil krithis, where the reader does not want any qualifiers.\
+</ul>';
+document.write(t);
+</script>
+</body>
+</html>
+

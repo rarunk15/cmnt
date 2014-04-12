@@ -1,0 +1,226 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+var songView;
+var swaraRow = null;
+function test1() {
+   songView = loadEditor( 'songdata' );
+   
+   var h = TestUtils.getHeading(songView);
+   if( !h ) return "test error: cannot locate heading";
+
+   var s = songView.getNextSelectableObject(h);
+   if( s == null || s == h || !s.rowView ) return "test error: cannot locate swara row";
+
+   swaraRow = s.rowView();
+   var results = new Array(  "s:0:0:true:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:1:false:false",
+			     "m:0:1:false:false",
+			     "p:0:2:false:false",
+			     "d:0:2:false:false",
+			     "n:0:2:false:false",
+			     "s:1:2:false:false",
+			     "|",
+			     "s:1:0:false:false",
+			     "n:0:0:false:false",
+			     "|",
+			     "d:0:1:false:false",
+			     "p:0:1:false:false",
+			     "m:0:2:false:false",
+			     "g:0:2:false:false",
+			     "r:0:2:false:false",
+			     "s:0:2:false:false",
+			     "||");
+    songView.selectObject(swaraRow.firstSelectable());
+    var err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "select s failed: " + err;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Validate initial swaras", "s r (g m (p d n s')) s' n (d p (m g r s)) are on one swara row", test1 );
+
+function testStayiSelector() 
+{
+    var err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector failed (s is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (r is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (g is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (m is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (p is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (d is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (n is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 1 );
+    if( err != null ) return "stayi selector display for failed (s' is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 1 );
+    if( err != null ) return "stayi selector display for failed (s' is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (n is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (d is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (p is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (m is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (g is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (r is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateStayiSelector( 0 );
+    if( err != null ) return "stayi selector display for failed (s is expected to be selected): " + err;
+    return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Stayi selector display", "Stayi selector display updates correctly as we select various swaras in the row", testStayiSelector );
+
+function testSpeedSelector() 
+{
+    songView.selectObject(swaraRow.firstSelectable());
+
+    var err = TestUtils.validateSpeedSelector( "1/1" );
+    if( err != null ) return "speed selector failed (s is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/1" );
+    if( err != null ) return "speed selector failed (r is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/2" );
+    if( err != null ) return "speed selector failed (g is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/2" );
+    if( err != null ) return "speed selector failed (m is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (p is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (d is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (n is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (s' is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/1" );
+    if( err != null ) return "speed selector failed (s' is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/1" );
+    if( err != null ) return "speed selector failed (n is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/2" );
+    if( err != null ) return "speed selector failed (d is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/2" );
+    if( err != null ) return "speed selector failed (p is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (m is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (g is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (r is expected to be selected): " + err;
+
+    songView.selectNextObject();
+    err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "speed selector failed (s is expected to be selected): " + err;
+
+    return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Speed selector display", "Speed selector display updates correctly as we select various swaras in the row", testSpeedSelector );
+
+
+
+function runTest() 
+{
+    window.setTimeout( "TestUtils.runScript(testCases);", 1000 );
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="0">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="Selector display test case" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="0" len="1"></S>
+<S label="r" octave="0" speed="0" len="1"></S>
+<S label="g" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="2" len="1"></S>
+<S label="d" octave="0" speed="2" len="1"></S>
+<S label="n" octave="0" speed="2" len="1"></S>
+<S label="s" octave="1" speed="2" len="1"></S>
+<S label="s" octave="1" speed="0" len="1"></S>
+<S label="n" octave="0" speed="0" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="2" len="1"></S>
+<S label="g" octave="0" speed="2" len="1"></S>
+<S label="r" octave="0" speed="2" len="1"></S>
+<S label="s" octave="0" speed="2" len="1"></S>
+</SWARAS>
+<LYRICS>
+</LYRICS>
+</BLOCK>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

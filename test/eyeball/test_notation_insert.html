@@ -1,0 +1,791 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+var songView;
+var swaraRow = null;
+function testInsertToNonFullRowSameSpeed() 
+{
+    var results = new Array(   
+	    	 "s:0:0:false:true", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "<new>:false:false"
+		 );
+
+   songView = loadEditor( 'songdata' );
+
+   var h = TestUtils.getHeading(songView);
+   if( !h ) return "test error: cannot locate heading";
+
+   var s = songView.getNextSelectableObject(h);
+   if( s == null || s == h || !s.rowView ) return "test error: cannot locate swara row";
+
+   swaraRow = s.rowView();
+   songView.selectObject(swaraRow.firstSelectable());
+   TestUtils.sendInsKeyToSwaraLabelBox();
+
+
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed validating initial contents: " + err;
+
+   // insert single swara at beginning
+   TestUtils.appendTextToSwaraLabelBox( "s" );
+   results = new Array(   
+	    	 "s:0:0:true:true", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting at beginning: " + err;
+
+   // insert single swara before interim tala marker
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to second s
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ri
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ga
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ma
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to pa
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to da
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ni (before "|")
+   TestUtils.appendTextToSwaraLabelBox( "s'" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "s:1:0:true:true",
+		 "|",
+		 "n:0:0:false:false",
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "|",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting at swara after interim tala marker: " + err;
+
+   // insert single swara after interim tala marker
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ni (after "|")
+   TestUtils.appendTextToSwaraLabelBox( "s'" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:true:true",
+		 "n:0:0:false:false",
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "n:0:0:false:false",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting at swara after interim tala marker: " + err;
+
+   // insert at middle of tala part
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ni
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to s'
+   TestUtils.appendTextToSwaraLabelBox( "n" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "n:0:0:true:true",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting at swara in middle of tala part: " + err;
+
+   // insert one more
+   TestUtils.appendTextToSwaraLabelBox( "n" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "n:0:0:true:true",
+		 "|",
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting at swara in middle of tala part: " + err;
+
+   // insert swara to make row full
+   TestUtils.appendTextToSwaraLabelBox( "n" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "|",
+		 "n:0:0:true:true",
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "||"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting swara to make row full: " + err;
+
+   return err;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Insert into non-full row (same speed)", "confirm we can enter swaras at various points in the row", testInsertToNonFullRowSameSpeed);
+
+function testContInsertToNonFullRowSameSpeed() 
+{
+   // select first swara in next row
+    var row = songView.getNextSelectableRow(swaraRow);
+    if( !row ) return "cannot locate next row";
+
+    row = songView.getNextSelectableRow(row);
+    if( !row || row == swaraRow ) return "cannot locate next row";
+
+    var row = songView.getNextSelectableRow(row);
+    if( !row || !row.firstSelectable || row == swaraRow ) return "cannot locate next row";
+
+    swaraRow = row;
+    songView.selectObject(swaraRow.firstSelectable());
+
+    var results = new Array(   
+	    	 "s:0:0:false:true", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "d:0:0:false:false",
+		 "p:0:0:false:false",
+		 "|",
+		 "<new>:false:false"
+		 );
+
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed validating initial contents: " + err;
+
+   // insert continuation before interim tala marker
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ri
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ga
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ma
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to pa
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to da
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ni
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to sa' (before "|")
+   TestUtils.appendTextToSwaraLabelBox( "-" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "-:0:0:false:false",
+		 "|",
+		 "s:1:0:false:true",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "d:0:0:false:false",
+		 "|",
+		 "p:0:0:false:false",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting continuation at swara before interim tala marker: " + err;
+
+   // insert single swara after interim tala marker (We are already there)
+   TestUtils.appendTextToSwaraLabelBox( "-" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "-:0:0:false:false",
+		 "|",
+		 "-:0:0:false:false",
+		 "s:1:0:false:true",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "|",
+		 "d:0:0:false:false",
+		 "p:0:0:false:false",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting continuation at swara after interim tala marker: " + err;
+
+   // insert at middle of tala part (We are already there)
+   TestUtils.appendTextToSwaraLabelBox( "-" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "-:0:0:false:false",
+		 "|",
+		 "-:0:0:false:false",
+		 "-:0:0:false:false",
+		 "s:1:0:false:true",
+		 "s:1:0:false:false",
+		 "|",
+		 "n:0:0:false:false",
+		 "d:0:0:false:false",
+		 "p:0:0:false:false",
+		 "<new>:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting continuation at swara in middle of tala part: " + err;
+
+   // insert to make row full
+   TestUtils.appendTextToSwaraLabelBox( "-" );
+   results = new Array(   
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "-:0:0:false:false",
+		 "|",
+		 "-:0:0:false:false",
+		 "-:0:0:false:false",
+		 "-:0:0:false:false",
+		 "s:1:0:false:true",
+		 "|",
+		 "s:1:0:false:false",
+		 "n:0:0:false:false",
+		 "d:0:0:false:false",
+		 "p:0:0:false:false"
+		 );
+   var err = TestUtils.validateSwaraRow( swaraRow, results);
+   if( err != null ) return "failed inserting swara to make row full: " + err;
+
+   return err;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Insert - into non-full row (same speed)", "confirm we can enter continuations at various points in the row", testContInsertToNonFullRowSameSpeed);
+
+function testInsertToFullRowSameSpeed() 
+{
+   // select first swara in next row
+    var row = songView.getNextSelectableRow(swaraRow);
+    if( !row ) return "cannot locate next row";
+
+    row = songView.getNextSelectableRow(row);
+    if( !row || row == swaraRow ) return "cannot locate next row";
+
+    var row = songView.getNextSelectableRow(row);
+    if( !row || !row.firstSelectable || row == swaraRow ) return "cannot locate next row";
+
+    swaraRow = row;
+    songView.selectObject(swaraRow.firstSelectable());
+
+    var row1 = swaraRow;
+    var row2, row3;
+
+    var results1 = new Array(   
+	    	 "s:0:0:true:true", 
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "g:0:0:false:false",
+		 "m:0:0:false:false",
+		 "|",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "|",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "s:1:0:false:false",
+		 "||"
+		 );
+    var results2 = new Array(   
+		 "s:1:0:false:false",
+	    	 "s:1:0:false:false", 
+	    	 "s:1:0:false:false", 
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "d:0:0:false:false",
+		 "d:0:0:false:false",
+		 "p:0:0:false:false",
+		 "|",
+		 "p:0:0:false:false",
+		 "m:0:0:false:false",
+		 "m:0:0:false:false",
+		 "g:0:0:false:false",
+		 "|",
+		 "g:0:0:false:false",
+		 "r:0:0:false:false",
+		 "r:0:0:false:false",
+		 "s:0:0:false:false",
+		 "||"
+		 );
+    var results3 = new Array(   
+		 "s:0:0:false:false",
+		 "<new>:false:false" );
+   // insert single swara at beginning
+   TestUtils.appendTextToSwaraLabelBox( "s" );
+   var err = TestUtils.validateSwaraRow( row1, results1);
+   if( err != null ) return "failed for first row when inserting at beginning: " + err;
+
+   row2 = songView.getNextSelectableRow(row1);
+   if( !row2 ) return "cannot locate second swara row";
+   row2 = songView.getNextSelectableRow(row2);
+   if( !row2 ) return "cannot locate second swara row";
+   err = TestUtils.validateSwaraRow( row2, results2);
+   if( err != null ) return "failed for second row when inserting at beginning: " + err;
+
+   row3 = songView.getNextSelectableRow(row2);
+   if( !row3 ) return "cannot locate third swara row";
+   row3 = songView.getNextSelectableRow(row3);
+   if( !row3 || !row3.firstSelectable ) return "cannot locate third row";
+   err = TestUtils.validateSwaraRow( row3, results3);
+   if( err != null ) return "failed for third row when inserting at beginning: " + err;
+
+   // insert single swara before interim tala marker
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to second s
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to third s
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ri
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to 2nd ri
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ga
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to 2nd ga
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to ma (before "|")
+   TestUtils.appendTextToSwaraLabelBox( "s'" );
+   results1 = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "g:0:0:false:false",
+		 "s:1:0:true:true",
+		 "|",
+		 "m:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "p:0:0:false:false",
+		 "|",
+		 "d:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "||"
+		 );
+    results2 = new Array(   
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+	    	 "s:1:0:false:false", 
+	    	 "s:1:0:false:false", 
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "d:0:0:false:false",
+		 "d:0:0:false:false",
+		 "|",
+		 "p:0:0:false:false",
+		 "p:0:0:false:false",
+		 "m:0:0:false:false",
+		 "m:0:0:false:false",
+		 "|",
+		 "g:0:0:false:false",
+		 "g:0:0:false:false",
+		 "r:0:0:false:false",
+		 "r:0:0:false:false",
+		 "||"
+		 );
+    results3 = new Array(   
+		 "s:0:0:false:false",
+		 "s:0:0:false:false",
+		 "<new>:false:false" );
+
+   err = TestUtils.validateSwaraRow( row1, results1);
+   if( err != null ) return "failed for first row when inserting at swara before interim tala marker: " + err;
+
+   // MUST redetermine row (it gets "replaced" because of insert)
+   row2 = songView.getNextSelectableRow(row1);
+   if( !row2 ) return "cannot locate second swara row";
+   row2 = songView.getNextSelectableRow(row2);
+   if( !row2 ) return "cannot locate second swara row";
+   err = TestUtils.validateSwaraRow( row2, results2);
+   if( err != null ) return "failed for second row when inserting at swara before interim tala marker " + err;
+
+   // MUST redetermine row (it gets "replaced" because of insert)
+   row3 = songView.getNextSelectableRow(row2);
+   if( !row3 ) return "cannot locate third swara row";
+   row3 = songView.getNextSelectableRow(row3);
+   if( !row3 ) return "cannot locate third swara row";
+   err = TestUtils.validateSwaraRow( row3, results3);
+   if( err != null ) return "failed for third row when inserting at swara before interim tala marker: " + err;
+
+   // insert single swara after interim tala marker
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to m (after "|")
+   TestUtils.appendTextToSwaraLabelBox( "s'" );
+
+   results1 = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "g:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:true:true",
+		 "m:0:0:false:false",
+		 "m:0:0:false:false",
+		 "p:0:0:false:false",
+		 "|",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "d:0:0:false:false",
+		 "n:0:0:false:false",
+		 "||"
+		 );
+    results2 = new Array(   
+		 "n:0:0:false:false",
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+	    	 "s:1:0:false:false", 
+	    	 "s:1:0:false:false", 
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "d:0:0:false:false",
+		 "|",
+		 "d:0:0:false:false",
+		 "p:0:0:false:false",
+		 "p:0:0:false:false",
+		 "m:0:0:false:false",
+		 "|",
+		 "m:0:0:false:false",
+		 "g:0:0:false:false",
+		 "g:0:0:false:false",
+		 "r:0:0:false:false",
+		 "||"
+		 );
+    results3 = new Array(   
+		 "r:0:0:false:false",
+		 "s:0:0:false:false",
+		 "s:0:0:false:false",
+		 "<new>:false:false" );
+
+   err = TestUtils.validateSwaraRow( row1, results1);
+   if( err != null ) return "failed for first row when inserting at swara after interim tala marker: " + err;
+
+   // MUST redetermine row (it gets "replaced" because of insert)
+   row2 = songView.getNextSelectableRow(row1);
+   if( !row2 ) return "cannot locate second swara row";
+   row2 = songView.getNextSelectableRow(row2);
+   if( !row2 ) return "cannot locate second swara row";
+   err = TestUtils.validateSwaraRow( row2, results2);
+   if( err != null ) return "failed for second row when inserting at swara after interim tala marker " + err;
+
+   // MUST redetermine row (it gets "replaced" because of insert)
+   row3 = songView.getNextSelectableRow(row2);
+   if( !row3 ) return "cannot locate third swara row";
+   row3 = songView.getNextSelectableRow(row3);
+   if( !row3 || !row3.firstSelectable ) return "cannot locate third row";
+   err = TestUtils.validateSwaraRow( row3, results3);
+   if( err != null ) return "failed for third row when inserting at swara after interim tala marker: " + err;
+
+   // insert at middle of tala part
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to m
+   TestUtils.sendRightKeyToSwaraLabelBox();	// to second m
+   TestUtils.appendTextToSwaraLabelBox( "n" );
+
+   results1 = new Array(   
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+	    	 "s:0:0:false:false", 
+		 "r:0:0:false:false",
+		 "r:0:0:false:false",
+		 "g:0:0:false:false",
+		 "g:0:0:false:false",
+		 "s:1:0:false:false",
+		 "|",
+		 "s:1:0:false:false",
+		 "m:0:0:false:false",
+		 "n:0:0:true:true",
+		 "m:0:0:false:false",
+		 "|",
+		 "p:0:0:false:false",
+		 "p:0:0:false:false",
+		 "d:0:0:false:false",
+		 "d:0:0:false:false",
+		 "||"
+		 );
+    results2 = new Array(   
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "s:1:0:false:false",
+		 "s:1:0:false:false",
+	    	 "s:1:0:false:false", 
+	    	 "s:1:0:false:false", 
+		 "n:0:0:false:false",
+		 "n:0:0:false:false",
+		 "|",
+		 "d:0:0:false:false",
+		 "d:0:0:false:false",
+		 "p:0:0:false:false",
+		 "p:0:0:false:false",
+		 "|",
+		 "m:0:0:false:false",
+		 "m:0:0:false:false",
+		 "g:0:0:false:false",
+		 "g:0:0:false:false",
+		 "||"
+		 );
+    results3 = new Array(   
+		 "r:0:0:false:false",
+		 "r:0:0:false:false",
+		 "s:0:0:false:false",
+		 "s:0:0:false:false",
+		 "<new>:false:false" );
+
+   err = TestUtils.validateSwaraRow( row1, results1);
+   if( err != null ) return "failed for first row when inserting at swara in middle of tala part: " + err;
+
+   // MUST redetermine row (it gets "replaced" because of insert)
+   row2 = songView.getNextSelectableRow(row1);
+   if( !row2 ) return "cannot locate second swara row";
+   row2 = songView.getNextSelectableRow(row2);
+   if( !row2 ) return "cannot locate second swara row";
+   err = TestUtils.validateSwaraRow( row2, results2);
+   if( err != null ) return "failed for second row when inserting at swara in middle of tala part " + err;
+
+   // MUST redetermine row (it gets "replaced" because of insert)
+   row3 = songView.getNextSelectableRow(row2);
+   if( !row3 ) return "cannot locate third swara row";
+   row3 = songView.getNextSelectableRow(row3);
+   if( !row3 || !row3.firstSelectable ) return "cannot locate third row";
+   err = TestUtils.validateSwaraRow( row3, results3);
+   if( err != null ) return "failed for third row when inserting at swara in middle of tala part: " + err;
+
+   return err;
+
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Insert - into first full row (same speed)", "confirm we can enter continuations at various points in the row", testInsertToFullRowSameSpeed);
+
+function runTest() 
+{
+    window.setTimeout( "TestUtils.runScript(testCases);", 1000 );
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="1">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="non-full row same speed" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="1" len="1"></S>
+<S label="r" octave="0" speed="1" len="1"></S>
+<S label="g" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+</SWARAS>
+<LYRICS>
+<L label="sa"></L>
+<L label="ri"></L>
+<L label="ga"></L>
+<L label="ma"></L>
+<L label="pa"></L>
+<L label="da"></L>
+<L label="ni"></L>
+<L label="sa"></L>
+</LYRICS>
+</BLOCK>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="non-full row same speed" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="1" len="1"></S>
+<S label="r" octave="0" speed="1" len="1"></S>
+<S label="g" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+</SWARAS>
+<LYRICS>
+<L label="sa"></L>
+<L label="ri"></L>
+<L label="ga"></L>
+<L label="ma"></L>
+<L label="pa"></L>
+<L label="da"></L>
+<L label="ni"></L>
+<L label="sa"></L>
+<L label="sa"></L>
+<L label="ni"></L>
+<L label="da"></L>
+<L label="pa"></L>
+</LYRICS>
+</BLOCK>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="2 rows same speed" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="1" len="1"></S>
+<S label="s" octave="0" speed="1" len="1"></S>
+<S label="r" octave="0" speed="1" len="1"></S>
+<S label="r" octave="0" speed="1" len="1"></S>
+<S label="g" octave="0" speed="1" len="1"></S>
+<S label="g" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="s" octave="1" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+<S label="n" octave="0" speed="1" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="d" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+<S label="p" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="1" len="1"></S>
+<S label="m" octave="0" speed="1" len="1"></S>
+<S label="g" octave="0" speed="1" len="1"></S>
+<S label="g" octave="0" speed="1" len="1"></S>
+<S label="r" octave="0" speed="1" len="1"></S>
+<S label="r" octave="0" speed="1" len="1"></S>
+<S label="s" octave="0" speed="1" len="1"></S>
+<S label="s" octave="0" speed="1" len="1"></S>
+</SWARAS>
+<LYRICS>
+<L label="sa"></L>
+<L label="sa"></L>
+<L label="ri"></L>
+<L label="ri"></L>
+<L label="ga"></L>
+<L label="ga"></L>
+<L label="ma"></L>
+<L label="ma"></L>
+<L label="pa"></L>
+<L label="pa"></L>
+<L label="da"></L>
+<L label="da"></L>
+<L label="ni"></L>
+<L label="ni"></L>
+<L label="sa"></L>
+<L label="sa"></L>
+<L label="sa"></L>
+<L label="sa"></L>
+<L label="ni"></L>
+<L label="ni"></L>
+<L label="da"></L>
+<L label="da"></L>
+<L label="pa"></L>
+<L label="pa"></L>
+<L label="ma"></L>
+<L label="ma"></L>
+<L label="ga"></L>
+<L label="ga"></L>
+<L label="ri"></L>
+<L label="ri"></L>
+<L label="sa"></L>
+<L label="sa"></L>
+</LYRICS>
+</BLOCK>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+var songView;
+function test1() {
+   songView = loadEditor( 'songdata' );
+
+   var h = TestUtils.getHeading(songView);
+   if( !h ) return "test error: cannot locate heading";
+   songView.selectObject(h);
+
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+
+   // s(r-)
+   TestUtils.sendTextToSwaraLabelBox("sr");
+   TestUtils.selectSwaraSpeed(2);
+   TestUtils.appendTextToSwaraLabelBox("-");
+
+   // r(g-)
+   TestUtils.selectSwaraSpeed(1);
+   TestUtils.appendTextToSwaraLabelBox("rg");
+   TestUtils.selectSwaraSpeed(2);
+   TestUtils.appendTextToSwaraLabelBox("-");
+
+   return TestUtils.validateSwaraRow( songView.getSelected().rowView(), 
+	   	new Array(   "s:0:0:false:false", 
+	   		     "r:0:1:false:false",
+	   		     "-:0:1:false:false",
+	       		     "r:0:0:false:false", 
+	   		     "g:0:1:false:false",
+	   		     "-:0:1:false:false",
+			     "<new>:true:true"));
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add multiple speeds #1", "confirm that s (r-) r (g-) is added, followed by spacer (selected,editing)", test1 );
+
+
+function runTest() 
+{
+    window.setTimeout( "TestUtils.runScript(testCases);", 1000 );
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="1">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="ninnukOri varnam" align="center"></HEADING>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

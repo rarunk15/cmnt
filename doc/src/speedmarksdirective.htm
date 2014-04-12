@@ -1,0 +1,51 @@
+<h3 style="page-break-before:always;">SpeedMarks Directive</h3>
+The <span class="syntax2">SpeedMarks</span> directive controls whether the typesetter
+should draw the lines for higher speeds (mEl kAlam) below the swaras or over the swaras.
+The value of the directive must be either <span class="syntax2">below</span> or
+<span class="syntax2">above</span>. 
+<p>
+The default setting is to draw the lines above the swaras, and so an explicit
+<span class="syntax2">SpeedMarks: above</span> is not strictly needed.
+</p>
+Here are examples of usage of SpeedMarks directive:
+<p>
+<table class="mytable">
+<tr class="mytr">
+<td style="width:3.75in;">
+<div class="syntax2" id="smabove">SpeedMarks: above
+Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="smabove_v">
+<script language="javascript">
+renderSongFragment("smabove_v", "smabove");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<div class="syntax2" id="smbelow">SpeedMarks: below
+Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+<td>
+<span class="songfragment" id="smbelow_v">
+<script language="javascript">
+renderSongFragment("smbelow_v", "smbelow");
+</script>
+</span>
+</table>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

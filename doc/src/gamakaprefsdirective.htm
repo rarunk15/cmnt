@@ -1,0 +1,50 @@
+<h3 style="page-break-before:always;">GamakaPrefs Directive</h3>
+The <span class="syntax2">GamakaPrefs</span> directive can be used to set the default preferences for
+subsequent gamaka markers in Swara directives. Currently, the preferences apply only to
+text based gamakas i.e. <span class="syntax2">g(w)</span>, which results in the text within
+the parenthesis <span class="syntax2">w</span> here, to be used as gamaka markers. The 
+preferences allow you to specify the size of font, and font/text color. The
+syntax of the <span class="syntax2">GamakaPrefs</span> directive is as follows:
+<div class="sc"><span class="syntax2">GamakaPrefs: attributes</span></div>
+where <i>attributes</i> is a comma separated list of one or more of the following:<ul>
+<li><i>font size</i>: The default point size of the font of the text based gamakas as a number
+<li><i>color</i>: The color of the text of the text based gamakas. This can either be a color name 
+such as <i>green</i>, <i>blue</i> or a RGB (red, green, blue) combination.
+</ul>
+<p>
+Here are some examples of usages of the <span class="syntax2">GamakaPrefs</span> directive:
+<p>
+<table class="mytable" style="font-size:100%;width:100%;">
+<tr class="mytr">
+<td>
+<span class="syntax2">GamakaPrefs: 12</span>
+<td>
+Sets the default point size of the font of text based gamaka specifiers to 12pt.
+<tr class="mytr">
+<td>
+<span class="syntax2">GamakaPrefs: 12,red</span>
+<td>
+Sets the default point size for the font of text based gamaka specifiers 12pt and color to red.
+<tr class="mytr">
+<td>
+<span class="syntax2">GamakaPrefs: 12,rgb(64,100,125)</span>
+<td>
+Sets the default point size of the font for text based gamakas to 12pt, and the color to a a color 
+whose red-component is 64, blue component is 100, and green component is 125. 
+The <i>rgb(red,green.blue)</i> of color specification takes a value between
+0 and 255 for each of the red, green and blue component. The maximum value
+of 255 for all three i.e. rgb(255,255,255) is white, the minimum value of 0
+for all three i.e. rgb(0,0,0) is black. All the colors of the spectrum fall
+between these two and take varying values for these three components.
+</table>
+<p>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

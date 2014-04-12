@@ -1,0 +1,150 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{$lang_cmlang_terms_title}</title>
+	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
+<script language="javascript" type="text/javascript">
+var categories = tinyMCE.getWindowArg("categories");
+
+function categoryChange()
+{
+    var f = document.getElementById('cmlangtermsform');
+    if( !f ) return;
+    var terms = categories[f.categories.value];
+    f.terms.options.length = 0;
+    var i = 0;
+    for( var t in terms ) {
+	f.terms.options[i++] = new Option(t, t);
+    }
+    f.terms.value = f.terms.options[0].value;
+    termChange();
+}
+
+function getTerm()
+{
+    var f = document.getElementById('cmlangtermsform');
+    if( !f ) return null;
+
+    var c = f.categories.value;
+    if( !c ) return null;
+    var terms = categories[c];
+    if( !terms ) return null;
+    return terms[f.terms.value];
+}
+
+function termChange()
+{
+    var f = document.getElementById('cmlangtermsform');
+    if( !f ) return null;
+
+    var term = getTerm();
+    if( !term ) return;
+
+    f.termname.value = term.name();
+    f.defaultval.value = term.getVal("default");
+    f.sanskrit.value   = term.getVal("sanskrit");
+    f.telugu.value     = term.getVal("telugu");
+    f.tamil.value      = term.getVal("tamil");
+    f.kannada.value    = term.getVal("kannada");
+    f.malayalam.value  = term.getVal("malayalam");
+}
+
+function insertVariable()
+{
+    var term = getTerm();
+    if( term ) {
+	var callback = tinyMCE.getWindowArg("callback");
+	if( callback ) callback.onInsertVariable(term);
+    }
+    tinyMCEPopup.close();
+}
+
+
+function cmLangTermsInit() 
+{
+    var b = document.getElementById("cmlangterms_body");
+    var f = document.getElementById('cmlangtermsform');
+    if( f ) {
+	var i = 0;
+	for( var c in categories )
+	    f.categories.options[i++] = new Option(c, c);
+
+
+	f.categories.value = f.categories.options[0].value;
+	categoryChange();
+	f.categories.onChange = categoryChange;
+
+	f.terms.onChange = termChange;
+    }
+}
+
+</script>
+	<base target="_self" />
+</head>
+<body id="cmlangterms_body" onload="tinyMCEPopup.executeOnLoad('cmLangTermsInit();');" style="display: none">
+    <form id="cmlangtermsform">
+    <div align="center">
+	<div class="title">{$lang_cmlang_terms_title}</div>
+	    <table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+		    <td>
+			<b>Category:</b><br/>
+			<select name="categories" onchange="categoryChange();" size="10"></select>
+		    </td>
+		    <td>
+			<b>Terms:</b><br/>
+			<select name="terms" ondblclick="insertVariable();" onchange="termChange();" size="10"></select>
+		    </td>
+		    <td>
+			&nbsp;</br>
+			<table style="font-size:small;">
+			    <tr>
+				<td><b>Name:</b></td>
+				<td> 
+				<input id="name" name="termname" type="text"></input>
+				</td>
+				<td colspan=2"> &nbsp;</td>
+			    </tr>
+			    <tr>
+				<td> <b>Default Value:</b> </td>
+				<td> <input name="defaultval" type="text"></input> </td>
+			    </tr>
+			    <tr>
+				<td> <b>Sanskrit:</b> </td>
+				<td> <input name="sanskrit" type="text" value=""></input> </td>
+			    </tr>
+			    <tr>
+				<td> <b>Telugu:</b> </td>
+				<td> <input name="telugu" type="text" value=""></input> </td>
+			    </tr>
+			    <tr>
+				<td> <b>Kannada:</b> </td>
+				<td> <input name="kannada" type="text" value=""></input> </td>
+			    </tr>
+			    <tr>
+				<td> <b>Tamil:</b> </td>
+				<td> <input name="tamil" type="text" value=""></input> </td>
+			    </tr>
+			    <tr>
+				<td> <b>Malayalam:</b> </td>
+				<td> <input name="malayalam" type="text" value=""></input> </td>
+			    </tr>
+			</table>
+		    </td>
+		</tr>
+		<tr>
+		    <td style="height:1.0em;"></td>
+		    <td style="height:1.0em;"></td>
+		<tr>
+		    <td colspan="3">
+			<center>
+			    <input type="button" onclick="insertVariable();" value="OK"></input>
+			    &nbsp;&nbsp;
+			    <input type="button" onclick="tinyMCEPopup.close();" value="Cancel"></input>
+			</center>
+		    </td>
+		</tr>
+	    </table>
+	</div>
+    </form>
+</body>
+</html>

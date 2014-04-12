@@ -1,0 +1,60 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+function testSteps() 
+{
+   var err;
+   var songView = loadEditor( 'songdata' );
+
+   var h = TestUtils.getHeading(songView);
+   if( !h ) 
+       return "test error: cannot locate heading";
+   songView.selectObject(h);
+
+   TestUtils.selectHeadingFontSize(8);
+   h = songView.getSelected();
+   err = TestUtils.validateHeadingView(h, null, null, null, null, "8", null, null );
+   if( err != null ) return err;
+
+   songView.selectNextObject(h);
+   h = songView.getSelected();
+   TestUtils.selectHeadingFontSize(12);
+
+   err = TestUtils.validateHeadingView(h, null, null, null, null, "12", null, null );
+   if( err != null ) return err;
+
+   songView.selectNextObject(h);
+   var h = songView.getSelected();
+   TestUtils.selectHeadingFontSize(24);
+
+   err = TestUtils.validateHeadingView(h, null, null, null, null, "24", null, null );
+   if( err != null ) return err;
+
+   return null;	// all steps ran
+}
+var testCases = new Array();
+testCases[testCases.length] = new SimpleAutoTestCase("Heading Format Test (font sizes)","top heading 8, next heading 12, and next 24", testSteps);
+
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="TestUtils.runScript(testCases);" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="2">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="Courier" fontsize="18" bold="false" italic="false" text="Heading 1 (should be 8)" align="center"></HEADING>
+<HEADING font="Courier" fontsize="18" bold="false" italic="false" text="Heading 2 (should be 12)" align="center"></HEADING>
+<HEADING font="Courier" fontsize="18" bold="false" italic="false" text="Heading 3 (should be 24)" align="center"></HEADING>
+<HEADING font="Courier" fontsize="18" bold="false" italic="false" text="Heading 4" align="center"></HEADING>
+</PARTS>
+</SONG>
+</XML>
+<div id="testresult" style="display:none">
+</div>
+</body>
+</html>

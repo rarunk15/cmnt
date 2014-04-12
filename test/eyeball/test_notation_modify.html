@@ -1,0 +1,107 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+var songView;
+var swaraRow = null;
+function test1() {
+   songView = loadEditor( 'songdata' );
+
+   var h = TestUtils.getHeading(songView);
+   if( !h ) return "test error: cannot locate heading";
+
+   var s = songView.getNextSelectableObject(h);
+   if( s == null || s == h || !s.rowView ) return "test error: cannot locate swara row";
+
+   swaraRow = s.rowView();
+
+   return TestUtils.validateSwaraRow( swaraRow,
+	   	new Array(   "s:0:0:false:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+			     "m:0:0:false:false",
+			     "|",
+			     "p:0:0:false:false",
+			     "d:0:0:false:false",
+			     "|",
+			     "n:0:0:false:false",
+			     "s:1:0:false:false",
+			     "||"));
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Validate initial swaras", "confirm that s to s (tara stayi) are on one swara row", test1 );
+
+function testModifySwara() {
+   var results = new Array(  "n:-1:0:false:false", 
+	   		     "s:0:0:false:false",
+	   		     "r:0:0:true:true",
+			     "m:0:0:false:false",
+			     "|",
+			     "p:0:0:false:false",
+			     "d:0:0:false:false",
+			     "|",
+			     "n:0:0:false:false",
+			     "s:1:0:false:false",
+			     "||");
+    songView.selectObject(swaraRow.firstSelectable());
+    TestUtils.sendTextToSwaraLabelBox("n`sr");
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "failed replacing first 3 swaras with n`sr: " + err;
+    return err;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Validate replacing consecutive swaras", "confirm first 3 swaras are replaced by n` s r (selected, edited)", testModifySwara );
+
+function testModifySwara2() {
+   var results = new Array(  "n:-1:0:false:false", 
+	   		     "s:0:0:false:false",
+	   		     "r:0:0:false:false",
+			     ",:0:0:false:false",
+			     "|",
+			     "g:0:0:false:false",
+			     "-:0:0:false:false",
+			     "|",
+			     "n:0:0:true:false",
+			     "s:1:0:false:false",
+			     "||");
+    TestUtils.sendTextToSwaraLabelBox(",g-", true );
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "failed replacing next 3 swaras with ,g-: " + err;
+    return err;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Validate replacing consecutive swaras", "confirm next 3 swaras are replaced by , g - swaras and we have advanced to next", testModifySwara2 );
+
+function runTest() 
+{
+    window.setTimeout( "TestUtils.runScript(testCases);", 1000 );
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="1">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="ninnukOri varnam" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="0" len="1"></S>
+<S label="r" octave="0" speed="0" len="1"></S>
+<S label="g" octave="0" speed="0" len="1"></S>
+<S label="m" octave="0" speed="0" len="1"></S>
+<S label="p" octave="0" speed="0" len="1"></S>
+<S label="d" octave="0" speed="0" len="1"></S>
+<S label="n" octave="0" speed="0" len="1"></S>
+<S label="s" octave="1" speed="0" len="1"></S>
+</SWARAS>
+<LYRICS>
+</LYRICS>
+</BLOCK>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

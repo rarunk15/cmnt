@@ -1,0 +1,157 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+var songView;
+var swaraRow = null;
+
+function nothingSelected() {
+    songView = loadEditor( 'songdata' );
+
+
+    // assuming nothing is selected - validate that all items are grayed
+	// bring up insert menu
+    var err;
+    TestUtils.showInsertMenu();
+
+    err = TestUtils.validateMenu( mainMenu.getEditMenu(), 
+	   TestUtils.constructInsertMenuShortHand( new Array( false, false, false, false, false, false, false )));
+    return err;
+}
+
+   
+function headingSelected() {
+    mainMenu.getEditMenu().hide();
+    // select the heading
+    var h = TestUtils.getHeading(songView);
+    if( !h ) return "test error: cannot locate heading";
+    songView.selectObject(h);
+
+    // bring up insert menu and validate its display
+    TestUtils.showInsertMenu();
+    err = TestUtils.validateMenu( mainMenu.getEditMenu(), 
+	   TestUtils.constructInsertMenuShortHand( new Array( true, true, true, true, false, false, false )));
+    return err;
+}
+
+function firstSwaraRowSelected() {
+    mainMenu.getEditMenu().hide();
+    // select first swara in first row
+   songView.selectNextObject();
+
+    // bring up insert menu and validate its display (note: append notation grayed)
+    TestUtils.showInsertMenu();
+    err = TestUtils.validateMenu( mainMenu.getEditMenu(), 
+	   TestUtils.constructInsertMenuShortHand( new Array( true, true, true, true, false, true, true )));
+    return err;
+}
+
+
+function secondSwaraRowSelected() {
+    mainMenu.getEditMenu().hide();
+    // select first swara in next row
+    var row = songView.getNextSelectableRow(songView.getSelected().rowView());
+    songView.selectObject(row.firstSelectable());
+
+    // bring up insert menu and validate its display (note: append notation enabled)
+    TestUtils.showInsertMenu();
+    err = TestUtils.validateMenu( mainMenu.getEditMenu(), 
+	   TestUtils.constructInsertMenuShortHand( new Array( true, true, true, true, true, true, true )));
+    return err;
+}
+
+function thirdSwaraRowSelected() {
+    mainMenu.getEditMenu().hide();
+
+    // select first swara in third row
+    var row = songView.getNextSelectableRow(songView.getSelected().rowView())
+    row = songView.getNextSelectableRow(row);
+    songView.selectObject(row.firstSelectable());
+
+    // bring up insert menu and validate its display (note: add lyrics grayed as row already has lyrics)
+    TestUtils.showInsertMenu();
+    err = TestUtils.validateMenu( mainMenu.getEditMenu(), 
+	   TestUtils.constructInsertMenuShortHand( new Array( true, true, true, true, true, false, true )));
+
+    mainMenu.getEditMenu().hide();
+    return err;
+}
+
+testCases[testCases.length] = new SimpleAutoTestCase("Validate Edit menu", 
+    						     "Edit Menu display when nothing is selected (all disabled)", nothingSelected);
+testCases[testCases.length] = new SimpleAutoTestCase("Validate Edit menu", 
+    						     "Edit Menu display when heading is selected", headingSelected);
+testCases[testCases.length] = new SimpleAutoTestCase("Validate Edit menu", 
+    						     "Edit Menu display when first swara row is selected (append notation disabled)", firstSwaraRowSelected);
+testCases[testCases.length] = new SimpleAutoTestCase("Validate Edit menu", 
+    						     "Edit Menu display when second swara row is selected (append notation enabled)", secondSwaraRowSelected);
+testCases[testCases.length] = new SimpleAutoTestCase("Validate Edit menu", 
+    						     "Edit Menu display when third swara row is selected (add lyrics disabled)", thirdSwaraRowSelected);
+
+function runTest() 
+{
+    window.setTimeout( "TestUtils.runScript(testCases);", 1000 );
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="0">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="Insert Menu Test" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="0" len="1"></S>
+<S label="r" octave="0" speed="0" len="1"></S>
+<S label="g" octave="0" speed="0" len="1"></S>
+<S label="m" octave="0" speed="0" len="1"></S>
+<S label="p" octave="0" speed="0" len="1"></S>
+<S label="d" octave="0" speed="0" len="1"></S>
+<S label="n" octave="0" speed="0" len="1"></S>
+<S label="s" octave="1" speed="0" len="1"></S>
+<S label="s" octave="0" speed="0" len="1"></S>
+<S label="r" octave="0" speed="0" len="1"></S>
+<S label="g" octave="0" speed="0" len="1"></S>
+<S label="m" octave="0" speed="0" len="1"></S>
+<S label="p" octave="0" speed="0" len="1"></S>
+<S label="d" octave="0" speed="0" len="1"></S>
+<S label="n" octave="0" speed="0" len="1"></S>
+<S label="s" octave="1" speed="0" len="1"></S>
+</SWARAS>
+<LYRICS>
+</LYRICS>
+</BLOCK>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="Insert Menu Test" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="0" len="1"></S>
+<S label="r" octave="0" speed="0" len="1"></S>
+<S label="g" octave="0" speed="0" len="1"></S>
+<S label="m" octave="0" speed="0" len="1"></S>
+<S label="p" octave="0" speed="0" len="1"></S>
+<S label="d" octave="0" speed="0" len="1"></S>
+<S label="n" octave="0" speed="0" len="1"></S>
+<S label="s" octave="1" speed="0" len="1"></S>
+</SWARAS>
+<LYRICS>
+<l label="sa"></l>
+<l label="ri"></l>
+<l label="ga"></l>
+<l label="ma"></l>
+<l label="pa"></l>
+<l label="dha"></l>
+<l label="ni"></l>
+<l label="sa"></l>
+</LYRICS>
+</BLOCK>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

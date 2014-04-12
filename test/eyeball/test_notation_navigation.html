@@ -1,0 +1,369 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+var songView;
+var swaraRow = null;
+function test1() {
+   songView = loadEditor( 'songdata' );
+
+   var h = TestUtils.getHeading(songView);
+   if( !h ) return "test error: cannot locate heading";
+
+   var s = songView.getNextSelectableObject(h);
+   if( s == null || s == h || !s.rowView ) { return "test error: cannot locate swara row"; }
+
+   swaraRow = s.rowView();
+
+   return TestUtils.validateSwaraRow( swaraRow,
+	   	new Array(   "s:0:0:false:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+			     "m:0:0:false:false",
+			     "|",
+			     "p:0:0:false:false",
+			     "d:0:0:false:false",
+			     "|",
+			     "n:0:0:false:false",
+			     "s:1:0:false:false",
+			     "||"));
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Validate initial swaras", "confirm that s to s (tara stayi) are on one swara row", test1 );
+
+function testRightKey() 
+{
+   var results = new Array(  "s:0:0:true:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+			     "m:0:0:false:false",
+			     "|",
+			     "p:0:0:false:false",
+			     "d:0:0:false:false",
+			     "|",
+			     "n:0:0:false:false",
+			     "s:1:0:false:false",
+			     "||");
+
+    songView.selectObject(swaraRow.firstSelectable());
+    var err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "select s failed: " + err;
+
+    // send RIGHT key, selection should move to "r"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[0] = "s:0:0:false:false";
+    results[1] = "r:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at s failed: " + err;
+
+    // send RIGHT key, selection should move to "g"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[1] = "r:0:0:false:false";
+    results[2] = "g:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at r failed: " + err;
+
+    // send RIGHT key, selection should move to "m"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[2] = "g:0:0:false:false";
+    results[3] = "m:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at g failed: " + err;
+
+    // send RIGHT key, selection should move to "p"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[3] = "m:0:0:false:false";
+    results[5] = "p:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at m failed: " + err;
+
+    // send RIGHT key, selection should move to "d"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[5] = "p:0:0:false:false";
+    results[6] = "d:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at p failed: " + err;
+
+    // send RIGHT key, selection should move to "n"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[6] = "d:0:0:false:false";
+    results[8] = "n:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at d failed: " + err;
+
+    // send RIGHT key, selection should move to "s'"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[8] = "n:0:0:false:false";
+    results[9] = "s:1:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at n failed: " + err;
+
+    // send RIGHT key, selection should remain at "s'"
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "RIGHT while at tara-s failed: " + err;
+
+    return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Navigation (Right Key)", "right key works within swara row", testRightKey );
+
+function testLeftKey() 
+{
+   var results = new Array(  "s:0:0:false:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+			     "m:0:0:false:false",
+			     "|",
+			     "p:0:0:false:false",
+			     "d:0:0:false:false",
+			     "|",
+			     "n:0:0:false:false",
+			     "s:1:0:true:false",
+			     "||");
+
+    songView.selectObject(swaraRow.lastSelectable());
+    var err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "select s' failed: " + err;
+
+    // send LEFT key, selection should move to "n"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[9] = "s:1:0:false:false";
+    results[8] = "n:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at s failed: " + err;
+
+    // send LEFT key, selection should move to "d"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[8] = "n:0:0:false:false";
+    results[6] = "d:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at n failed: " + err;
+
+    // send LEFT key, selection should move to "p"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[6] = "d:0:0:false:false";
+    results[5] = "p:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at d failed: " + err;
+
+    // send LEFT key, selection should move to "m"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[5] = "p:0:0:false:false";
+    results[3] = "m:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at p failed: " + err;
+
+    // send LEFT key, selection should move to "g"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[3] = "m:0:0:false:false";
+    results[2] = "g:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at m failed: " + err;
+
+    // send LEFT key, selection should move to "r"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[2] = "g:0:0:false:false";
+    results[1] = "r:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at g failed: " + err;
+
+    // send LEFT key, selection should move to "s"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[1] = "r:0:0:false:false";
+    results[0] = "s:0:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at r failed: " + err;
+
+    // send LEFT key, selection should remain at "s'"
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "LEFT while at n failed: " + err;
+
+    return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Navigation (Left Key)", "left key works within swara row", testLeftKey );
+
+function testHomeEndKey() 
+{
+   var results = new Array(  "s:0:0:true:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+			     "m:0:0:false:false",
+			     "|",
+			     "p:0:0:false:false",
+			     "d:0:0:false:false",
+			     "|",
+			     "n:0:0:false:false",
+			     "s:1:0:false:false",
+			     "||");
+    songView.selectObject(swaraRow.firstSelectable());
+    var err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "select s' failed: " + err;
+
+    // send END key, selection should move to s'
+    TestUtils.sendEndKeyToSwaraLabelBox();
+    results[0] = "s:0:0:false:false";
+    results[9] = "s:1:0:true:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "END while at s failed: " + err;
+
+    // send END key, selection should remain at s'
+    TestUtils.sendEndKeyToSwaraLabelBox();
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "END while at s' failed: " + err;
+
+    // send HOME key, selection should move back to s
+    TestUtils.sendHomeKeyToSwaraLabelBox();
+    results[0] = "s:0:0:true:false";
+    results[9] = "s:1:0:false:false";
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "HOME while at s' failed: " + err;
+
+    // send END key, selection should remain at s
+    TestUtils.sendHomeKeyToSwaraLabelBox();
+    err = TestUtils.validateSwaraRow( swaraRow, results);
+    if( err != null ) return "HOME while at s failed: " + err;
+
+    return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Navigation (HOME/END Key)", "home/end key works in swara row", testHomeEndKey );
+
+function testStayiSpeedDisplayDuringNavigation() 
+{
+    var row = songView.getNextSelectableRow(swaraRow);
+    if( !row ) return "failed to locate second swara row";
+
+    row = songView.getNextSelectableRow(row);
+    if( !row ) return "failed to locate second swara row";
+
+    songView.selectObject(row.firstSelectable());
+
+    var results = new Array(  "s:0:0:true:false", 
+	   		      "p:1:1:false:false",
+	   		      "s:-1:2:false:false",
+			     "<new>:false:false" );
+    var err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( 0 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/1" );
+    if( err != null ) return "failed while at s during RIGHT key test: " + err;
+
+    // RIGHT key moving to p'
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[0] = "s:0:0:false:false";
+    results[1] = "p:1:1:true:false";
+    var err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( 1 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/2" );
+    if( err != null ) return "failed while at p' during RIGHT key test: " + err;
+
+    // RIGHT key moving to s`
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[1] = "p:1:1:false:false";
+    results[2] = "s:-1:2:true:false";
+    err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( -1 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "failed while at s` during RIGHT key test: " + err;
+
+    // RIGHT key moving to spacer
+    TestUtils.sendRightKeyToSwaraLabelBox();
+    results[2] = "s:-1:2:false:false";
+    results[3] = "<new>:true:true";
+    err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( 0 );	// default to madya
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/4" );	// speed of last swara
+    if( err != null ) return "failed while at spacer during RIGHT key test: " + err;
+
+    // LEFT key moving to s`
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[3] = "<new>:false:false";
+    results[2] = "s:-1:2:true:false";
+    err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( -1 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "failed while at s` during LEFT key test: " + err;
+
+    // LEFT key moving to p'
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[2] = "s:-1:2:false:false";
+    results[1] = "p:1:1:true:false";
+    err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( 1 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/2" );
+    if( err != null ) return "failed while at p' during LEFT key test: " + err;
+
+    // LEFT key moving to s
+    TestUtils.sendLeftKeyToSwaraLabelBox();
+    results[1] = "p:1:1:false:false";
+    results[0] = "s:0:0:true:false";
+    err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( 0 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/1" );
+    if( err != null ) return "failed while at s during LEFT key test: " + err;
+
+    // END key moving to spacer
+    TestUtils.sendEndKeyToSwaraLabelBox();
+    results[0] = "s:0:0:false:false";
+    results[3] = "<new>:true:true";
+    err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( 0 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/4" );
+    if( err != null ) return "failed while at s during END key test: " + err;
+
+    // HOME key moving to spacer
+    TestUtils.sendHomeKeyToSwaraLabelBox();
+    results[0] = "s:0:0:true:false";
+    results[3] = "<new>:false:false";
+    err = TestUtils.validateSwaraRow( row, results);
+    if( err == null ) err = TestUtils.validateStayiSelector( 0 );
+    if( err == null ) err = TestUtils.validateSpeedSelector( "1/1" );
+    if( err != null ) return "failed while at s during HOME key test: " + err;
+    return err;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Stayi/Speed selector display", "Stayi/Speed selectors update correctly as we navigate across a swara row", testStayiSpeedDisplayDuringNavigation);
+
+function runTest() 
+{
+    window.setTimeout( "TestUtils.runScript(testCases);", 1000 );
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="0">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="ninnukOri varnam" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="0" len="1"></S>
+<S label="r" octave="0" speed="0" len="1"></S>
+<S label="g" octave="0" speed="0" len="1"></S>
+<S label="m" octave="0" speed="0" len="1"></S>
+<S label="p" octave="0" speed="0" len="1"></S>
+<S label="d" octave="0" speed="0" len="1"></S>
+<S label="n" octave="0" speed="0" len="1"></S>
+<S label="s" octave="1" speed="0" len="1"></S>
+</SWARAS>
+<LYRICS>
+</LYRICS>
+</BLOCK>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="3 swaras, different speeds, different octaves" align="center"></HEADING>
+<BLOCK>
+<SWARAS>
+<S label="s" octave="0" speed="0" len="1"></S>
+<S label="p" octave="1" speed="1" len="1"></S>
+<S label="s" octave="-1" speed="2" len="1"></S>
+</SWARAS>
+<LYRICS>
+</LYRICS>
+</BLOCK>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

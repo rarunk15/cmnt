@@ -1,0 +1,99 @@
+.body
+{
+    padding:0 0 0 0;
+    margin:0 0 0 0;
+    font-family:Lucida Grande,Verdana,Arial,Sans-Serif;
+    font-size: 80%;
+}
+
+.tocitem
+{
+    color:#800000;
+    onclick=alert('hi');
+}
+
+.tocitem A:visited
+{
+    color:#800000;
+}
+
+.toclink
+{
+    font-size: small;
+    text-decoration: none;
+    border: thin solid #808080;
+    background-color: #c0c0c0;
+}
+
+.tocclose
+{
+    text-decoration: none;
+    border: thin solid #808080;
+    background-color: #c0c0c0;
+}
+
+.toc
+{
+    background-color: #ffffff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: none;
+    z-index: 900;
+    border: thin groove #00000;
+}
+
+.helpcontent
+{
+    padding:5 5 5 5; 
+    height:450;
+    overflow:scroll;
+}
+
+.indic
+{
+    font-family:Akshar Unicode,Arial Unicode MS;
+    display:inline;
+}
+
+.cmvar
+{
+    color: #000080;
+    background-color: #c0c0c0;
+}
+
+.button
+{
+    background-color:#c0c0c0;
+    border:1px solid #000000; 
+}
+
+.optbutton
+{
+    font-family: Lucida, Courier;
+    color: #000000;
+    background-color:#f0f0f0;
+    border: 1px solid;
+    font-weight: normal;
+    margin-right: 0.80em;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size:50%;
+}
+
+.scheme
+{
+    font-size: 90%;
+    display: inline;
+    color:#000080;
+    background-color:#f0f0f0;
+    border: 1px solid #c0c0c0;
+    font-weight: bold;
+}
+
+h2, h3, h4
+{
+    color: #800000;
+}

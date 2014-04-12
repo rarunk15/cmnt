@@ -1,0 +1,96 @@
+@media screen,print
+{
+.langArea {
+    height:400;
+    padding-top: 0;
+    display:none;
+    margin:5 5 5 5;
+    font-family: Latha,Arial Unicode MS,Lucida Sans Unicode;
+}
+
+.tabMain {
+    padding-top: 0;
+}
+
+.langAreaContent {
+    padding-top: 0;
+    margin:5 5 5 5;
+    /*font-family: Latha,Arial Unicode MS,Lucida Sans Unicode;*/
+}
+
+div.li {
+    display: inline;
+}
+
+sup
+{
+    font-size: 6pt;
+    vertical-align: super;
+}
+
+.button
+{
+    font-family: Lucida, Courier;
+    color: #000000;
+    background-color:#f0f0f0;
+    border: 1px solid;
+    font-weight: normal;
+    cursor: pointer;
+    margin-right: 0.80em;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size:50%;
+}
+
+p {
+    margin:0;
+    padding:0;
+}
+
+}
+
+@media screen
+{
+
+.linkback {
+    display: block;
+    font-weight: bold;
+}
+
+.linkbackbutton {
+    color: #000000;
+    background-color:#f0f0f0;
+    border: 2px groove;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 0.80em;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+}
+
+@media print
+{
+
+.linkback {
+    display: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+.editorform {
+    display: none;
+}
+
+}

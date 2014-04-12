@@ -1,0 +1,180 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript">
+function closeToc () {
+    document.getElementById('toc').style.display='none';
+}
+function gotoSection(sec) {
+    closeToc();
+    var content = document.getElementById('contents');
+    var secnode = document.getElementById(sec);
+    if( content && secnode )
+	content.scrollTop = secnode.offsetTop - content.offsetTop;
+}
+
+function sch(txt) { return '<span class="scheme">' + txt + '</span>'; }
+
+function schchoice(txt, delim) { 
+    var l = txt.length;
+    var idx = 0;
+    var pattern;
+    var t = "";
+    if( !delim ) delim = '/';
+    while(idx < l) {
+	var cidx = txt.indexOf(delim,idx);
+	if( cidx >= 0 ) {
+	    pattern = txt.substring(idx,cidx);
+	}
+	else
+	    pattern = txt.substring(idx);
+	t += sch(pattern);
+	if( cidx < 0 )
+	    break;
+	else
+	    t += delim;
+	idx = cidx+delim.length;
+    }
+    document.write(t);
+}
+</script>
+<style type="text/css" media="all">
+	@import "cmhelp.css";
+</style>
+</head>
+<body class="body">
+<div>
+<br>
+&nbsp;<a class="toclink" href="#" onclick="document.getElementById('toc').style.display='block'">Table of Contents</a><br>
+<hr>
+<div id="toc" class="toc">
+    <center><h3>Table of Contents</h3></center>
+    <ul>
+	<li><a class="tocitem" onclick="gotoSection('Top');" href="#">Help</a></li>
+	<ul>
+	    <li><a class="tocitem" onclick="gotoSection('Usage');" href="#">General Usage</a></li>
+	    <li><a class="tocitem" onclick="gotoSection('Printing');" href="#">Printable View, Printing</a></li>
+	    <li><a class="tocitem" onclick="gotoSection('Variables');" href="#">Variables - what are they and how to use them</a></li>
+	    <ul>
+		<li><a class="tocitem" onclick="gotoSection('InsertVariables');" href="#">How to insert a variable</a></li>
+		<li><a class="tocitem" onclick="gotoSection('ConvertToVariable');" href="#">How to convert normal text to a variable</a></li>
+		<li><a class="tocitem" onclick="gotoSection('ConvertAllToVar');" href="#">Find and replace suitable words to variables</a></li>
+	    </ul>
+	    <li><a class="tocitem" onclick="gotoSection('Miscellaneous');" href="#">Miscellaneous</a></li>
+    </ul>
+    <p>
+    <center><a class="tocclose" href="#" onclick="document.getElementById('toc').style.display='none'">Close</a></center>
+</div>
+<div id="contents" class="helpcontent">
+<center>
+<h3><a id="Top" name="Top"></a>Help <span "style=font-size:medium;font-weight:regular;"></span></h3>
+</center>
+The Carnatic Music Transliterator allows you to create text for carnatic music 
+compositions in a "unified" transliteration scheme so that it can be 
+effectively rendered in all the carnatic music languages (sanskrit, telugu, tamizh, kannada
+and malayalam).  See <a href="/cmtranslit/cmtranslit_scheme.html" target="Scheme">Unified Transliteration Scheme for Carnatic
+Music Compositions</a> for more information on the scheme.
+<h3><a id="Usage" name="Usage"></a>General Usage</h3>
+You can either start typing from scratch, or you can paste HTML or word content. Use the various
+formatting buttons on top to create text in <b>bold</b>, <i>italic</i>, <u>underline</u>, and also
+to create bullet list, numbered lists, headings etc. As mentioned above, the text is expected to be
+in the <a href="/cmtranslit/cmtranslit_scheme.html" target="Scheme">unified transliteration scheme for carnatic music</a>
+<p>
+Once you have created the text, you use the
+<img style="background-color:#c0c0c0;border:1px solid #000000;" align="top" src="images/translate.png"></img> button to 
+translate to the various languages. Use the tabs on top to switch between different languages
+<table>
+    <tr>
+	<td>
+</table>
+</p>
+<p>
+<h4>Paragraphs (RETURN) and newlines (Shift+RETURN)</h4>
+When entering text, if you press the RETURN key, the editor will create a new 
+paragraph. If you instead want to new just a new line without the additional space 
+taken by paragraph, press Shift key while pressing the RETURN key.
+<h3><a id="Printing" name="Printing"></a>Printable View, Printinng</h3>
+Once you have translated the transliteration text to the target languages, you can switch to a printable view
+using the <b>Printable View</b> link the bottom. This view includes only the contents for the
+selected language(s), which you can then print to your printer using the print options of the browser. 
+<h4>Getting back to the editor - the Back link</h4>
+The printable view, includes a <b>Back</b> link to take you back to the editor. You should use
+this link and <u>not</u> the Back button of your browser.  Note that as desired, the <b>Back</b> link 
+will not be included in your hard copy print.
+<h4>Including more than one language in printable view</h4>
+By default, the printable view will include the translation for the currently selected target language. So,
+if you are currently viewing Telugu, and you click on the <b>Printable View</b> link, the printable
+view will include only the Telugu rendition. You can include multiple languages, and also control the 
+order in which the languages appear by changing the print options. 
+<p>
+To view the print options,
+click on the <span class="optbutton">+</span> button next to the <b>Printable View</b> link. This will show two lists
+side by side with two buttons <span class="optbutton">&gt;&gt;</span> and <span class="optbutton">&lt;&lt;</span>
+in-between. The left side list contains all the languages including a special entry <i>&lt;Current&gt;</i> to
+indicate the currently selected language. The right side list contains the languages that will be included
+in the printable view in the order they appear in the list. Use the <span class="optbutton">&gt;&gt;</span>
+button to add a language to the printable view. Use the <span class="optbutton">&lt;&lt;</span>
+button to remove a language from the printable view.
+<h3><a id="Variables" name="Variables"></a>Variables - what are they and how to use them</h3>
+Some common terms which appear in carnatic music books <b>outside</b> of the
+actual lyrics (i.e. sAhitya) have various spelling and pronounciations in the different languages.
+For example, "Raga" (as in raga of the krithi), is rAga in kannada but rAgam in 
+tamizh. So if you enter it as rAga in the input, then the translation would be inappropriate for tamizh as
+it would appear as <span class="indic">&#x0BB0;&#x0BBE;&#x0B95;</span> in tamizh. On the other hand, if you specify it
+as rAgam, then it would appear as <span class="indic">&#x0CB0;&#x0CBE;&#x0C97;&#x0C82;</span>, which is less than ideal than
+<span class="indic">&#x0CB0;&#x0CBE;&#x0C97;</span>. There are many many examples of such terms in this category:
+<ul>
+    <li> The term for language as in of a krithi (<b>bAsha</b> in sanskrit, kannada, but <b>bashai</b> or 
+    the better <b>mozhi</b> in tamizh), 
+    <li> Names of composers such as <b>tyAgarAja</b> (which would be spelt as <b>tiyAgarAjar</b> in tamizh)
+    <lb> Some raga names  like AbhOgi (<b>abhOgi</b> in kannada, telugu), kAmbhOji (<b>kAmbOdi</b> in tamizh)
+</ul>
+<p>
+<u>Currently, the list of variables are pre-defined, and only a handful are supported at this
+point </u>
+<p>
+To solve this problem, the editor has the concept of a <b>variable</b>, which is a term in
+the input that translates to different words according to the language.  There are several ways of 
+introducing variables into the content that needs to be transliterated. 
+<h4><a id="InsertVariables" name="InsertVariables"></a>How to insert a variable</h4>
+To insert a variable at the current location, you click on the 
+<img class="button" align="top" src="images/cmlangterms.png"></img>
+button. This will bring up a window from which you can select the variable you want to insert. The inserted
+variable will be shown in blue text with a gray background (e.g. <span class="cmvar">rAga</span>).
+<h4><a id="ConvertToVariable" name="ConvertToVariable"></a>How to convert normal text to a variable</h4>
+If you have already entered in a text, you can tell the editor to convert it into a variable by
+clicking on <img class="button" align="top" src="images/cvtlangterm.png"></img> button. The editor
+will grab the current word, and search the list of pre-defined variables for a match. It will
+compare the current word against the english transliteration for <u>all</u> of the languages
+for a match. If a match is found, it will transform the current word into a variable (which
+will turn it into bluex text against a gray background). 
+<p>
+Note that the text in the english translation, would be the text you entered. This points at
+an advantage of using the <img class="button" align="top" src="images/cvtlangterm.png"></img>
+button vs. the <img class="button" align="top" src="images/cmlangterms.png"></img> button
+in that you have more control over how the text appears in the english "translation". For 
+example, for the the variable for raga, if you use the <img class="button" src="images/cmlangterms.png"></img> 
+button, the english text will always be rAga. However, with this approach, your input text could be any one of
+rAga, raga, Raga, rAgam, rAgamu etc., and all these will convert to the same variable, and the english 
+"translation" will retain the original text.
+<h4><a id="ConvertAllToVar" name="ConvertAllToVar"></a>Find and replace suitable words to variables</h4>: If you are pasting text from an existing 
+source, then it may be convenient to click on the <img class="button" align="top" src="images/cvtlangtermsall.png"></img> button. This will
+search the text for words that are suitable for translation to variables.  This can save the trouble of
+figuring out which words in your text should be variables.  Words that are suitable are ones that appear in bold 
+amongst themselves, as in the context of headings, and also words in a certain form (e.g. Raga: i.e. a word that 
+matches a variable value and is followed by a colon). 
+<p>
+Of course, using the <img class="button" align="top" src="images/cvtlangtermsall.png">
+may not always work flawlessly, in which case you can use the other approaches to insert new variables,
+and convert individual words to variables.
+<h3><a id="Miscellaneous" name="Miscellaneous"</a>Miscellanous</h3>
+<h4>Remove hyperlinks</h4>
+If you are pasting text from an existing HTML source (as in a web-page), you may
+want to remove the anchors which are usually shown underlined in a browser, which you may not want in
+your transliterated content. You can do this by clicking on the 
+<img class="button" align="top" src="../../themes/advanced/images/cleanup.gif"></img> button.
+<h4>Clear Contents</h4>
+Use <img class="button" align="top" src="../../themes/advanced/images/newdocument.gif"></img> button to
+clear the contents of the editor.
+</div>
+</body>
+</html>

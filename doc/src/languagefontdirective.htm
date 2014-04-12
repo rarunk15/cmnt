@@ -1,0 +1,46 @@
+<h3 style="page-break-before:always;">LanguageFont Directive</h3>
+The <span class="syntax2">LanguageFont</span> directive can be used to direct the
+typesetter to use a specific default font for all notation content that are rendered
+in a specific language. If your swaras and lyrics are in telugu, and you have a mixture
+of headings in english, telugu and sanskrit - you can specify multiple LanguageFont
+directives to ask the typesetter to use a specific telugu font, sanskrit font and an
+english font. Note that the LanguageFont is optional, and if not specified the browser
+simply picks an appropriate font if available. Also whatever font you specify must be
+available on your system in order for the typesetter to be able to render the content
+properly.
+<p>
+The syntax of the <span class="syntax2">LanguagFont</span> directive is as follows:
+<div class="sc"><span class="syntax2">LanguagFont: attributes</span></div>
+where <i>attributes</i> is a comma separated list of one or more of the following:<ul>
+    <li><i>language</i>: The language whose font is being specified by this directive. This is
+     one of English, Sanskrit, Telugu, Tamil or Kannada. Note that for English with diacritics
+     some fonts may display better than others.
+    <li><i>font name</i>: The name of the font 
+</ul>
+<p>
+<p>
+Here are some examples of usages of the <span class="syntax2">LanguageFont</span> directive:
+<p>
+<table class="mytable" style="font-size:100%;width:100%;">
+<tr class="mytr">
+<td>
+<span class="syntax2">LanguageFont: Sanskrit,Akshar Unicode</span>
+<td>
+Sets the font to use for all Sanskrit content to the <i>Akshar Unicode</i> font.
+<tr class="mytr">
+<td>
+<span class="syntax2">LanguageFont: English,Courier</span>
+<td>
+Sets the font to use for all english content to the <i>Courier</i> font.
+</table>
+<p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.5</b>: Support for English with diacritics</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

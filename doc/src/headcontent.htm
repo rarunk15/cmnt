@@ -1,0 +1,133 @@
+<head>
+<title>Carnatic Music Notation Typesetter (v1.5 Beta)</title>
+<script type="text/javascript">
+var codeBase = "../"; 
+</script>
+<script type="text/javascript" src="../src/editor.js"></script>
+<script type="text/javascript">
+var fragments = new Array();
+function renderSongFragment(viewTag, modelTag, prefix)
+{
+    var o = new Object();
+    fragments[fragments.length] = o;
+    o.viewTag = viewTag;
+    o.modelTag = modelTag;
+    if( prefix )
+	o.prefix   = prefix;
+}
+
+function renderFragments() 
+{
+    LookAndFeel.init(document.body, editorCodeBase + "src/l_and_f", true);
+    GamakaManager.init(document.getElementById("gamakatester"));
+    setTimeout("_renderFragments()",1000);
+}
+
+function _renderFragments() 
+{
+    var i;
+    useTopPadForSwaras = true;
+    spanNotationTableEntireWidth = false;
+    for( i = 0; i < fragments.length; i++ ) {
+	var o = fragments[i];
+
+	var modelObj = document.getElementById(o.modelTag);
+	var viewObj = document.getElementById(o.viewTag);
+	if( modelObj != null && viewObj ) {
+	    var p = modelObj;
+	    var m = null;
+	    if( p.className && (p.className == "syntax" || p.className == "syntax2") ) {
+		var v = "";
+		if( o.prefix ) {
+		    v = o.prefix;
+		    v += "\n";
+		}
+		v += p.firstChild.nodeValue;
+		var s = Song.prototype.fromRawText(v);
+		if( s != null && s.fResult ) {
+		    var sv = new SongView(s.fResult, 1, false, s.fResult.getSpeedMarksPreference());	// 1 => # of tala cycles per row
+		    sv.fPageWidth = 0;
+		    sv.fPageHeight = 6;
+		    sv.setInteractive(false);
+		    sv.render(viewObj);
+
+		    var fTable = sv.firstPage().fInner.firstChild;
+		    fTable.parentNode.removeChild(fTable);
+		    sv.getContents().parentNode.removeChild(sv.getContents());
+		    viewObj.removeChild(viewObj.firstChild);
+		    viewObj.appendChild(fTable);
+		    fTable.style.padding = "0 0 0 0";
+		    if( fTable.rows[0].className == "guiderow" )
+			    fTable.deleteRow(0);	/* delete the guide row */
+		}
+	    }
+	}
+    }
+}
+</script>
+<style type="text/css" media="print">
+.mytr > td
+{
+    border: thin solid #c0c0c0;
+}
+</style>
+<style type="text/css" media="screen">
+.mytr > td
+{
+    border: thin solid;
+}
+</style>
+<style type="text/css">
+.mytable
+{
+    border-collapse: collapse;
+}
+
+.mytable > tr > td
+{
+    border: thin solid;
+}
+
+
+.sc {
+    margin-left: 0.25in;
+    margin-right: 0.25in;
+    margin-top: 0.1in;
+    margin-bottom: 0.1in;
+    page-break-inside: avoid;
+}
+.songfragment {
+    margin-left: 0.25in;
+    margin-top: 0.1in;
+    margin-bottom: 0.1in;
+    display:table-cell;
+}
+.syntax {
+    /*border: thin solid #f0f0f0;*/
+    font-family: monospace;
+    font-size: 11;
+    vertical-align: bottom;
+    color: #000080;
+    padding-top: 5;
+    padding-bottom: 5;
+    padding-left: 5;
+    padding-right: 5;
+    white-space: pre;
+    display: table-cell;
+    page-break-inside: avoid;
+}
+
+.syntax2 {
+    font-family: monospace;
+    font-size: 11;
+    color: #000080;
+    white-space: pre;
+}
+
+.songfragment {
+    padding: 0 0 0 0;
+    display: table-cell;
+}
+</style>
+</head>
+

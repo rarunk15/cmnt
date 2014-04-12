@@ -1,0 +1,65 @@
+<h2 style="page-break-before:always;">Directives - in detail</h2>
+Each line of the input format contains a directive. The syntax of a directive 
+is the directive name, followed by a colon, which is then followed by the 
+directive value:<br>
+<div class="sc"><span class="syntax">directive_name:directive_value</span></div>
+<p>
+For example:
+<div class="sc">
+<span class="syntax">Tala: Adi
+S: s r g m | p d | n s
+</span>
+</div>
+<p>
+<b><i>Directive names are case insensitive</i></b>. There can be spaces around the colon 
+separating the directive name and the value. Also in most places, more than
+one space is <=> one space. So all the following <i>Tala</i> and <i>S</i> 
+(for swaras) directives are equivalent to each other:
+<div class="sc">
+<span class="syntax">tala: Adi
+	tALa: Adi
+	Tala: Adi
+	Tala : Adi
+	Tala:                      Adi
+	Tala            :     Adi
+
+	S: s r g m | p d | n s
+	S: s   r   g   m | p d |   n s
+</span>
+</div>
+Spacing is flexible so that you can give whatever spacing that is needed to make the input format
+itself readable.
+<p>
+<b><i>Header vs. Body section</i></b>: The specification of the song in this format 
+is roughly divided into 2 sections: <ul>
+<li>The header portion where you specify overall attributes for the song. Certain
+<i>directives</i> must appear in the header portion only.
+<li>The main body where you specify the swaras and the associated lyrics. You
+can also specify headings for different portions of the song here. Certain
+<i>directives</i> cannot appear in the body portion and must appear only in
+the header portion
+</ul>
+<p>
+There is no clear demarcation between the header and the body portion. Basically the
+first heading or swara or lyric signals the start of the body portion.
+#include "defaultspeeddirective.htm"
+#include "headingdirective.htm"
+#include "headingprefsdirective.htm"
+#include "gamakaprefsdirective.htm"
+#include "gatidirective.htm"
+#include "languagedirective.htm"
+#include "languagefontdirective.htm"
+#include "layoutdirective.htm"
+#include "linebreakdirective.htm"
+#include "lyricdirective.htm"
+#include "lyricprefsdirective.htm"
+#include "orientationdirective.htm"
+#include "pagebreakdirective.htm"
+#include "phraseendsdirective.htm"
+#include "songbreakdirective.htm"
+#include "smartlyricmodedirective.htm"
+#include "speedmarksdirective.htm"
+#include "swaradirective.htm"
+#include "swaraprefsdirective.htm"
+#include "taladirective.htm"
+#include "titledirective.htm"

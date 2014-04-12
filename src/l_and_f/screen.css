@@ -1,0 +1,41 @@
+#mybody {
+    overflow: hidden;
+    background: rgb(224,224,224);
+}
+.WorkspaceOuter {
+    height: 6in;
+    overflow: auto;
+}
+.WorkSpace {
+    padding: 0.5em 0.5em 0.5em 0.5em;
+}
+.Editor {
+    border: 1px solid; 
+    background: rgb(224,224,224);
+}
+.CmdArea {
+    /* border: 1px solid;  */
+    background: rgb(224,224,224);
+}
+.SongContainer {
+    background: rgb(224,224,224);
+}
+.Page {
+    border: 1px solid;
+}
+#audiodiv {
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+.SongBreak {
+    /*background: rgb(240,240,240);*/
+    /*height: 0.05in;*/
+}
+#Splitter {
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+.NormalViewLink {
+	display: block;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+}

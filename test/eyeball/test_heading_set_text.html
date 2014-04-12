@@ -1,0 +1,85 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../../";</script>
+<script type="text/javascript" src="../../../src/editor.js"></script>
+<script type="text/javascript">
+function getHeading(songView) {
+   var page = songView.fFirstPart;
+   var r = null;
+   if( page ) {
+       r = page.fFirstPart;
+       while( r ) {
+	   if( r.isSelectable() ) {
+	       break;
+	   }
+	   r = r.next;
+       }
+   }
+   if( !r || r.partType() != PAGEVIEWPART_HEADING ) return null;
+   return r;
+}
+
+function testStep_setHeading(h)
+{
+   var htb = toolBarsManager.getHeadingToolBarManager();
+   var lblBox = htb.getLabelBox();
+   lblBox.getTextBox().value = "ninnuKori varnam";
+   lblBox.onChange();
+   return true
+}
+
+function testSteps() 
+{
+   var songView = loadEditor( 'songdata' );
+
+   var h = getHeading(songView);
+   if( !h ) 
+       return "test error: cannot locate heading";
+   songView.selectObject(h);
+
+
+   if( !testStep_setHeading(h)) 
+       return "test error: unable to set heading";
+
+   return null;	// all steps ran
+}
+
+function runTest() 
+{
+    var err = null;
+    var checkMsg = "check if heading is changed to ninnuKori varnam, and is selected"
+    try
+    {
+	err = testSteps();
+    }
+    catch(e)
+    {
+	err = "got exception trying to run test: " + e;
+    }
+    if( err ) 
+	top.testDriver.document.eyeballTestFailed(checkMsg, err);
+    else
+    	top.testDriver.document.eyeballTestComplete(checkMsg);
+}
+
+function cleanup() 
+{
+    unloadEditor();
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="2">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="" align="center"></HEADING>
+</PARTS>
+</SONG>
+</XML>
+<div id="testresult" style="display:none">
+</div>
+</body>
+</html>

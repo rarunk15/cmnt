@@ -1,0 +1,46 @@
+<h3 style="page-break-before:always;">Orientation Directive</h3>
+The <span class="syntax2">Orientation</span> directive controls whether the typesetter
+should layout the notation in portrait (8 inches width by 11 inches height) or in
+landscape (11 inches width by 8 inches height) mode. The default is portrait mode,
+and should serve well for most situations. However, if your notations are too wide
+(e.g. long tala cycles) you may want to use the Landscape mode.
+<p>
+You can also specify to override the default page margins value which is 0.25 inches 
+on all sides (left, right, top and bottom).
+<p>
+The <span class="syntax2">Orientation</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">Orientation: &lt;value&gt;</span>
+<br><br>(or)<br><br>
+<span class="syntax2">Orientation: &lt;value&gt;&lt;margin-specifiers&gt;</span>
+</div>
+where,
+<ul>
+    <li><span class="syntax2">&lt;value&gt;</span> must be either <span class="syntax2">portrait</span> or
+        <span class="syntax2">landscape</span>.
+    <li><span class="syntax2">&lt;margin-specifiers&gt;</span> is a comma separated list of one or more of the
+        following:
+        <ul>
+            <li><span class="syntax2">left:&lt;margin-value&gt;</span> to specify a value (in inches) for
+	    the left margin (e.g. <span class="syntax2">left:0.15</span> for 0.15 inches left margin)
+            <li><span class="syntax2">right:&lt;margin-value&gt;</span>, to specify a value (in inches) for
+	    the right margin.
+            <li><span class="syntax2">top:&lt;margin-value&gt;</span>, to specify a value (in inches) for
+	    the top margin.
+            <li><span class="syntax2">bottom:&lt;margin-value&gt;</span>, to specify a value (in inches) for
+	    the bottom margin.
+        </ul>
+</ul>
+<p>
+As mentioned above, the default setting is to portrait, and so an explicit
+<span class="syntax2">Orientation: portrait</span> is not strictly needed.
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.5 Beta</b>: Introduced page margin overrides</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

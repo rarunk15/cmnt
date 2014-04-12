@@ -1,0 +1,331 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+var songView;
+function test1() {
+   songView = loadEditor( 'songdata' );
+
+   var h = TestUtils.getHeading(songView);
+   if( !h ) return "test error: cannot locate heading";
+   songView.selectObject(h);
+
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("g");
+
+   return TestUtils.validateSwaraView(songView.getSelected(), 0, 0, "g", true, true);
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add g", "confirm that g is added and we are still editing it", test1 );
+
+function test2() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("ga");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "ga", false, false);
+   if( err != null ) return "failed on ga: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateNewSwaraSpacerView(s, true, true);
+   if( err != null ) return "failed on new empty slot: " + err;
+
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add ga", "confirm that ga is added and we have advanced to a new empty entry", test2 );
+
+function test3() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("g-");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "g", false, false);
+   if( err != null ) return "failed on g: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "-", false, false);
+   if( err != null ) return "failed on -: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateNewSwaraSpacerView(s, true, true);
+   if( err != null ) return "failed on new empty slot: " + err;
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add g-", "confirm that g, - is added, and we have advanced to a new empty entry", test3 );
+
+function test4() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("ga-");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "ga", false, false);
+   if( err != null ) return "failed on ga: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "-", false, false);
+   if( err != null ) return "failed on -: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateNewSwaraSpacerView(s, true, true);
+   if( err != null ) return "failed on new empty slot: " + err;
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add ga-", "confirm that ga is added, were is added, and we have advanced to a new empty entry", test4);
+
+function test5() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("g--");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "g", false, false);
+   if( err != null ) return "failed on g: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "-", false, false);
+   if( err != null ) return "failed on first -: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "-", false, false);
+   if( err != null ) return "failed on second -: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateNewSwaraSpacerView(s, true, true);
+   if( err != null ) return "failed on new empty slot: " + err;
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add g--", "confirm that g, -, -, were added, and we have advanced to a new empty entry", test5);
+
+function test6() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("srgr");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "s", false, false);
+   if( err != null ) return "failed on s: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "r", false, false);
+   if( err != null ) return "failed on first r: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "g", false, false);
+   if( err != null ) return "failed on g: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "r", true, true);
+   if( err != null ) return "failed on second r: " + err;
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add srgr", "confirm that s, r, g, r (being edited) were added", test6);
+
+function test7() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("pdns'");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "p", false, false);
+   if( err != null ) return "failed on p: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "d", false, false);
+   if( err != null ) return "failed on d: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "n", false, false);
+   if( err != null ) return "failed on n: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 1, 0, "s", true, true);
+   if( err != null ) return "failed on s: " + err;
+
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add pdns'", "confirm that p, d, n, s (tara, being edited) were added", test7);
+
+function test8() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("pdns'np");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "p", false, false);
+   if( err != null ) return "failed on first p: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "d", false, false);
+   if( err != null ) return "failed on d: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "n", false, false);
+   if( err != null ) return "failed on first n: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 1, 0, "s", false, false);
+   if( err != null ) return "failed on s: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "n", false, false);
+   if( err != null ) return "failed on second n: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "p", true, true);
+   if( err != null ) return "failed on second p: " + err;
+
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add pdns'np", "confirm that p, d, n, s (tara), n, p (being edited) were added", test8);
+
+function test9() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("p,p;n`p`");
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   var err = TestUtils.validateSwaraView(s, 0, 0, "p", false, false);
+   if( err != null ) return "failed on first p: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, ",", false, false);
+   if( err != null ) return "failed on ,: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, "p", false, false);
+   if( err != null ) return "failed on second p: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, 0, 0, ";", false, false);
+   if( err != null ) return "failed on ;: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, -1, 0, "n", false, false);
+   if( err != null ) return "failed on n: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, -1, 0, "p", true, true);
+   if( err != null ) return "failed on third p: " + err;
+
+   return null;
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add p,p;n`p`", "confirm that p, ',' (pause),  p, ';' (pause), n (mandra), p (mandra, being edited) were added", test9);
+
+function test10() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.sendTextToSwaraLabelBox("p");
+   TestUtils.selectSwaraOctave(1);
+
+   TestUtils.sendTextToSwaraLabelBox("d", true);	// true => append
+   TestUtils.selectSwaraOctave(-1);
+
+   var rowView = songView.getSelected().rowView();
+   var s = rowView.firstSelectable();
+
+   err = TestUtils.validateSwaraView(s, 1, 0, "p", false, false);
+   if( err != null ) return "failed on ,: " + err;
+
+   s = songView.getNextSelectableObject(s);
+   err = TestUtils.validateSwaraView(s, -1, 0, "d", true, true);
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add p'd` selecting octave via selector", "confirm that p (tara), d (mandra, being edited) were added", test10);
+
+function test11() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.selectSwaraSpeed(1);
+   TestUtils.sendTextToSwaraLabelBox("srgmpdns'" );
+   return TestUtils.validateSwaraRow(
+       songView.getSelected().rowView(), new Array( "s:0:0:false:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+	   		     "m:0:0:false:false",
+	   		     "p:0:0:false:false",
+	   		     "d:0:0:false:false",
+	   		     "n:0:0:false:false",
+	   		     "s:1:0:true:true",
+			     "|" ));
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Check if tala marker is added", "check s r g m p d n s' (selected, edited) is added followed by tala marker", test11);
+
+function test12() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.selectSwaraSpeed(1);
+   TestUtils.sendTextToSwaraLabelBox("srgmpdns's'ndp" );
+   return TestUtils.validateSwaraRow(
+       songView.getSelected().rowView(), new Array( "s:0:0:false:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+	   		     "m:0:0:false:false",
+	   		     "p:0:0:false:false",
+	   		     "d:0:0:false:false",
+	   		     "n:0:0:false:false",
+	   		     "s:1:0:false:false",
+			     "|",
+	   		     "s:1:0:false:false",
+	   		     "n:0:0:false:false",
+	   		     "d:0:0:false:false",
+	   		     "p:0:0:true:true",
+			     "|" ));
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Check if second tala marker is added", "add s to s' to p (selected, edited) are added followed by second tala marker", test12);
+
+function test13() {
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   TestUtils.selectSwaraSpeed(1);
+   TestUtils.sendTextToSwaraLabelBox("srgmpdns's'ndpmgrs" );
+
+   return TestUtils.validateSwaraRow(
+       songView.getSelected().rowView(), new Array( "s:0:0:false:false", 
+	   		     "r:0:0:false:false",
+	   		     "g:0:0:false:false",
+	   		     "m:0:0:false:false",
+	   		     "p:0:0:false:false",
+	   		     "d:0:0:false:false",
+	   		     "n:0:0:false:false",
+	   		     "s:1:0:false:false",
+			     "|",
+	   		     "s:1:0:false:false",
+	   		     "n:0:0:false:false",
+	   		     "d:0:0:false:false",
+	   		     "p:0:0:false:false",
+			     "|",
+	   		     "m:0:0:false:false",
+	   		     "g:0:0:false:false",
+	   		     "r:0:0:false:false",
+	   		     "s:0:0:true:true",
+			     "||" ));
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add s to s' and back to s", "check all rows contents including tala markers", test13);
+
+function runTest() 
+{
+    window.setTimeout( "TestUtils.runScript(testCases);", 1000 );
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="1">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="ninnukOri varnam" align="center"></HEADING>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

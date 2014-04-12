@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{$lang_cmlang_terms_title}</title>
+	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
+<script language="javascript" type="text/javascript">
+/**
+*
+*  AJAX IFRAME METHOD (AIM)
+*  http://www.webtoolkit.info/
+*
+**/
+AIM = {
+
+    frame : function(c) {
+        var n = 'f' + Math.floor(Math.random() * 99999);
+        var d = document.createElement('DIV');
+        d.innerHTML = '<iframe style="display:none" src="about:blank" id="'+n+'" name="'+n+'" onload="AIM.loaded(\''+n+'\')"></iframe>';
+        document.body.appendChild(d);
+
+        var i = document.getElementById(n);
+        if (c && typeof(c.onComplete) == 'function') {
+            i.onComplete = c.onComplete;
+        }
+
+        return n;
+    },
+
+    form : function(f, name) {
+        f.setAttribute('target', name);
+    },
+
+    submit : function(f, c) {
+        AIM.form(f, AIM.frame(c));
+        if (c && typeof(c.onStart) == 'function') {
+            return c.onStart();
+        } else {
+            return true;
+        }
+    },
+
+    loaded : function(id) {
+        var i = document.getElementById(id);
+        if (i.contentDocument) {
+            var d = i.contentDocument;
+        } else if (i.contentWindow) {
+            var d = i.contentWindow.document;
+        } else {
+            var d = window.frames[id].document;
+        }
+        if (d.location.href == "about:blank") {
+            return;
+        }
+
+        if (typeof(i.onComplete) == 'function') {
+            i.onComplete(d.body.innerHTML);
+        }
+    }
+
+}
+
+function startCallback() {
+    return true;
+}
+
+function completeCallback(response) {
+    if( response.indexOf( "Error: cannot open" ) >= 0 ) {
+	alert(response);
+	return;
+    }
+    var callback = tinyMCE.getWindowArg("callback");
+    tinyMCEPopup.close();
+    if( callback )
+	callback.onLoad(response);
+}
+
+</script>
+	<base target="_self" />
+</head>
+<body id="cmload_body" style="display: none">
+    <form name="cmloadform" id="loadform" 
+			method="post"
+			action="/cmtranslit/openfile.php" 
+			enctype="multipart/form-data"
+			onsubmit="return AIM.submit(this, {'onStart' : startCallback, 'onComplete' : completeCallback})">
+    <div align="center">
+	<div class="title">{$lang_cmlang_load_title}</div>
+	    <table width="100%" style="padding-top:1em" cellspacing="0" cellpadding="0">
+		<tr>
+		    <td colspan="3">
+			<b>Specify file to import:</b><br>
+		    </td>
+		<tr>
+		    <td colspan="3" style="height:0.5em;"></td>
+		<tr>
+		    <td>
+			<input type="hidden" name="MAX_FILE_SIZE" value="100000">
+			<input type="file" name="openfile" id="openfile" size="40">
+		    </td>
+		    <td>
+			&nbsp;
+		    </td>
+		</tr>
+		<tr>
+		    <td style="height:1.0em;"></td>
+		    <td style="height:1.0em;"></td>
+		<tr>
+		    <td colspan="3">
+		    <center>
+			<input type="submit" value="OK"></input>
+			&nbsp;&nbsp;
+			<input type="button" onclick="tinyMCEPopup.close();" value="Cancel"></input>
+		    </center>
+		    </td>
+		</tr>
+	    </table>
+	</div>
+    </div>
+    </form>
+</body>
+</html>

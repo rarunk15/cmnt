@@ -1,0 +1,163 @@
+<h3>Quick Start through an example</h3>
+To understand and quickly become familiar with the input format, let us look at 
+an example. Here is a short snippet of a song specified using an input format, and
+how it is rendered by the typesetter:
+<p>
+<div style="padding-left:0.25in;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">Input Format</span>
+<td>
+<div class="sc">
+<span id="ex1" class="syntax2">Tala: Adi
+DefaultSpeed: 1
+Heading: "brOva bhAramA - bahudAri - Adi - tyAgarAja",bold,italic,14,center
+Heading: ""
+Heading: "pallavi:",bold,left,12
+S: "1)" ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: "2)" m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L:      mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<td width="50%">
+<span class="songfragment" id="ex1_v">
+<script language="javascript">
+renderSongFragment("ex1_v", "ex1");
+</script>
+</span>
+</table>
+</div>
+<p>
+Let us now look at the input line by line.
+<p>
+<hr>
+<span class="syntax">#1: <span class="syntax2">Tala: Adi</span></span><br>
+This line contains a <i>Tala directive</i> that specifies catuSra gati Adi 
+tala as the tala for the song. Specifying the tala also controls how the 
+typesetter should layout the notation of the song and when and where 
+tala markers need to be placed. Check out the <b>Tala Directive</b> section 
+below for more information on the the various talas that can be specified 
+using the tala directive.
+<p>
+<hr>
+<span class="syntax"><span class="syntax2">#2: Heading: "brOva bhAramA - bahudAri - Adi - tyAgarAja",bold,italic,14,center</span><br>
+<span class="syntax2">#3: Heading: ""</span><br>
+<span class="syntax2">#4: Heading: "pallavi:",bold,left,12</span></span><br>
+These line contain <i>Heading directives</i>. Line #2 directs the typesetter 
+to place the text <i>brOva bhArama - bahudAri - Adi - tyAgarAja</i> in 
+14 point size, bold, and italic and centered on the notation display area.
+You can see in the typesetter output area above that this is how the heading 
+appears.
+<p>
+Line #3 specifies an heading directive with an empty heading. This simply results
+in an empty line in the typeset output, and can be used to introduce empty 
+vertical space wherever needed. 
+<p>
+Finally, Line #4 directs the typesetter to place a heading <i>pallavi:</i> in 12 
+point size, bold and aligned at the left edge of the display. 
+<p>
+Check out the <b>Heading Directive</b> section below for more information on
+the heading directive. The above examples are very simple and basic. There is a
+lot of power and flexibility available in specifying a heading, which 
+you can use to specify mixed bold, italic and underlined,  text in various 
+colors,  text that is tabular (i.e. rendered as a table), or text that is
+translated to an Indic language, or even insert an image!
+<p>
+<hr>
+<span class="syntax">#5: <span class="syntax2">S: "1)" ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||</span><br><br>...<br>
+#7: <span class="syntax2">S: "2)" m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||</span></span><br>
+These lines start with <span class="syntax2">S:</span>, a <i>Swara directive</i>,
+which specifies notation i.e. swaras for the song. Here are some key points to note
+in the syntax used to specify swaras:
+<ul>
+<li><i>Swara Labels</i>:
+<span class="syntax2">s</span>, 
+<span class="syntax2">r</span>, <span class="syntax2">g</span>, 
+<span class="syntax2">m</span> etc. indicate swaras, and 
+<span class="syntax2">sa</span>, <span class="syntax2">ri</span>, 
+<span class="syntax2">ga</span>, <span class="syntax2">ma</span> etc. indicate
+dhIrgha or elongated swaras. You can also specify a dhIrgha swara as 
+<span class="syntax2">n</span>, instead of <span class="syntax2">ni</span>. 
+<li>
+<li><i>Tara/Mandra Stayi Swaras</i>:
+To indicate a swara in tara stayi, use the forward-tick character as a suffix 
+as in <span class="syntax2">s<b>'</b></span> (as in Line #7) or 
+<span class="syntax2">sa<b>'</b></span>.  Similarly to indicate a swara in mandra 
+stayi, use the backward-tick character as <span class="syntax2">p<b>`</b></span> or 
+<span class="syntax2">pa<b>`</b></span>.
+<li><i>Pauses, Continuations</i>: The comma (<span class="syntax2"><b>,</b></span>), and 
+semi-colon (<span class="syntax2"><b>;</b></span>) are pauses/continuations, with the 
+latter being twice as long in duration as the former.
+<li><i>Switching speed/kAlam</i>:
+The parenthesis characters <span class="syntax2"><b>(</b></span>, and 
+<span class="syntax2"><b>)</b></span> are used to switch from normal speed to 
+higher speeds. But what is the normal speed? Since the above example did not 
+explicitly specify a layout (see <b>Layout Directive</b> below), the default
+layout is <i>krithi layout</i>. In the krithi layout, for catuSra gati (i.e. as
+per tala specified), swaras by default are in second speed i.e. 2 swaras per 
+akshara. So in the above example, the swaras outside of paranthese are in
+the default, second speed. However, phrases <span class="syntax2">p d n , </span>
+on line #5, and <span class="syntax2">p d n s' n pa ; </span> on line #7 are in
+third speed, and thus are rendered as such in the output. Note that the paranthesis
+must be separated by spaces on either side.
+<li><i>Tala Markers</i>:
+The special characters <span class="syntax2">|</span>, and 
+<span class="syntax2">||</span> indicate tala markers but they are only for
+clarity in the input for you as the user. They are simply skipped by the 
+typesetter which automatically determines where tala markers fall for the 
+current tala based on the duration of the swaras. In other words, you dont have
+to specify these in the input, their presence/absence has no effect on the 
+typeset output, but having them there may allow the input to be
+more understandable.
+<li><i>Sangati Labels</i>:
+Both the above swara directives here begin with a quoted string,
+which is a special indicator telling the typesetter to attach a label to the 
+left of the swara lines (and their associated lyric lines). The labels here are
+<i>1)</i> and <i>2)</i> respectively, and in this example are used to indicate
+the first and second sangatis of the pallavi. 
+<li><i>Gamaka specifiers</i>:
+Following the swara and the stayi suffix, certain characters or patterns are 
+allowed to indicate standard gamakas. In the example above, on Line #7, the 
+<span class="syntax2">m~</span>, with the tilde/wavy-line character (~) after m, 
+indicates the <i>kampita</i> gamaka for that madhyama swara. You can see in 
+the rendition that the gamaka is rendered as a glyph above the swara as shown
+in the typesetter output area above.
+<ul>
+<li>See the <b>Swara Directive</b> section below for more information on how to 
+specify gamakas. You can use special characters like ~ that map to specific 
+predefined glyphs, and also specify anuswaras.
+</ul>
+</ul>
+Check out the <b>Swara Directive</b> section below for more information.
+<p>
+Let us move on to the next couple of lines in the input.
+<p>
+<hr>
+<span class="syntax">#6: <span class="syntax2">L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,</span><br><br>...<br>
+#8: <span class="syntax2">L:      mA . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,</span><br></span><p>
+These lines starts with <span class="syntax2">L:</span>, a <i>lyric 
+directive</i>, which specifies lyrics associated with the swaras for the
+previous <i>swara directive</i> seen. Lyrics for the swaras are separated by 
+one or more spaces. It is important to note that you <b>must</b> specify 
+one lyric for every swara (including pauses) in the swara line. An empty 
+lyric can be specified using the underscore character 
+(<span class="syntax2">_</span>) as employed in this example. 
+It is also not uncommon to use a period (<span class="syntax2">.</span>)
+instead, particularly if the corresponding swara/continuation should be emphasized
+as with gamaka.
+<p>
+<i>It is not necessary to align the lyrics</i> against the swaras in the corresponding
+swara directive as done in the example above. The typesetter will automaticallly
+align them in the typeset output as shown above. Of course it makes the input a
+lot more readable if the lyrics are aligned against the swaras using spaces. Note
+also that in the typesetter program has a button that can automatically align the
+raw input itself automatically for you.
+<p>
+Check out the <b>Lyric Directive</b> section below for more information.

@@ -1,0 +1,275 @@
+<html>
+<head>
+<title>Testbed for a Common Transliteration Engine for Carnatic Music</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="cmtranslit_testbed.js"></script>
+<style type="text/css">
+.bf {
+    font-family: Akshar Unicode, Arial Unicode MS, Lucida Sans Unicode;
+    font-weight: bold;
+}
+.if {
+    font-family: Akshar Unicode, Arial Unicode MS, Lucida Sans Unicode;
+    font-style: italic;
+}
+.f {
+    font-family: Akshar Unicode, Arial Unicode MS, Lucida Sans Unicode;
+    font-size: 1em;
+}
+.heading {
+    font-size: 18;
+    font-weight:bold;
+}
+
+#intro {
+    padding-left:10;
+}
+</style>
+<script>
+var showIntro = true;
+var CMTransliterationTestBed = new CMTransliterationTestBedDefn();
+function onIntro(but,id) {
+    showIntro = !showIntro;
+    if( showIntro ) {
+	document.getElementById(id).style.display = "block";
+	but.value = "-";
+    }
+    else {
+	document.getElementById(id).style.display = "none";
+	but.value = "+";
+    }
+}
+
+function doImportExample(o) {
+    var dom = document.getElementById(o.value);
+    if( !dom ) {
+	alert( "cannot locate example data" );
+    	return;
+    }
+    var c = dom.firstChild;
+    if( !c.tagName ) 
+	c = c.nextSibling;
+    if( !c || !c.tagName || c.tagName.toLowerCase() != "contents" || !c.firstChild) {
+	alert( "cannot locate example data" );
+    	return;
+    }
+    var v = c.firstChild.nodeValue;
+    if( v == "" )
+	alert( "cannot locate example data" );
+    CMTransliterationTestBed.importText(v);
+}
+
+function onTamilQualSchemeChange(o) {
+    CMTransliterationTestBed.setTamilQualScheme(o.value);
+}
+
+function onSanskritAnuswaraChange(o)
+{
+    CMTransliterationTestBed.setSanskritAnuswara(o.value);
+}
+
+function init() {
+    CMTransliterationTestBed.init('ieform');
+    var o = document.getElementById('tamilqualscheme');
+    if(o) onTamilQualSchemeChange(o);
+}
+</script>
+</head>
+<body onload="init();" style="font-family:'Lucida Grande', Verdana, Arial, Sans-Serif;">
+<center><h3>Testbed for a Common Transliteration Engine for Carnatic Music</h3></center>
+<span style="font-size:75%;font-style:italic">
+<b>Note:</b>: This web-page contains characters in Sanskrit (Devanagiri), Telugu, 
+Kannada, Tamil and Malayalam. If they do not display correctly, then you need 
+to install proper fonts on your computer.  On Firefox, if the Indian language 
+characters do appear but are in the wrong order, please follow instructions given
+in this page: <a href="http://en.wikipedia.org/wiki/Wikipedia:Enabling_complex_text_support_for_Indic_scripts#Check_for_existing_support">http://en.wikipedia.org/wiki/Wikipedia:Enabling_complex_text_support_for_Indic_scripts#Check_for_existing_support</a>
+</span>
+<p>
+This web-page is a test-bed of the the 
+<a href="cmtranslit_scheme.html" target="Legend">Unified Transliteration Scheme for Carnatic Music Compositions</a>.
+<p>
+<!--
+<span style="font-size:small;font-style:italic">Note: Click on the minus button above to hide this introduction<p></span>
+-->
+<p>
+Type in the transliterated text in the edit box below and check how it is translated to the different 
+languages. Use the <i>New Line</i> button to create a new line of text. Use up-arrow and down-arrow keys 
+to navigate between lines. You can also click on any line to select it and then modify it.
+<p>
+You can also use a full-blown editor <a href="index.html">here</a>.
+<div id="ieformdiv" style="border:thick grooved;background:#cccccc;z-index:5;position:absolute; display:none">
+    <form id="ieform">
+	<table>
+	    <tr><td>
+		<span id="ieform_exportlab"><b>Copy the text to clipboard to export:</b></span>
+		<span id="ieform_importlab"><b>Type in (or paste) text in transliterated english to import:</b></span>
+		<span id="ieform_rawlab"><b>Edit transliterated english text:</b></span>
+	    <tr><td>
+		    <textarea id="ieform_textarea" style="overflow:scroll;word-wrap:normal;" name="textarea" type="textarea" rows="20" cols="80"></textarea>
+	    <tr><td>
+		<div>
+		    <center>
+		    <input id="ieform_ok" name="ok" type="button" value="&nbsp;OK&nbsp;" onclick="onIEFormOK()"> &nbsp; 
+		    <input id="ieform_cancel" name="cancel" type="button" value="Cancel" onclick="onIEFormCancel()">
+		    </center>
+		</div>
+	</table>
+    </form>
+</div>
+<hr>
+<p>
+<form>
+    <b>Example:</b>
+    <select name="example">
+	<option value="example1">Example 1: bhajarE rE mAnasa (sanskrit)</option>
+	<option value="example2">Example 2: O jagadamba (telugu) </option>
+	<option value="example3">Example 3: ambegAlikkutali (kannada)</option>
+	<option value="example4">Example 4: alai pAyudE (tamizh)</option>
+    </select>
+    <input type="button" value="Load Example" onclick="doImportExample(this.parentNode.example)">
+    <p>
+    <b>Type in text to translate:</b>
+    <input style="font-family:Arial Unicode MS;" id="input" type="text" size="90"></input>
+    <input type="button" value="New Line" onclick="CMTransliterationTestBed.onNewRow()">
+    <input type="button" value="Export ..." onclick="doExport(null)">
+    <input type="button" value="Import ..." onclick="doImport()">
+    <input type="button" value="Edit Entire Text ..." onclick="doEditRaw()">
+</form>
+<p>
+<table style="width:12in" border-collapse="collapse">
+<tr>
+    <td valign="top" style="padding:5 5 5 5; border: 1px solid #000000;background:rgb(218,218,218); width:6in">
+	<b>English</b>
+	<hr>
+	<div id="english" style="height:1.5in; overflow:auto"></td>
+    <td "style:width5px;"></td>
+    <td valign="top" style="padding:5 5 5 5; border: 1px solid #000000;background:rgb(218,218,218); width:6in">
+	    <b>Sanskrit</b>&nbsp;&nbsp;
+	    <input type="button" value="Export as HTML ..." onclick="doExport('sanskrit')"><br>
+	    <i style="font-size:8pt;">Anuswara Options (word-endings):</i>
+		<select style="font-size:8pt" value="auto" id="sanskritanuswara" 
+			name="sanskritanuswara" onchange="onSanskritAnuswaraChange(this);">
+		    <option selected value="auto">Use anuswara in middle of sentences, or if M is specified</option>
+		    <option value="forced">Use anuswara only if M is specified</option>
+		    <option value="never">Do not anuswara</option>
+		    <option value="always">Always use anuswara</option>
+		</select>
+	    <hr>
+	    <div id="sanskrit" style="height: 1.5in; overflow:auto"></div></td>
+<tr>
+    <td colspan="2" style="height:0.5em"></td>
+<tr>
+    <td valign="top" style="padding:5 5 5 5; border: 1px solid #000000;background:rgb(218,218,218); width:6in">
+	    <b>Telugu</b>&nbsp;&nbsp;<input type="button" value="Export as HTML ..." onclick="doExport('telugu')">
+	    <hr>
+	    <div id="telugu" style="height: 1.5in; overflow:auto"></div></td>
+    <td "style:width5px;"></td>
+    <td valign="top" style="padding:5 5 5 5; border: 1px solid #000000;background:rgb(218,218,218); width:6in">
+	<b>Kannada</b>&nbsp;&nbsp;<input type="button" value="Export as HTML ..." onclick="doExport('kannada')">
+	<hr>
+	<div id="kannada" style="height: 1.5in; overflow:auto"></div></td>
+<tr>
+    <td valign="top" style="padding:5 5 5 5; border: 1px solid #000000;background:rgb(218,218,218); width:6in">
+	<b>Tamil</b>&nbsp;&nbsp;<input type="button" value="Export as HTML ..." onclick="doExport('tamil')"><br>
+	<i style="font-size:8pt;">Qualifier Scheme:</i>
+	<select style="font-size:8pt" value="noqual" id="tamilqualscheme" name="tamilqualscheme" onchange="onTamilQualSchemeChange(this)">
+	    <option selected value="noqual">No Qualifiers</option>
+	    <option value="nohard">None always implies hard sounds (ka, ca, Ta, ta, pa)</option>
+	    <option value="natural">Qualifiers only when sound deviates from natural tamil rules</option>
+	</select>
+	<hr>
+	<div id="tamil" style="height: 1.5in; overflow:auto"></div>
+    <td "style:width5px;"></td>
+    <td valign="top" style="padding:5 5 5 5; border: 1px solid #000000;background:rgb(218,218,218); width:6in">
+	<b>Malayalam</b>&nbsp;&nbsp;
+	<input type="button" value="Export as HTML ..." onclick="doExport('malayalam')">
+	<hr>
+	<div id="malayalam" style="height: 1.5in; overflow:auto"></div></td>
+</table>
+<xml style="display:none" id="example1">
+<contents style="display:none">bhajarE rE mAnasa mahishAsura mardinIm
+nija bhakta jaya SubhadAyinIm
+
+bhavasAgara tAraka rUpam
+SrI vidyAm mahA kAma sundarI
+
+purA dEvAsura sangramE
+daitya mastakaccEda vinOdinIm
+harAdi dEva Sakti svarUpiNIm
+murAri mOhinIm mahAbalAdri vAsinIm
+nirantaram bhakta viSvAsinIm navadurgAm kAmAkshIm
+nitya pUrNa candrika vilAsinIm mahAbalAdri nivAsinIm</contents>
+</xml>
+<xml style="display:none" id="example2">
+<contents>O jagadamba nanu (amba) nIvu javamuna brOvu amba
+
+I jagatu gatiyau  janulaku maritEjamuna rAjavinutayau
+rAjamukhi sarOjanayana suguNarAjarAjitakAmAkshI
+
+kannatalli nAdu centaninta
+kannaDasalupagatagunA
+ninnu nE nammiyunnavADugadA
+nannokani brOcuTakarudA
+annibhuvanambulu gAcEvu pra-
+sannamUrtI annapUrNavaradA
+vinnapambu vinnavi~nci sannidhi 
+vipannabhayavimOcana dhaurEya
+
+jAlamEla SailabAla tALa
+jAlanu jananI ninnu vinA
+pAlanArthamuga vErE daivamula
+lOlamatiyai  nammitinA
+nIlakaNTharANI ninnu nammitini
+nijambuga balikEdi dayacEsi
+
+ca~ncalAtmuDEnu yEmi pUrva-
+sa~ncitamula salipitinO
+ka~ncikAmAkshI  nEnu ninnu poDa
+kA~ncitini SaraNu SaraNu nI-
+vi~ncukAca~ncalagAti nAdEsa-
+nu~ncavamma SyAmakR.shNavinuta
+ma~ncikIrti niccunaTTi dEni man-
+ni~nci nAdaparAdhamula sahi~nci
+
+varasitagiri-nilayuni-priyapraNayini parASakthi manavini vinumA
+mariyAdalerugani dushprabhulu kOrivinutimpaga varam bOsagi</contents>
+</xml>
+<xml style="display:none" id="example3">
+<contents>ambegAlikkutali banda gOvinda
+ambujanAbha dayadinda enna manege
+
+jalacara jalavASa dharaNidhara mrugarUpa
+nelanaLadu mUraDiya mADi banda
+kulanASa vanavAsa navanIta cOraniva
+lalaneyara vratabhanga vAhana turanga
+
+kaNNu biDuvanu tanna benna taggiSuvanu
+maNNu kedari kOrebAya teredu
+ciNNa bhArgava lakshmaNaNNa beNNaya kaLLa
+mAnava biTTu kudureyanEridE
+
+nIrapokkanu giriya negahi dharaNiya tandu
+naramR.ga balibandha koraLagoyika
+naramuridu OraLeLedu niravANi hayahatti
+purandara viTala manege tA banda</contents>
+</xml>
+<xml style="display:none" id="example4">
+<contents>alai pAyudE kaNNA! enmanam miga 
+alai pAyudE! un Ananda mOhana vENugAnamadil
+
+nilai peyarAdu silai pOlavE ninRa
+nEramAvadaRiyAmalE miga vinOdamAna muraLIdarA enmanam
+
+teLinda nilavu paTTappagalpOl eriyudE - un
+dikkai nOkki en iru puruvam neriyudE
+kaninda un vENugAnam kATRil varugudE
+kaNgaL sorugi oru vidamAy varugudE
+
+kaditta manattil uRutti padattai enakku aLittu magizhtavA - oru
+tanitta vanattil aNaittu enakku uNarci koDuttu pugazhtavA
+kanai kaDalalaiyinil kadiravan oLiyena iNaiyiru kazalena kanittavA
+kadaRi manamurugi nAn azhaikkavO idara mAdaruDan nI kaLikkavO
+idu tagumO idu muRaiyO - idu darumam tAnO
+kuzalUdiDum pozudADidum kuzaigaL pOlavE manadu vEdanai migavoDu</contents>
+</xml>
+</html>

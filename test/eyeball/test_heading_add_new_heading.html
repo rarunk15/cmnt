@@ -1,0 +1,63 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+
+function testSteps() 
+{
+   var songView = loadEditor( 'songdata' );
+
+   // select first heading
+   var h = TestUtils.getHeading(songView);
+   if( !h ) 
+       return "test error: cannot locate heading";
+   songView.selectObject(h);
+
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_TEXT_AFTER);
+
+   var nh1 = songView.getSelected();
+   if( nh1 == null || nh1 == h )
+       return "test error: new heading not added or not selected";
+
+   TestUtils.setHeadingText( "heading after");
+
+   songView.selectObject(h);
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_TEXT_BEFORE);
+
+   var nh2 = songView.getSelected();
+   if( nh2 == null || nh2 == h || nh2 == nh1 )
+       return "test error: new heading not added or not selected";
+   TestUtils.setHeadingText( "heading before");
+
+   var err;
+   err = TestUtils.validateHeadingView(nh1, null, false, ALIGN_CENTER, "Default", "Default", false, false );
+   if( err != null )
+       return "failed on new heading (after) :  " + err;
+
+   err = TestUtils.validateHeadingView(nh2, null, true, ALIGN_CENTER, "Default", "Default", false, false );
+   if( err != null )
+       return "failed on new heading (before) :  " + err;
+
+   return null;	// no errors
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Add Heading Above/Below another heading", 
+						"2 headings are added around ninnuKori varnam (centered, default font and size), and the one before is selected", testSteps);
+
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="TestUtils.runScript(testCases);" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="2">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="ninnuKori varnam" align="center"></HEADING>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+#include "headcontent.htm"
+<body>
+<script type="text/javascript">
+function selchanged(obj)
+{
+   var fr = document.getElementById("frame");
+   fr.src = "chapters/" + obj.value;
+}
+</script>
+<select onchange="selchanged(this);">
+<option value="None">None</option>
+<option value="intro.htm">intro.htm</option>
+<option value="quickstart.htm">quickstartdirective.htm</option>
+<option value="assist.htm">assist.htm</option>
+<option value="directives.htm">directives.htm</option>
+<option value="defaultspeeddirective.htm">defaultspeeddirective.htm</option>
+<option value="gamakaprefsdirective.htm">gamakaprefsdirective.htm</option>
+<option value="gatidirective.htm">gatidirective.htm</option>
+<option value="headingdirective.htm">headingdirective.htm</option>
+<option value="headingprefsdirective.htm">headingprefsdirective</option>
+<option value="languagedirective.htm">languagedirective.htm</option>
+<option value="languagefontdirective.htm">languagefontdirective.htm</option>
+<option value="layoutdirective.htm">layoutdirective.htm</option>
+<option value="lyricdirective.htm">lyricdirective.htm</option>
+<option value="lyricprefsdirective.htm">lyricprefsdirective.htm</option>
+<option value="orientationdirective.htm">orientationdirective.htm</option>
+<option value="phraseendsdirective.htm">phraseendsdirective.htm</option>
+<option value="songbreakdirective.htm">songbreakdirective.htm</option>
+<option value="speedmarksdirective.htm">speedmarksdirectivedirective.htm</option>
+<option value="swaradirective.htm">swaradirective.htm</option>
+<option value="swaraprefsdirective.htm">swaraprefsdirective.htm</option>
+<option value="taladirective.htm">taladirective.htm</option>
+</select>
+<p>
+<iframe id="frame" height="90%" width="100%">
+</iframe>
+
+</body>
+</html>

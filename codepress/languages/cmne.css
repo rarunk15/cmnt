@@ -1,0 +1,17 @@
+/*
+ * CodePress color styles for generic syntax highlighting
+ */
+
+/* reserved words */
+/* b, b em {color:#7F0055;font-weight:bold;}  */
+b, b em {color:#7F0055;font-weight:normal;} 
+/* special words */
+/* u {color:darkblue;font-weight:bold;}  */
+u {color:darkgreen; font-weight:normal;}
+/* comments */
+i, i b, i s, i u, i em {color:green;font-weight:normal;} 
+/* strings */
+s, s b, s em {color:#888888;font-weight:normal;} 
+#__me { font-weight: normal; }
+b u { color:darkblue; font-weight: bold; }
+

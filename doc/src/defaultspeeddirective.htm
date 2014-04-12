@@ -1,0 +1,87 @@
+<h3 style="page-break-before:always;">DefaultSpeed Directive</h3>
+The <span class="syntax2">DefaultSpeed</span> directive controls what the default speed
+of the swaras in a Swara Directive are. The speed here implies the duration of the swara.
+The typesetter current supports 3 speeds:
+<ul>
+<li><b>0</b> - which implies what is colloquially known as first speed, where each swara spans
+a full akshara.
+<li><b>1</b> - which implies what is colloquially known as second speed, where e.g. in 
+catusra gati, each swara spans half an aksara, or 2 swaras taken up an akshara. Note that
+in this speed for tIsra gati, 3 swaras take up 1 akshara. Similarly for khaNDa, miSra
+and sankIrNa gati, it would be 5, 7 and 9 swaras per akshara respectively.
+<li><b>2</b> - which implies what is colloquially known as third speed, where e.g. in 
+catusra gati, each swara spans quarter of an aksara, or 4 swaras taken up an akshara.
+For tiSra, khaNDa, miSra and sankIrNa gati it would be  6, 10, 14 and 19 swaras.
+</ul>
+<p>
+Note that depending on the layout (see Layout directive), an appropriate default speed
+is automatically set for you. The DefaultSpeed directive can be used to override that
+default. The value of the DefaultSpeed directive must be one of the above speeds. This
+implies that swaras at higher speeds will be shown with speed lines (above or below -
+see SpeedMarks directive). Note that there is no way to specify a speed that is
+<i>slower</i> than the default, and so e.g. if you pick a default speed as 1, then
+there is no way to specify swaras of speed 0. Hence you should pick such a speed
+only if there is no such need.
+<p>
+Here are some examples of usage of the DefaultSpeed directive. The varnam layout (see <b>Layout
+Directive</b>, while it may not be most appropriate to show various speeds, is used
+here for illustrative purposes, as it makes the typesetter show each akshara clearly:
+<p>
+<table class="mytable">
+<tr class="mytr">
+<td>
+<div class="syntax2" id="speed0">DefaultSpeed: 0 
+Layout: varnam
+Tala: Adi
+S: s r ( s r ( g m p d ) ) r g ( r g ( m p d n ) )
+</div>
+<td>
+<span class="songfragment" id="speed0_v">
+<script language="javascript">
+renderSongFragment("speed0_v", "speed0");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td>
+<div class="syntax2" id="speed1">DefaultSpeed: 1 
+Layout: varnam
+Tala: Adi
+S: sa ri s r ( g m p d ) ri ga r g ( m p d n )
+</div>
+<td>
+<span class="songfragment" id="speed1_v">
+<script language="javascript">
+renderSongFragment("speed1_v", "speed1");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td>
+<div class="syntax2" id="speed2">DefaultSpeed: 2 
+Layout: varnam
+Tala: Adi
+S: sa ; ri ; sa ri g m p d ri ; ga ; ri ga m p d n
+</div>
+<td>
+<span class="songfragment" id="speed2_v">
+<script language="javascript">
+renderSongFragment("speed2_v", "speed2");
+</script>
+</span>
+</td>
+</tr>
+</table>
+
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

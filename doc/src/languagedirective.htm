@@ -1,0 +1,265 @@
+<h3 style="page-break-before:always;">Language Directive</h3>
+The <span class="syntax2">Language</span> directive specifies two things:
+<ol>
+<li> The language in which to render the swaras (specified by Swara Directives) 
+and lyrics (specified by Lyric Directives). 
+<li> The <i>default</i> language in which to render the headings and other
+text specified by the Heading Directives. Note that <i>default</i> here
+implies that this is the language that will be in effect for an heading
+unless the Heading directive overrides it. Hence it is possible to include
+headings in different languages.
+</ol>
+<p>
+Using this directive you can tell the typesetter to show your notations 
+and headings in English with diacritics, Sanskrit, Telugu, Tamil or Kannada. Note that for 
+Lyric and Heading Directives, the typesetter would presume that lyrics are 
+specified in the <b>Unified Transliteration Scheme for Carnatic Music Compositions</b>, 
+and translate to the specified language for rendering.
+<p>
+If no Language directive is specified, swaras and lyrics are rendered as
+specified in input i.e. in English.
+<p>
+Here are some examples:<p>
+<table class="mytable" style="width:7in;">
+<tr class="mytr">
+<td>
+<span class="syntax2" id="diacritics">Tala: Adi
+Language: Diacritics
+Heading: "bRova bhAramA",12,center
+Heading: "(brOva bhAramA)",english,italic,9,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="diacritics_v" style="font-family:Lucida Grande;">
+<script language="javascript">
+renderSongFragment("diacritics_v", "diacritics");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="sanskrit">Tala: Adi
+Language: sanskrit
+Heading: "bRova bhAramA",12,center
+Heading: "(brOva bhAramA)",english,italic,9,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="sanskrit_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("sanskrit_v", "sanskrit");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="telugu">Tala: Adi
+Language: telugu
+Heading: "brOva bhAramA",12,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="telugu_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("telugu_v", "telugu");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="tamil">Tala: Adi
+Language: tamil
+Heading: "brOva bhAramA",12,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="tamil_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("tamil_v", "tamil");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="kannada">Tala: Adi
+Language: kannada
+Heading: "brOva bhAramA",12,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="kannada_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("kannada_v", "kannada");
+</script>
+</span>
+</td>
+</table>
+<h4>Extra language attributes</h4>
+The <span class="syntax2">Language</span> directive allows you to specify certain
+extra attributes in the language value, which control how the content in that
+language is rendered. A language directive with attribute values has the
+following syntax:
+<div class="sc">
+<span class="syntax2">Language: your_language:attr1:attr2</span>
+</div>
+where, 
+<ul>
+    <li><span class="syntax2">your_language</span> is one of 
+	<span class="syntax2">Sanskrit Telugu Tamil Kannada English</span>
+    <li><span class="syntax2">attr1</span> is the first attribute, and
+	    <span class="syntax2">attr2</span> is the second attribute etc.
+</ul>
+<p>
+Currently the following attributes are supported:
+<ul>
+    <li>One of <span class="syntax2">noqual nohard</span> to specify a Tamil
+    qualifier scheme - see <b>Tamil Qualifier Scheme</b> below for more information.
+    <li><span class="syntax2">granthasa,nogranthasa</span>, which is applicable only to
+    Tamil. It directs the typesetter to use or not use the 
+    <span style="font-family:code2000;">&#x0bb6;</span> character for 
+    <b>Sa</b> (as in Siva, Sakthi). The default is to not use, which implies 
+    <span style="font-family:Code2000;">&#x0bb8;<sub>2</sub></span> is used for <b>Sa</b>. 
+    Note however that the <span style="font-family:Code2000;">&#x0bb6;</span> character is 
+    a fairly recent addition to Unicode (in 2006) and hence it is supported only in a few
+    systems at this time. So you should use the <span class="syntax2">granthasa</span> specifier only
+    if your system can support it. Here are the current known configurations in which this character
+    is supported:
+    <ul>
+	<li>On Microsoft Vista, there is support at the system level for this character.
+	The Latha font that is part of the OS supports this font.  The system support is
+	by the Unicode rendering engine called <i>Uniscribe</i>, which is in the dll 
+	<i>usp10.dll</i>. The version of the dll that ships with Vista has this support
+	<li>On Microsoft XP, if Office 2007 is installed then the Unicode
+	rendering engine that is part of the Office 2007 at this time. However,
+	the rendering engine that is in use for the rest of the system is an older
+	version and does <i>not</i> support it. To make say <i>FireFox</i>
+	or <i>Opera</i> browsers to use the Office 2007's rendering engine, find
+	the <i>usp10.dll</i> under the Office 2007 installation directory tree, 
+	and copy the it into into the FireFox, Opera installation directory.
+	<p>
+	You would still need a Unicode font that supports the character. One such
+	font is <i>Code2000</i>, which is a shareware font available for download
+	at www.code2000.net.
+    </ul>
+    <li>A percentage value in the form <span class="syntax2">n%</span>
+    This controls the size of the qualifiers shown for languages like Tamil 
+    when displaying sounds not natural to the language. The qualifiers are shown 
+    as sup-scripted numbers and normally are shown in a point size that is 
+    closest 70% of the current font size. This may be too small or too big for
+    some fonts depending on user preference. In such cases, the size of the
+    qualifiers can be adjusted using this attribute in the <span class="syntax2">Language</span> directive.
+</ul>
+<p>
+For example <span class="syntax2">Language: Tamil:granthasa:90%</span> asks the
+typesetter to use <span style="font-family:Code2000;">&#x0bb6;</span> for <b>Sa</b>,
+and also show qualifiers (e.g. for <b>kha</b>, <b>gha</b> etc.) with a font 
+whose size is closest to 90% of the current font size for the Tamil language.
+<h4>Need for explicit specifiers in Lyric directives</h4>
+It would be common for lyric fragments (syllables) belonging to a word 
+to be specified as separate entities separated by spaces if they are 
+assigned to different swaras (as would be very common) - e.g. 
+<span class=syntax2">ninnukOri</span> would appear as <span class="syntax2">nin nu kO ri</span>.
+As a result, when applying interpreting a text in the Unified scheme
+for translation to a language, the typesetter cannot rely on spaces
+to imply word delimitors, and you may have to explicitly qualify 
+certain letters so that the typesetter renders them properly. This is
+explained in this expection.
+<p>
+<h4>Tamil: <span style="font-family:Code2000">&#x0ba8;</span> vs.  
+    <span style="font-family:Code2000">&#x0ba9;</span>.</h4>
+The Tamil script has two characters for the "na" sound - 
+<span style="font-family:Code2000">&#x0ba8;</span> 
+and 
+<span style="font-family:Code2000">&#x0ba9;</span>.
+The latter 
+<span style="font-family:Code2000">&#x0ba9;</span>.
+cannot appear at the beginning of the word. A phrase like say <i>manam nOgi</i> 
+is written as <span style="font-family:Code2000">
+&#x0BAE;&#x0BA9;&#x0BAE;&#x0BCD; &#x0BA8;&#x0BCB;&#x0B95;&#x0BBF;
+</span>, wherein both characters figure. 
+Note that at a word start like nOgi,
+<span style="font-family:Code2000">&#x0ba8;</span> figures. 
+Usually, in the Unified scheme,
+if specify <i>manam nOgi</i> (say in a Heading Directive), the translator
+will correctly translate as it would rely on space as word delimitor,
+and know that for nO, it should use <span style="font-family:Code2000">&#x0ba8;</span>.
+However, when appearing as lyrics in a notation as in a Lyric Directive, this phrase 
+could appear as <span class="syntax2">L: ma na m nO gi</span> where the syllables are sung as 
+separate swaras. Here, the typesetter cannot rely on spaces to determine
+word breaks - as that would result in the incorrect conclusion that each
+syllable is a separate word! Hence when interpreting lyric text, the 
+typesetter <u>always</u> assumes <span class="syntax2">na</span> stands for 
+<span style="font-family:Code2000">&#x0ba9;</span>, and to specify
+<span style="font-family:Code2000">&#x0ba8;</span>, you need to explicitly
+specify it as <span class="syntax2">^n</span> as in <span class="syntax2">ma na m ^nO gi</span>.
+<p>
+<h5>Use n2 as opposed to n^</h5>
+Note that there are two was of specifying 
+<span style="font-family:Code2000">&#x0ba8;</span>:  <span class="syntax2">n2</span> 
+or <span class="syntax2">n^</span>. However, since the caret character 
+(<span class="syntax2">^</span>) would be interpret as superscript indicator by
+<b>Wiky</b>, it is safer to always use <span class="syntax2">n2</span> in Heading directives
+<p>
+<h4>Tamil Qualifier Schemes</h4>
+As implied earlier, if you specify the language as <span class="syntax2">Tamil:noqual</span> then 
+no numeric subscript qualifiers (to distinguish ka, ga etc.) would be used. 
+Similarly <span class="syntax2">Tamil:nohard</span> would specify a qualifier scheme, where 
+qualifiers are used for the softer ga (but not for ka), and of course for gha, and kha, 
+which do not exist in tamil.
+<p>
+Note that <span class="syntax2">Tamil:natural</span> does exist for specifying a qualifier
+scheme where qualifiers are used only when sounds deviate from natural tamil language rules
+(e.g. gAnam where the soft gA occurs at the beginning of word and is not typical of native
+tamil words), this scheme's effectiveness is nullified in the lyric line. This is because
+the scheme relies on being able to reliably detect word beginnings, and as mentioned above,
+that is not possible in the lyric line. However, you should be able use it in the Heading directives.
+<p>
+For more information in Tamil Qualifier schemes, please refer to <a href="http://arunk.freepgs.com/cmtranslit/legend.html">
+The Unified Carnatic Music Transliteration Scheme - the legend</a>
+<p>
+<h4>Anuswara</h4>
+In languages like kannada and telugu, the anuswara character 
+<span style="font-family:Code2000">&#x200d;&#x0c82;</span>  is used instead #n, ~n, n, N and m
+in certain contexts. For example, in contexts shown in words <i>sa#ngIta</i>, 
+<i>pa~nca</i>, <i>candra</i>, <i>khaNDa</i>, <i>amba</i> etc. the anuswara character is 
+used instead of the #n, ~n, n and N respectively. Usually, in the Unified scheme, you can 
+specify these words as their fair phoenetic representation rather than as 
+<i>saMgIta, paMca, caMdra, khaMDa</i> and <i>aMba</i>. In fact, that is the recommended 
+way as it facilitates easy translation to other languages which may have different 
+anuswara rules. For example, Sanskrit has these same words but does not use the 
+anuswara in every case.
+<p>
+When specifying lyrics, as indicated above, a single word may appear as multiple fragments 
+separated by spaces. This means that you have to be careful as to whether the #n, ~n, n, N and m
+is specified in a separate fragment from its trailing consonant, which actually determines
+whether anuswara should be used. the translator will display the anuswara <u>only</u> if 
+both are together. So while <span class="sc2">L: ca ndra</span> will still be rendered 
+correctly with anuswara (<i>n</i> and the subsequent consonant <i>d</i> are
+still together), <span class="syntax2">L: ca n dra</span>,  <span class="syntax2">L: ca n . d ra</span>
+etc. will not. In such cases, you would need to explicitly specify the anuswara as in
+<span class="syntax2">L: ca M dra</span>,  <span class="syntax2">L: ca M . dra</span>. 
+Note however that this does compromise the ability to easily switch a notation to a 
+different language.
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.1</b>: Introduced extra language attributes - support for tamil 
+	<span style="font-family:Code2000;">&#x0bb6;</span>, qualifier size control</li>
+	<li><b>v1.5 beta</b>: Support for English with diacritics</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

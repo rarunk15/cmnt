@@ -1,0 +1,173 @@
+
+BUGS:
+
+shri_gayatri: 
+
+(These bugs should be fixed now)
+1. modify "ga" to g by keyboard doesn work
+2. modify "ga" to g by speed-selector doesnt work - splitting of swaras may be broken ever since
+   we went to fixed span of "1" (and align at tala markers only). We also know split swaras should
+   split length first, it doesnt do it
+3. Delete of "ga" while editing works but selection is broken - swaratoolbar.js doesnt update
+   selection correctly on deletes.
+
+
+
+<b>Heading Tests</b>
+Change Text of existing heading 	test_heading_set_text.html
+Turn bold on				test_heading_set_bold_italic_left.html
+Turn bold off				???
+Turn italic on				test_heading_set_bold_italic_left.html
+Turn italic off				???
+Change font family			test_heading_right_font.html
+Change font size			test_heading_set_fontsize.html
+Align Left 				test_heading_set_bold_italic_left.html
+Align Right 				test_heading_right_font.html
+Align Center				??? (is default so tested by all indirectly)
+Add Heading above a heading		test_heading_add_new_heading.html
+Add Heading below a heading		test_heading_add_new_heading.html
+Add Heading above a notation block	???
+Add Heading below a notation block	???
+Delete a heading			???
+
+Add Heading before/after in the middle of notation	???
+block (should be possible only if row
+starts tala) - block should be split correctly,
+do tests when selection is lyric row, and when it is not
+
+
+<b>Notation Data Entry Tests - adding to new row</b>
+enter single swara char (s)			test_notation_add_new (test1)
+enter lengthy swara (sa, ga, ma)		test_notation_add_new (test2)
+enter lengthy swara (ri, ni)			???
+enter lengthy swara as continuation (s-)	test_notation_add_new (test3)
+enter continuaation followed by lengthy swara 	test_notation_add_new (test4)
+enter continuation followed by continuation	test_notation_add_new (test5)
+enter swara char followed by swara char (sr)	test_notation_add_new (test6)
+enter tara stayi via keyboard (s')		test_notation_add_new (test7)
+enter tara stayi via selector			test_notation_add_new (test10)
+enter swara char following tara stayi (s'n)	test_notation_add_new (test8)
+enter mandra stayi via keyboard (s')		test_notation_add_new (test9)
+enter mandra stayi via selector			test_notation_add_new (test10)
+enter swara char following mandra stayi (s`n)	test_notation_add_new (test9)
+enter comma (pause)				test_notation_add_new (test9)
+enter swara following comma			test_notation_add_new (test9)
+enter semi-colon (lengthy pause)		test_notation_add_new (test9)
+enter swara following semi-colon		test_notation_add_new (test9)
+confirm interim tala markers added as swaras 
+are added					test_notation_add_new (test11, test12)
+confirm end tala markers added as swaras 
+are added					test_notation_add_new (test13)
+
+confirm that ; and length swaras are of correct
+length (can test that tala markers appear)	???
+
+TODO: varying speeds (test_notation_add_new2)
+
+<b>Notation Navigation Tests</b>
+RIGHT key advances to next swara	 	test_notation_navigation.html (testRightKey)
+RIGHT key does nothing at end of row		test_notation_navigation.html (testRightKey)
+RIGHT key skips over tala marker 		test_notation_navigation.html (testRightKey)
+RIGHT key advances to spacer as appropriate	???
+RIGHT key does nothing when at spacer		???
+LEFT  key advances to previous swara	 	test_notation_navigation.html (testLeftKey)
+LEFT  key does nothing at beginning of row	test_notation_navigation.html (testLeftKey)
+LEFT  key skips over tala marker 		test_notation_navigation.html (testLeftKey)
+
+function testStayiSpeedDisplayDuringNavigation() 
+
+LEFT key updates stayi selector	for tara	test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+LEFT key updates stayi selector	for mandra	test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+LEFT key updates stayi selector	   for madya	test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+RIGHT key updates stayi selector   for tara	test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+RIGHT key updates stayi selector   for mandra	test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+RIGHT key updates stayi selector   for madya	test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+LEFT key updates speed selector	for 0		test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+LEFT key updates speed selector	for 1		test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+LEFT key updates speed selector	for 2		test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+RIGHT key updates speed selector for 0		test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+RIGHT key updates speed selector for 1		test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+RIGHT key updates speed selector for 2		test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+HOME key updates stayi selector			test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+HOME key updates speed selector			test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+END  key updates stayi selector			test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+END  key updates speed selector			test_notation_navigation.html (testStayiSpeedDisplayDuringNavigation)
+LEFT key updates label				???
+RIGHT key updates label				???
+LEFT key updates gamaka				???
+LEFT key updates gamaka	(none)			???
+RIGHT key updates gamaka			???
+RIGHT key updates gamaka (none)			???
+
+<b>Notation Data Entry Tests - modify swara</b>
+
+<i>change label, stayi, gamaka </i>
+typing new swara character when at swara					test_notation_modify.html (testModifySwara)
+typing -  character when at swara						test_notation_modify.html (testModifySwara2)
+typing ,  character when at swara						test_notatiob_modify.html (testModifySwara2)
+typing multiple swara chars overrwrites successive				test_notatiob_modify.html (testModifySwara)
+typing multiple swara chars at end doesnt accept all chars except first		???
+
+
+<i>change speed </i>
+typing lengthy swara when at shorter swara	????
+typing lengthy swara when at shorter swara	????
+typing shorter swara when at length swara	???
+typing ;       when at short swara		???
+typing ;       when at longer swara
+
+
+<b>Notation Data Entry Tests - inserting into existing row </b>
+
+<i>non-full row all swaras same speed </i>
+insert single swara char at beginning of row    	test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert single swara char before interim tala marker 	test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert single swara char after interim tala marker	test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert single swara in the  middle of tala part		test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert single swara char that makes row full		test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert continuation char before interim tala marker 	test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert continuation char after interim tala marker	test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert continuation char in the  middle of tala part	test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+insert continuation char that makes row full		test_notation_insert.html (testInsertToNonFullRowSameSpeed)
+
+<i>full row (first row in multi-row block) all swaras same speed </i>
+insert single swara char at beginning of row    	test_notation_insert.html (testInsertToFullRowSameSpeed)
+insert single swara char before interim tala marker 	test_notation_insert.html (testInsertToFullRowSameSpeed)
+insert single swara char after interim tala marker	test_notation_insert.html (testInsertToFullRowSameSpeed)
+insert single swara in the  middle of tala part		test_notation_insert.html (testInsertToFullRowSameSpeed)
+insert continuation char before interim tala marker 	???
+insert continuation char after interim tala marker	???
+insert continuation char in the  middle of tala part	???
+
+<i>full row (last row in multi-row block) all swaras same speed </i>
+insert single swara char at beginning of row    	???
+insert single swara char before interim tala marker 	???
+insert single swara char after interim tala marker	???
+insert single swara in the  middle of tala part		???
+insert continuation char before interim tala marker 	???
+insert continuation char after interim tala marker	???
+insert continuation char in the  middle of tala part	???
+
+<i>non-full row insert swara that causes split of other swaras</i>
+
+<i>full row (first row in multi-row block) insert swara that causes split of other swaras</i>
+
+<i>full row (last row in multi-row block) insert swara that causes split of other swaras</i>
+
+<b>Notation Data Entry Tests - Deleting swara</b>
+
+<i>Swaras not associated with lyrics</i>						???
+Delete at beginning of row								???
+Delete at swara before interim tala marker						???
+Delete at swara after interim tala marker						???
+Delete last swara in a block (model) that is followed by a block (model)		???
+(i.e. not last swara in a notation-block)						???
+Delete last swara in a notation-block							???
+Delete last swara in a notation-block that also happens to be only swara in a row	???
+Delete ONLY swara in a notation-block (i.e. also last swara in a row)			???
+
+Delete that results in row deletion in a page that IS followed by another page
+
+
+<i>Swaras associated with lyrics</i>
+

@@ -1,0 +1,126 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{$lang_cmlang_fonts_title}</title>
+	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
+<script language="javascript" type="text/javascript">
+function onOK() 
+{
+    var settings = tinyMCE.getWindowArg("settings");
+    if( !settings ) return;
+
+    var f = document.getElementById("cmfontsform");
+    if( !f )  {
+	alert( "internal error: cannot find form!" );
+	return;
+    }
+    settings.DefaultFont = f.defaultfont.value;
+    settings.SanskritFont = f.sanskritfont.value;
+    settings.TelugFont = f.telugufont.value;
+    settings.TamilFont = f.tamilfont.value;
+    settings.KannadaFont = f.kannadafont.value;
+    settings.MalayalamFont = f.malayalamfont;
+    settings.onFontsChanged();
+    tinyMCEPopup.close();
+}
+
+function cmFontsInit() 
+{
+    var settings = tinyMCE.getWindowArg("settings");
+    if( !settings ) return;
+    var f = document.getElementById("cmfontsform");
+    if( !f )  {
+	alert( "internal error: cannot find form!" );
+	return;
+    }
+    f.defaultfont.value = settings.DefaultFont;
+    f.sanskritfont.value = settings.SanskritFont;
+    f.telugufont.value   = settings.TeluguFont;
+    f.tamilfont.value   = settings.TamilFont;
+    f.kannadafont.value   = settings.KannadaFont;
+    f.malayalamfont   = settings.MalayalamFont;
+}
+
+
+</script>
+	<base target="_self" />
+</head>
+<body id="cmfonts_body" style="display: none" onload="tinyMCEPopup.executeOnLoad('cmFontsInit();');">
+    <form targe="_top" name="cmfontsform" id="cmfontsform">
+    <div align="center">
+	<div class="title" style="padding-bottom:1em;">{$lang_cmlang_fonts_title}</div>
+	    <table width="100%" style="padding:0 0 0 0;border-collapse:collapse;" cellspacing="0" cellpadding="0">
+		<tr>
+		    <td colspan="3">
+			<b>Use this font for all languages:</b><br>
+		    </td>
+		    <td>
+			<input type="text" size="40" name="defaultfont"></input>
+		    </td>
+		<tr>
+		    <td colspan="3" style="height:5px"></td>
+		<tr>
+		    <td colspan="3">
+			<b>Font for Sanskrit (overrides default):</b><br>
+		    </td>
+		    <td>
+			<input type="text" size="40" name="sanskritfont"></input>
+		    </td>
+		</tr>
+		<tr>
+		    <td colspan="3" style="height:5px;"></td>
+		<tr>
+		    <td colspan="3">
+			<b>Font for Telugu (overrides default):</b><br>
+		    </td>
+		    <td>
+			<input type="text" size="40" name="telugufont"></input>
+		    </td>
+		</tr>
+		<tr>
+		    <td colspan="3" style="height:5px;"></td>
+		<tr>
+		    <td colspan="3">
+			<b>Font for Tamil (overrides default):</b><br>
+		    </td>
+		    <td>
+			<input type="text" size="40" name="tamilfont"></input>
+		    </td>
+		</tr>
+		<tr>
+		    <td colspan="3" style="height:px;"></td>
+		<tr>
+		    <td colspan="3">
+			<b>Font for Kannada (overrides default):</b><br>
+		    </td>
+		    <td>
+			<input type="text" size="40" name="kannadafont"></input>
+		    </td>
+		</tr>
+		<tr>
+		    <td colspan="3" style="height:px;"></td>
+		<tr>
+		    <td colspan="3">
+			<b>Font for Malayalam (overrides default):</b><br>
+		    </td>
+		    <td>
+			<input type="text" size="40" name="malayalamfont"></input>
+		    </td>
+		</tr>
+		<tr>
+		    <td style="height:10px;"></td>
+		    <td style="height:10px;"></td>
+		<tr>
+		    <td colspan="4">
+		    <center>
+			<input type="button" onclick="onOK();" value="OK"></input>
+			&nbsp;&nbsp;
+			<input type="button" onclick="tinyMCEPopup.close();" value="Cancel"></input>
+		    </center>
+		    </td>
+		</tr>
+	    </table>
+	</div>
+    </div>
+    </form>
+</body>
+</html>

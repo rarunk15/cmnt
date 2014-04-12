@@ -1,0 +1,447 @@
+<h3 style="page-break-before:always;">Tala Directive</h3>
+The <span class="syntax2">Tala</span> directive specifies the tala for the 
+song and this is one of the parameters that determines how the notations 
+should be laid out. The tala anga markers are also deteremined based on this 
+and automatically placed by the typesetter. The tala directive <u>must</u> be 
+specified in the header section so that the tala for the song is known when 
+the first swara line is encountered.
+<p> 
+The <span class="syntax2">tala</span> directive has the following syntax:
+<div class="sc"><span class="syntax">Tala: Tala_Name</span></div>
+The value is one of the following pre-defined tala names as listed in the table below:
+<p>
+<center>
+<table class="mytable" style="font-size:100%;width:80%;">
+    <tr class="mytr">
+    <td align="center"><b>Tala<b><td  align="center" width="50%"><b>How to specify</b><br><br>
+    <i>(Note: Tala Names are case insensitive)</i>
+    <tr class="mytr">
+	<td>Adi
+	<td>
+	    <span class="syntax2">Tala: Adi</span> (catusra gati)
+	    <br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: Tisra_Adi</span> (triSra/tiSra gati)<br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: Adi2Kalai</span> (Adi 2-kalai)<br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: adi</span>
+    </tr>
+    <tr class="mytr">
+	<td>Roopaka (cApu)
+	<td>
+	    <span class="syntax2">Tala: Roopakacapu</span><br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: Rupakacapu</span><br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: rUpakacApu</span>
+    </tr>
+    <tr class="mytr">
+	<td>Roopaka
+	<td>
+	<span class="syntax2">Tala: Roopaka</span> (catuSra jAti roopaka)<br><br>
+	<span class="syntax2">Tala: Tisra_Roopaka</span> (tiSra jAti roopaka)<br>
+	<span class="syntax2">Tala: Catusra_Roopaka</span> (catuSra jAti roopaka)<br>
+	<span class="syntax2">Tala: Khanda_Roopaka</span> (khaNDa jAti roopaka)<br>
+	<span class="syntax2">Tala: Misra_Roopaka</span> (catusra jAti roopaka)<br>
+	<span class="syntax2">Tala: Sankirna_Roopaka</span> (sankIrna jAti roopaka)<br>
+	    <br><i style="font-size:90%;">(Note: You can specify Rupaka instead of Roopaka in the above)</i>
+    </tr>
+    <tr class="mytr">
+	<td>khaNDa cApu
+	<td><span class="syntax2">Tala: KhandaCapu</span>  (laid out as 4 avarthanams per row) <br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: KhandaCapu2</span> (laid out as 2 avarthanams per row)
+    <tr class="mytr">
+	<td>miSra cApu
+	<td><span class="syntax2">Tala: MisraCapu</span>
+    <tr class="mytr">
+	<td>Eka
+	<td>
+	<span class="syntax2">Tala: Eka</span> (catuSra jAti eka)<br><br>
+	<span class="syntax2">Tala: Tisra_Eka</span> (tiSra jAti eka)<br>
+	<span class="syntax2">Tala: Catusra_Eka</span> (catuSra jAti eka)<br>
+	<span class="syntax2">Tala: Khanda_Eka</span> (khaNDa jAti eka)<br>
+	<span class="syntax2">Tala: Misra_Eka</span> (catusra jAti eka)<br>
+	<span class="syntax2">Tala: Sankirna_Eka</span> (sankIrna jAti eka)<br>
+</table>
+<table class="mytable" style="font-size:100%;width:80%;page-break-before:always;">
+    <tr class="mytr">
+    <td align="center"><b>Tala<b><td  align="center" width="50%"><b>How to specify</b><br><br>
+    <i>(Note: Tala Names are case insensitive)</i>
+    <tr class="mytr">
+	<td>Triputa
+	<td>
+	<span class="syntax2">Tala: Triputa</span> (tiSra jAti tripuTa)<br><br>
+	<span class="syntax2">Tala: Tisra_Triputa</span> (tiSra jAti tripuTa)<br>
+	<span class="syntax2">Tala: Catusra_Triputa</span> (catuSra jAti tripuTa)<br>
+	<span class="syntax2">Tala: Khanda_Triputa</span> (khaNDa jAti tripuTa)<br>
+	<span class="syntax2">Tala: Misra_Triputa</span> (catusra jAti tripuTa)<br>
+	<span class="syntax2">Tala: Sankirna_Triputa</span> (sankIrna jAti tripuTa)<br>
+    <tr class="mytr">
+	<td>Dhruva
+	<td><span class="syntax2">Tala: Dhruva</span> (catusra jAti dhruva laid out as 1 avarthanam per row)<br>
+	    <span class="syntax2">Tala: Dhruva2</span> (catusra jAti dhruva laid out as 1 avarthanam over 2 rows)<br><br>
+	    <span class="syntax2">Tala: Tisra_Dhruva</span> (tiSra jAti dhruva)<br>
+	    <span class="syntax2">Tala: Catusra_Dhruva</span> (catuSra jAti dhruva)<br>
+	    <span class="syntax2">Tala: Khanda_Dhruva</span> (khaNDa jAti dhruva)<br>
+	    <span class="syntax2">Tala: Misra_Dhruva</span> (catusra jAti dhruva)<br>
+	    <span class="syntax2">Tala: Sankirna_Dhruva</span> (sankIrna jAti dhruva)<br>
+    <tr class="mytr">
+	<td>Matya
+	<td><span class="syntax2">Tala: Matya</span> (catuSra jAti maTya)<br><br>
+	<span class="syntax2">Tala: Tisra_Matya</span> (tiSra jAti maTya)<br>
+	<span class="syntax2">Tala: Catusra_Matya</span> (catuSra jAti maTya)<br>
+	<span class="syntax2">Tala: Khanda_Matya</span> (khaNDa jAti maTya)<br>
+	<span class="syntax2">Tala: Misra_Matya</span> (catusra jAti maTya)<br>
+	<span class="syntax2">Tala: Sankirna_Matya</span> (sankIrna jAti maTya)<br>
+    <tr class="mytr">
+	<td>Khanda Ata
+	<td><span class="syntax2">Tala: Ata</span> (khaNDa jAti aTa)<br><br>
+	<span class="syntax2">Tala: Tisra_Ata</span> (tiSra jAti aTa)<br>
+	<span class="syntax2">Tala: Catusra_Ata</span> (catuSra jAti aTa)<br>
+	<span class="syntax2">Tala: Khanda_Ata</span> (khaNDa jAti aTa)<br>
+	<span class="syntax2">Tala: Misra_Ata</span> (catusra jAti aTa)<br>
+	<span class="syntax2">Tala: Sankirna_Ata</span> (sankIrna jAti aTa)<br>
+    <tr class="mytr">
+	<td>Misra Jhampa
+	<td><span class="syntax2">Tala: Jhampa</span> (miSra jAti jhampa)<br><br>
+	<span class="syntax2">Tala: Tisra_Jhampa</span> (tiSra jAti jhampa)<br>
+	<span class="syntax2">Tala: Catusra_Jhampa</span> (catuSra jAti jhampa)<br>
+	<span class="syntax2">Tala: Khanda_Jhampa</span> (khaNDa jAti jhampa)<br>
+	<span class="syntax2">Tala: Misra_Jhampa</span> (catusra jAti jhampa)<br>
+	<span class="syntax2">Tala: Sankirna_Jhampa</span> (sankIrna jAti jhampa)<br>
+    <tr class="mytr">
+	<td>Manual Mode #1
+	<td><br><span class="syntax2">Tala: &lt;talaname_as_above&gt;,Manual</span><br><br>
+			(or)
+	    <span class="syntax2">Tala: &lt;talaname_as_above&gt;,Manual,InlineTalaMarkers</span><br><br>
+	    In this manual mode, the typesetter will <u>not</u> start a new 
+	    notation line unless explicitly directed so via the 
+	    <span class="syntax2">Songbreak</span> or 
+	    <span class="syntax2">Linebreak</span> directive.</i> It
+	    also does not align successive notation lines at tala angas like
+	    in non-manual modes. 
+	</td>
+    </tr>
+</table>
+<table class="mytable" style="font-size:100%;width:80%;page-break-before:always;">
+    <tr class="mytr">
+    <td align="center"><b>Tala<b><td  align="center" width="50%"><b>How to specify</b><br><br>
+    <i>(Note: Tala Names are case insensitive)</i>
+    <tr class="mytr">
+	<td>
+	   Manual mode #1 (continued)
+	<td>
+	    In this manual mode, the typesetter keeps track of the tala and thus
+	    renders tala markers automatically. They can be rendered separately
+	    on the swara line as usual or they can be rendered "inline" above 
+	    the swaras if <span class="syntax2">,InlineTalaMarkers</span> follows the
+	    <span class="syntax2">Manual</span> as indicated in the second form
+	    above.
+    <tr class="mytr">
+	<td>Manual Mode #2
+	<td><br><span class="syntax2">Tala: Manual</span><br><br>
+			(or)
+	    <span class="syntax2">Tala: Manual,InlineTalaMarkers</span><br><br>
+	    In this manual mode, you control everything. Like Manual Mode #1, 
+	    the typesetter will <u>not</u> start a new notation line unless 
+	    explicitly directed. This can be done via the 
+	    <span class="syntax2">Songbreak</span> directive (note that 
+	    the <span class="syntax2">Linebreak</span> directive is not 
+	    applicable in this mode and will be ignored).
+	    <p>
+	    In this manual mode, the typesetter does not track tala and 
+	    so will not render tala markers unless they are indicated 
+	    explicitly on the swara line via | or ||.  These tala markers
+	    can be rendered separately on the swara line as usual or they 
+	    can be rendered "inline" above.
+	    <p>
+	    This manual mode is useful for laying out notations for snippets of 
+	    ragas (i.e. with no tala), and also for songs whose layout is 
+	    more complex than what the typesetter can handle. 
+</table>
+</center>
+<p>
+Here are some examples of usage of tala.
+<p>
+<div style="padding-left:0.25in;">
+<table class="mytable" style="width:5in;">
+<!-- adi tala -->
+<tr class="mytr">
+<td>
+<span id="aditala" class="syntax2">Tala: Adi
+DefaultSpeed: 1
+S: s r g m p d n s' s n d p m g r s
+</span>
+</td>
+<td>
+<span class="songfragment" id="aditala_v">
+<script language="javascript">
+renderSongFragment("aditala_v", "aditala")
+</script>
+</span>
+</tr>
+<!--  misra capu -->
+<tr class="mytr">
+<td>
+<span id="mchapu" class="syntax2">Tala: MisraCapu
+DefaultSpeed: 1
+S: s , n d m d n d , m g m d m
+</span>
+</td>
+<td>
+<span class="songfragment" id="mchapu_v">
+<script language="javascript">
+renderSongFragment("mchapu_v", "mchapu")
+</script>
+</span>
+</tr>
+<!--  khaNDa capu -->
+<tr class="mytr">
+<td>
+<span id="kchapu" class="syntax2">Tala: KhandaCapu
+DefaultSpeed: 1
+S: s g s g m g m g m p
+</span>
+</td>
+<td>
+<span class="songfragment" id="kchapu_v">
+<script language="javascript">
+renderSongFragment("kchapu_v", "kchapu")
+</script>
+</span>
+</tr>
+</table>
+<div style="padding-left:0.25in;page-break-before:always;">
+<table class="mytable" style="width:5in;">
+<!-- roopaka capu -->
+<tr class="mytr">
+<td>
+<span id="rc3" class="syntax2">Tala: RupakaCapu
+DefaultSpeed: 1
+S: s r g r g m g m p m p d p d n d n s'
+</span>
+</td>
+<td>
+<span class="songfragment" id="rc3_v">
+<script language="javascript">
+renderSongFragment("rc3_v", "rc3")
+</script>
+</span>
+</tr>
+<!-- adi tisra gati -->
+<tr class="mytr">
+<td>
+<span id="tisraaditala" class="syntax2">Tala: Tisra_Adi
+DefaultSpeed: 1
+S: s r g m p  d n s' s' n d m 
+S: p g r s s' n d p  m  g r s
+</span>
+</td>
+<td>
+<span class="songfragment" id="tisraaditala_v">
+<script language="javascript">
+renderSongFragment("tisraaditala_v", "tisraaditala")
+</script>
+</span>
+</tr>
+<!-- catusra roopaka -->
+<tr class="mytr">
+<td>
+<span id="rupaka" class="syntax2">Tala: Rupaka
+DefaultSpeed: 0
+S: m  p d s' s' r | r' s d p  m  p
+S: r  m p d  m  p | d  p m g  r  s 
+</span>
+</td>
+<td>
+<span class="songfragment" id="rupaka_v">
+<script language="javascript">
+renderSongFragment("rupaka_v", "rupaka")
+</script>
+</span>
+</tr>
+</table>
+</div>
+<p>
+<h3>Use of Manual Mode (with inline tala markers)</h3>
+Manual mode can be quite useful in helping with easy interpretation of
+the underlying melody of the notation particularly if inline tala markers
+are used. This results in a notation layout where tala markers dont
+intefere with the grouping of musical phrasing. 
+<p>
+As an example, consider the following example of a charanam of the 
+nATa pancharatna krithi by tyAgarAja - jagadAnandakAraka.
+<p>
+<div style="padding-left:0;">
+<table class="mytable" style="width:6in;">
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">Input Format</span>
+<tr class="mytr">
+<td style="padding:0 0 0 0;">
+<div class="sc" style="padding:0 0 0 0;">
+<span id="lex1" class="syntax2">Layout:Krithi,FullWidth
+Tala: Adi
+DefaultSpeed: 2
+SwaraPrefs: 12
+LyricPrefs: 12
+HeadingPrefs: 12
+LanguageFont: English,Fixed
+Heading: "jagadAnandakAraka - nATa - tyAgarAja - caraNam #5",bold,center
+S: sa    pa   ma  ri- s  pa  m r s- p  m ga- m  p  n   p  ga- m  pa m  ri- p   m
+L: sR.Sh Tis  dit yan da kA ra kA . mi ta kA mi ta pha la dA  sa mA na gA  tra Sa
+S: ri- n  p  m  ri- s'  n  p  m  ri- r' sa'- p  sa'- m pa- r  g  m  pa- s' , n p m
+L: ci  pa ti nu tA  pti ma ta ha ra  nu rA   ga rA  ga rA  ji ta ka tA  sA _ ra hi ta
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="lex1_v">
+<script language="javascript">
+renderSongFragment("lex1_v", "lex1");
+</script>
+</span>
+</table>
+</div>
+<p style="page-break-before:always;">
+In the above, the melody is made up of the following musical phrases:
+<p>
+<div style="padding-left:0.25in;">
+<table class="mytable" style="border:thin solid;width:5in;">
+<tr><td>
+<span class="syntax2">
+ [sa pa ma ri]  [s pa m r s]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [p m ga] [m p n p m ga]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [m pa m ri] [p m ri] [n p m ri] [s' n p m ri]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [ri' sa'] [p sa] [m pa] [r g m pa]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [s' n p m]
+ <br>
+</span>
+</td>
+</table>
+</div>
+<p>
+The reason for the musical phrasings are:
+<ul>
+<li>
+The second line has two phrases with similar endings (<span class="syntax2">m ga</span>). 
+<li>
+Similarly, in the third line there are 4 phrases that end with same swara combination, 
+and the last three phrases follow a certain iterative pattern - i.e. a descending pattern with an 
+extra (high) swara being added in each iteration (<span class="syntax2">[p m ri] [n p m ri] [s' n p m ri]</span>)
+<li>The fourth line has patterns with similar endings - although they do not end in the same swara,
+the ending swaras have a consonent (<i>samvAdi</i> relationship.
+</ul>
+<h4>Inadequacy of standard/default notation layout scheme</h4>
+In the standard notation layout followed by almost all carnatic music notation books
+(and also the default layout of the typesetter as shown earlier above), this grouping often gets lost
+due to tala markers, in particular due to the alignment of successive 
+notation lines along anga markers. This alignment helps make the notation look 
+neat and attractive from an aesthetic sense, however it is at the expense of 
+lost clarity in actual interpretation of the underlying melody. The underlying
+melody may not be as easily discernible since the swaras that make up the 
+various musical phrases may not be shown grouped together, and different 
+phrases may not be separated.
+<p>
+<i>Note that even with the use of phrase ending markers (</i><span class="syntax2">-</span>
+<i>at the end of swaras), and with phrase end spacing specifiers (e.g. </i>
+<span class="syntax2">PhraseEnds:&lt;show_or_hide&gt;,0.45in</span>
+<i>)does not truly help as tala markers may be <u>within</u> a phrase.</i>
+<h4>A better alternative</h4>
+A better layout from a carnatic music practioneer's perspective may be one that
+a layout which respects the musical phrasing. A challenge though is that quite
+often the swaras that make up a musical phrase straddle across a tala anga 
+boundary, as well as tala cycle boundary. For example, in the above, the 
+<span class="syntax2">p m ri</span> in the phrasing part of the second set 
+straddles a tala boundary. Thus any layout in which the tala markers are 
+rendered separately along with swaras (like we see in almost all carnatic music
+notation books), will have the problem of tala markers appearing in the midde
+of musical phrases and thus affecting their grouping. 
+<p>
+This is the reason why the typesetter supports inline tala markers. It allows 
+the tala markers to be still notated so that the practioneer easily can discern
+how the melody lays against the tala, but yet render them in a away that they
+do not interfere with groupings of swaras that make up the various musical
+phrases in the melody intact. 
+<p>
+Of course it is impossible to do this as well as maintain alignment at tala 
+anga boundarie across notation lines since they are contradictory requirements).
+Thus there is some loss in aesthetics but the gain can outweigh this loss.
+<p>
+Below is an example of how the above melody can be notated using manual mode #1
+and with inline tala markers:
+<p>
+<div style="padding-left:0;padding-right:0;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+  <td style="padding:5 5 5 5;">
+    <span style="font-size:8pt;">Input Format</span>
+<tr class="mytr">
+  <td style="padding:0 0 0 0;">
+    <div class="sc">
+      <span id="lex2" class="syntax2">Layout:Krithi
+PhraseEnds: Hide,0.45in
+Tala: Adi,Manual,InlineTalaMarkers
+DefaultSpeed: 2
+SwaraPrefs: 12
+LyricPrefs: 12
+HeadingPrefs: 12
+LanguageFont: English,Fixed
+Heading: "jagadAnandakAraka - nAta - tyAgarAja - caraNam #5",bold,center
+S: sa    pa   ma  ri- s  pa  m r s- p  m ga- m  p  n   p  ga- m  pa m  ri- p   m  ri-
+L: sR.Sh Tis  dit yan da kA ra kA . mi ta kA mi ta pha la dA  sa mA na gA  tra Sa ci
+LineBreak
+S: n  p  m  ri- s'  n  p  m  ri- r' sa'- p  sa'- m pa- r  g  m  pa- s' , n p m
+L: pa ti nu tA  pti ma ta ha ra  nu rA   ga rA  ga rA  ji ta ka tA  sA _ ra hi ta
+      </span>
+    </div>
+  </td>
+</tr>
+<tr class="mytr">
+  <td style="padding:5 5 5 5;">
+    <span style="font-size:8pt;">Typesetter Output</span>
+<tr class="mytr">
+  <td>
+    <span class="songfragment" id="lex2_v">
+      <script language="javascript">renderSongFragment("lex2_v", "lex2");</script>
+    </span>
+  </td>
+</tr>
+</table>
+</div>
+<p>
+As shown above, the swaras in the various musical phrases that make up the melody of
+that charanam are grouped together, and the phrases themselves are adequately
+separated from each other (using <span class="syntax2">PhraseEnds:Hide 0.45in</span>,
+both of which allow us to discern the phrases easily. Tala markers are rendered inline
+above the swaras, so that it is easy to know which swara starts an anga (in this
+mode the <span class="syntax2">*</span> indicate start of an <i>akshara</i>. 
+<p>
+Of course, the alignment of notation at tala anga boundaries between the two 
+notation lines is no longer maintanable because that priority is given to
+the musical phrases.
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.2</b>: Added support for Khanda Triputa Tala</li>
+	<li><b>v1.4</b>: Added support for all 35 talas (catusra gati only), and Manual tala</li>
+	<li><b>v1.5 Beta</b>: Introduced Manual mode #2 and inline tala markers in manual mode</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

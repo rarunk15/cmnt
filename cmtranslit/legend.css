@@ -1,0 +1,107 @@
+@media print {
+    .button { display: none; }
+    .qualnote { display: none; }
+    .indicnote { display: none; }
+    .headerRowWithButtons { display: none; }
+    .screenonly { display: none; }
+}
+
+@media screen {
+.qualnote
+{
+    text-align:left;
+    font-size:60%;
+    font-weight:normal;
+    display: none;
+}
+
+.indicnote
+{
+    text-align:left;
+    font-size:60%;
+    font-weight:normal;
+}
+
+.button
+{
+    font-family: Lucida, Courier;
+    color: #000000;
+    background-color:#f0f0f0;
+    border: 1px solid;
+    font-weight: normal;
+    cursor: pointer;
+    margin-right: 0.80em;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size:50%;
+}
+
+.headerRowWithButtons
+{
+    font-size: 85%;
+    font-weight:normal;
+    background-color:#808080;
+    color:#ccccff;
+    page-break-after: avoid;
+    width:100%;
+}
+
+}
+
+@media all {
+.boldRow
+{
+    font-weight:bold;
+}
+
+td
+{
+    padding-left: 5;
+    padding-top:  5;
+    vertical-align: top;
+    page-break-inside: avoid;
+}
+
+.categoryRow
+{
+    font-family: Lucida, Courier;
+    font-size: 85%;
+    font-weight:bold;
+    background-color:#808080;
+    color:#ffffff;
+    page-break-after: avoid;
+}
+
+.headerRow
+{
+    font-size: 85%;
+    font-weight:bold;
+    background-color:#808080;
+    color:#ffffff;
+    page-break-after: avoid;
+    width:100%;
+}
+
+.indicl
+{
+    font-family: Akshar Unicode, Lucida Unicode, Arial Unicode MS;
+    font-size: 1.0em;
+}
+
+.indic
+{
+    display: inline;
+    font-family: Akshar Unicode, Lucida Unicode, Arial Unicode MS;
+    font-size: 110%;
+}
+
+.scheme
+{
+    font-size: 90%;
+    display: inline;
+    color:#000080;
+    background-color:#f0f0f0;
+    border: 1px solid #c0c0c0;
+    font-weight: bold;
+}
+}

@@ -1,0 +1,267 @@
+<html>
+<head>
+<title>Unified Transliteration Scheme for Carnatic Music Compositions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="legend.css"/>
+</head>
+<body style="font-family:'Lucida Grande', Verdana, Arial, Sans-Serif;">
+<p class="indicnote">
+<b>Note:</b>: This web-page contains characters in Devanagiri, 
+Telugu, Kannada, Tamil and Malayalam. If they do not display correctly, 
+then you need to install proper fonts on your computer.  On Firefox, if 
+the Indian language characters do appear but are in the wrong order, please 
+follow instructions given in this page: 
+<a href="http://en.wikipedia.org/wiki/Wikipedia:Enabling_complex_text_support_for_Indic_scripts#Check_for_existing_support">http://en.wikipedia.org/wiki/Wikipedia:Enabling_complex_text_support_for_Indic_scripts#Check_for_existing_support</a>
+<center>
+    <h2>Unified Transliteration Scheme for Carnatic Music Compositions<br>
+	<span style="font-size:75%;">(version 1.2)<span></h2>
+</center>
+<div style="font-size:100%">
+<h3><a name="top"></a>Synopsis</h3>
+The <i>Unified transliteration Scheme for Carnatic Music Compositions</i> is an
+English transliteration scheme for representing lyrics of Carnatic Music 
+compositions in the Indic languages the Sanskrit, Telugu, Tamil, Kannada and 
+Malayalam, the five languages used in Carnatic Music. (<i>Malayalam not yet fully supported in the scheme</i>). 
+<p>
+Click <a href="legend.html"><b>here</b></a> to view the scheme.
+<h3>Introduction</h3>
+The primary goals of the scheme are
+<ol>
+    <li>Aid fans and practioneers of carnatic music to grasp the 
+    pronounciation of compositions as accurately as possible.
+<ol>
+    <li>A secondary goal of the scheme is that it should be easy to read in 
+    english, and hence it aims towards a fair phonetic representation of the 
+    underlying pronounciation - although within the limitations and 
+    constraints of (a) the capability of the english language to represent
+    these sounds, (b) conformance to established but not necessarily 
+    phonetically accurate spellings for popular words/combinations, and 
+    (c) conformance to the most common already established transliteration 
+    rules, which again may not be phonetically accurate.
+    <li>While writing text in the scheme, a general rule of thumb to 
+    follow is <i>try to represent the underlying sound of the word, and 
+    not how the word is written in a specific target language</i>
+</ol>
+<li>Enable those carnatic music fans to view the text of the compositions in 
+any of any of the five target Indic languages. The assumption is that many 
+Carnatic Music fans and practitioneers may relate better to lyrics represented
+in their native language even for compositions in a different language.
+</ol>
+An immediate implication of Goal #1 is that the scheme should be able to 
+represent the sounds of all the languages. A not so obvious implication of 
+Goal #2, is that the scheme should be such that, a <b>single representation of 
+a composition</b> should be renderable in all the five languages. This 
+provides the reason for the "unified" part of the scheme.
+<p>
+This makes the scheme markedly different from the common transliteration 
+schemes already in existence for these languages. All those schemes have a 
+primary (if not always explicitly stated) and overriding goal of being able to 
+unambigiously represent the target language in the transliteration source. 
+This invariable leads to script specific idiosyncracies right in the 
+transliteration scheme itself (explained later below). This of course means 
+that a text in this scheme is of little use to people who dont know the 
+language, as they would not be able to grasp the pronounciation from the 
+english transliteration text. This in turn makes it harder for people (who 
+know different languages) to share lyrical information in an effective manner. 
+<p>
+The unified scheme strives to avoid language script specific idiosyncracies as 
+much as possible. For a sound (phoneme) that is common to all languages, there 
+is almost always a single representation in the scheme and thus no matter
+which language it figures in, a reader who understands the scheme should be
+able to grasp the pronounciation.  In some cases, for ease of use, the
+scheme does allow for various ways of specifying a particular sound (or 
+combination of sounds). In all these cases, one way would be a preferred 
+language neutral way, and the other that may be specific one or more target
+languages. Using the latter representation will usually not affect translation 
+to other languages, and hence can be used, but it is not preferred as it may 
+make the input text "less phonetic" and hence harder for people who do not 
+know the specific target language to grasp the underlying pronounciation.
+<p>
+Another big difference between this scheme and standard schemes is that this 
+scheme requires a "smarter" transliteration engine to apply language specific 
+rules. In fact, this requirement is the reason why the scheme itself is able 
+to rid itself of script specific idiosyncracies, and also be able to be easy 
+to read.
+<h4>Conformance to common existing transliteration scheme rules</h4>
+As stated above, the transliteration scheme is intended to be <i>as phonetic 
+based as possible</i> (i.e. phonetic in english) as possible. However, it 
+adheres to most of the already accepted norms such as A, E, I, O, U for 
+long vowels; t vs T, d vs D for softer vs harder consonants etc. These norms 
+are not phonetically ideal but they are nevertheless fairly well established 
+amongst most if not all existing schemes for the target languages. The scheme
+conforms to these norms as it is expected that most consumers would be
+familiar to those norms.
+<p>
+<h4>Avoidance of language specific artifacts</h4>
+Here are some examples of how the scheme avoids language specific artifacts:
+<ul>
+<li>In words like <i>candra</i>, languages such as Kannada, Telugu etc. 
+include the anuswara instead of standard <i>na</i> consonant. Standard 
+transliteration schemes may require this to be explicitly specified such 
+as <i>caMdra</i>. The presence of the anuswara does not affect the 
+pronounciation and hence the change makes the transliterated text be a "less 
+fair" representation phonetically. Also, the anuswara is not needed in all 
+languages - e.g. as in Tamil. In the scheme below, the above word can simply 
+be specified as <i>candra</i> (it can actually also be specified as 
+<i>caMdra</i>). In almost all cases, there is no need to explicitly specify 
+the anuswara, and the engine will automatically figure out where it is 
+applicable.</li>
+<li>Similarly <i>pArtasArati</i> is rendered in Tamil as
+<span class="indic">&#x0BAA;&#x0BBE;&#x0BB0;&#x0BCD;&#x0BA4;&#x0BCD;&#x0BA4;&#x0B9A;&#x0BBE;&#x0BB0;&#x0BA4;&#x0BBF;</span>, as Tamil requires the extra 
+<i>t</i>(<span class="indic">&#x0BA4;&#x0BCD;</span>) after <i>pAr</i> 
+(<span class="indic">&#x0BAA;&#x0BBE;&#x0BB0;&#x0BCD;</span>) to make the 
+following <span class="indic">&#x0ba4;</span> take the harder sound (i.e. 
+<i>t</i> as opposed to <i>d</i>. Standard schemes require this to explicitly 
+specified such as <i>pArttasArati</i>. This is not required here and the text 
+can remain as <i>pArtasArati</i> making it easily translatable to other Indic 
+languages that do not require the extra character.</li>
+<li>Consider the word <i>sundari</i>. Standard Telugu, Kannada schemes
+may require this to be specified as <i>suMdari</i>. Here the <i>M</i> is to 
+render as 
+<span class="indic">&#x0CB8;&#x0CC1;&#x0C82;&#x0CA6;&#x0CB0;&#x0CBF;</span> in 
+Kannada, or 
+<span class="indic">&#x0C38;&#x0C41;&#x0C02;&#x0C26;&#x0C30;&#x0C3F;</span> in 
+Telugu, with the anuswara following <i>su</i> as in 
+<span class="indic">&#x0CB8;&#x0CC1;&#x0C82;</span>/<span class="indic">&#x0C38;&#x0C41;&#x0C02;</span>.
+Even a Tamil transliteration scheme may require this to be specified as 
+<i>su~ndari</i> with say <i>%n</i> (an arbitrary chosen representation) required
+for the character <span class="indic">&#x0BA8;&#x0BCD;</span>, differentiating 
+it from <i>n</i> which would stand for 
+<span class="indic">&#x0BA9;&#x0BCD;</span>. Here both Tamil characters carry 
+the same sound, but the former one is used only when preceding 
+<span class="indic">&#x0BA4;</span> variant as here. However both 
+<i>suMdari</i> and <i>su%ndari</i> diverge away from a "fairer" phonetic 
+representation. In the scheme here, you can simply specify <i>sundari</i>, and 
+it will be rendered correctly in all the languages.</li>
+<li>Another example is the word <i></i> (poison) in Tamil, which is written as 
+<span class="indic">&#x0BA8;&#x0B9E;&#x0BCD;&#x0B9A;&#x0BC1;</span>. Here the 
+<i>nj</i> sound is represented as 
+<span class="indic">&#x0B9E;&#x0BCD;&#x0B9A;&#x0BCD;</span>, and some schemes 
+may require this to be specified explicitly (e.g. <i>na~jcU</i>/<i>na~ncu</i>, 
+with <i>~j</i>/<i>~n</i> for <span class="indic">&#x0B9E;&#x0BCD;</span> and 
+<i>cu</i> for <span class="indic">&#x0B9A;&#x0BC1;</span>). However, 
+<i>na~jcu</i>/<i>na~ncu</i> as it appears in English, is far from being a fair 
+phonetic representation of the pronounciation of the word it represents. It 
+also leads to incorrect pronounciation in other languages, which would need 
+the <i>ja</i> letter (but the <i>ja</i> letter would be inappropriate for 
+tamizh here). In the scheme here, you can simply specify <i>nanju</i>, which 
+is phonetically correct and the smart engine, will make sure it is rendered 
+correctly in all target languages</li>.
+<li>Finally, let us take the example of 
+<span class="indic">&#x0B95;&#x0BBE;&#x0BB1;&#x0BCD;&#x0BB1;&#x0BC1;</span> in
+Tamil, meaning <i>wind</i>. The sound of the 
+<span class="indic">&#x0BB1;&#x0BCD;</span> here is really 
+<span class="indic">&#x0B9F;&#x0BCD;</span>. Many schemes may however require 
+the transliteration text to be specified as <i>kARRu</i>, again to make it 
+represent how it is written. In the unified scheme, this is not desirable for 
+two reasons: (a) <i>kARRu</i> is a poor phonetic representation of the 
+underlying word (b) it will translate incorrectly to other languages unless 
+special logic is added. Hence, in the scheme, you specify it as <i>kATRu</i>. 
+This is an example of the general rule of thumb mentioned above: <i>try to 
+represent the underlying sound of the word, and not how the word is written in 
+a target language</i>
+</ul>
+<h4>Anuswaras - When to specify them explicitly?</h4>
+The scripts of all target languages except Tamil have the anuswara character, and the scheme does
+allow for explicit specification of the anuswara character. However, its usage should be carefully
+considered and used only in places where it is absolutely needed. The reasons for this is explained
+below.
+<p>
+Firstly, the anuswara usage varies significantly among the target languages. Secondly, in these languages
+(except classical sanskrit?), the anuswara does not represent a separate sound/phoneme, but instead 
+stands for 
+<span class="scheme">#n</span>, <span class="scheme">~n</span>, <span class="scheme">n</span>,
+<span class="scheme">N</span>, <span class="scheme">n</span>, or <span class="scheme">m</span>. 
+Hence, the anuswara can be considered an artifact of the script, and avoided in the input text, which
+should try to represent the underlying sound of a word, rather than how it is written in any particular
+target language. This is all the more important because the different languages follow different rules, 
+and anuswara figuring in a certain context in a certain language do not mean it will also figure 
+in that context in a different language.
+<p>
+However, for some contexts, it is not possible for the editor to easily figure out if anuswara should
+be used or not. Hence, the explicit specification of anuswara is not completely avoidable.  However,
+it is strongly recommended that it be avoided wherever possible as explained later.
+<h5>Explicit Anuswara Specifier Representation in the Scheme</h5>
+The scheme provides three different ways for specifying the anuswara 
+<span class="scheme">`n</span>, <span class="scheme">`N</span>, <span class="scheme">M</span>,
+as opposed to just <span class="scheme">M</span> that many standard schems employ. The reason for this
+variety is to avoid the explicit anuswara specification from hiding the underlying phoneme so that the
+input text still is a phonetically fair (in english) representation of the underlying word. For example
+<span class="scheme">sa`ngIta</span> is better than <span class="scheme">saMgIta</span>. Here are
+the recommendations as to which anuswara specifier to use when
+<ul>
+<li>Use <span class="scheme">`n</span> when the anuswara represents
+<span class="scheme">#n</span>, <span class="scheme">~n</span>, or <span class="scheme">n</span> sound. For example,
+<span class="scheme">sa`ngIta</span> instead of <span class="scheme">saMgIta</span>, <span class="scheme">sa`ncAri</span>
+instead of <span class="scheme">saMcAri</span>, and <span class="scheme">sa`ntOsha</span> instead of 
+<span class="scheme">saMtOsha</span>.
+<li>Use <span class="scheme">`N</span> when the anuswara represents <span class="scheme">N</span> sound. For example,
+<span class="scheme">sa`NDIna</span> instead of <span class="scheme">saMDIna</span>.
+<li>Use <span class="scheme">M</span> when the anuswara represents <span class="scheme">m</span> sound.
+</ul>
+<h5>Using explicit Anuswara Specifier in Kannada/Telugu</h5>
+In kannada and telugu, the anuswara in the script follows these rules:
+<ol>
+<li>Anuswara is <u>always</u> used instead of <span class="scheme">m</span> at end of words.
+<li>Anuswara is <u>always</u> used instead of <span class="scheme">#n</span> when preceding 
+<span class="scheme">k</span>/<span class="scheme">kh</span>/<span class="scheme">g</span>/<span class="scheme">gh</span>.
+<li>Anuswara is <u>always</u> used instead of <span class="scheme">~n</span> when preceding 
+<span class="scheme">c</span>/<span class="scheme">ch</span>/<span class="scheme">j</span>/<span class="scheme">jh</span>.
+<li>Anuswara is <u>always</u> used instead of <span class="scheme">n</span> when preceding 
+<span class="scheme">t</span>/<span class="scheme">th</span>/<span class="scheme">d</span>/<span class="scheme">dh</span>.
+<li>Anuswara is <u>always</u> used instead of <span class="scheme">N</span> when preceding 
+<span class="scheme">T</span>/<span class="scheme">Th</span>/<span class="scheme">D</span>/<span class="scheme">Dh</span>.
+<li>Anuswara is <u>always</u> used instead of <span class="scheme">m</span> when preceding 
+<span class="scheme">p</span>/<span class="scheme">ph</span>/<span class="scheme">b</span>/<span class="scheme">bh</span>.
+<li>Anuswara is <u>sometimes</u> used (depending on the word) instead of <span class="scheme">m</span> when preceding 
+other consonants such as <span class="scheme">y</span>, <span class="scheme">r</span> etc. (for example, <span class="scheme">saMyukta</span>)
+</ol>
+Since for the first 6 rules the anuswara is <u>always</u> implied, it is strong recommended that
+you not use the explicit anuswara specifier in these contexts. Note that this does imply that 
+certain Sanskrit based words when translated to sanskrit may not appear with anuswara when it
+should have. For example, it <span class="scheme">sa#nga</span>, but <span class="scheme">sa`ngIta</span>
+in sanskrit. But both would be written with anuswara in kannada and telugu. A careful user can
+explicitly specify the anuswara if a better translation to sanskrit is desired.
+<p>
+For cases covered by the 6th rule, explicit anuswara specifier needs to be specified wheverer applicable.
+<h5>Using explicit Anuswara Specifier in Sanskrit</h5>
+In sanskrit, there are no contexts in which anuswara <u>always</u> figures. Instead it depends
+on the word. Anuswara at end of words, also follow different rules according to different
+conventions:
+<ul>
+    <li>Anuswara is used for words ending in <span class="scheme">m</span> which are in 
+        the middle of sentence. Anuswara is not used at end of sentences.
+    <li>Anuswara is always used for words ending in <span class="scheme">m</span>
+    <li>Anuswara is never used for words ending in <span class="scheme">m</span>
+</ul>
+<p>
+In Sanskrit, it is up to the user to explicitly specify the anuswara where it is applicable. 
+<h5>Using explicit Anuswara Specifier in Malayalam</h5>
+Malayalam is similar to sanskrit except that it does not use anuswara at end of words,
+and also uses anuswara in the middle of words but in fewer possible contexts. 
+<p>
+In Malayalam, like Sanskrit, it is up to the user to explicitly specify the anuswara where 
+it is applicable. 
+<h4>Qualifiers</h4>
+The unified transliteration scheme for carnatic music uses <i>qualifiers</i> 
+in the form of super-script numbers for the following purposes:
+<ol>
+<li>Represent sounds that are not part of the language
+<li>Resolve any ambiguities in the letters of the script (as in the case of 
+Tamil)
+</ol>
+For languages other than Tamil, there is only one case where qualifiers 
+are used. That is the Kannada and Telugu representation of the <i>za/zgha</i>, 
+which occurs in Tamil and Malayalam.  For Tamil, qualifiers are needed in many 
+more contexts because both case #1 and case #2 arise when representing lyrics 
+from other languages. For information on when qualifiers apply, please refer 
+to the scheme.
+<p class="screenonly">
+Click <a href="legend.html"><b>here</b></a> to view the scheme.
+</p>
+<p class="screenonly">
+<a href="#Top"><b>Back to Top</b></a>
+</p>
+</div>
+</body>
+</html>

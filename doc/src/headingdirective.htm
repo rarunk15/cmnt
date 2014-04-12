@@ -1,0 +1,195 @@
+<h3 style="page-break-before:always;">Heading Directive</h3>
+The <span class="syntax2">heading</span> directive can be used to specify text labels to include
+in your notation. These can be used to represent headings such as title of the song, raga, and
+also headings of portions of song as pallavi, anupallavi. Empty headings can be used to
+add empty space.
+<p> 
+The <span class="syntax2">heading</span> directive has the following syntax:
+<div class="sc"><span class="syntax">Heading:"Heading_text",attributes</span></div>
+where, 
+<ul>
+    <li><i>Heading_text</i> (which <u>must</u> be enclosed in double-quotes as shown above) is the
+    text of the heading. This text will be displayed as-is unless the typesetter has been
+    asked to translate to another language via either the <b>Language Directive</b> or via
+    a language specified as one the heading attributes (see below).
+    <li><i>attributes</i> is a comma separated list of one or more of the following:<p>
+    <table class="mytable" style="font-size:100%;width:100%;">
+	<tr class="mytr">
+	<td>font name <td>For example,<br><span class="syntax2">Heading: "taLa: Adi",Arial</span><br>
+				       <span class="syntax2">Heading: "taLa: Adi",MS Sans Serif</span><p>
+				       If you do not specify a font name, the current default font in
+				       your browser is picked. Note that the font name must match a 
+				       font installed on your computer and hence may not render the 
+				       same way on your friend's computer if you shared the notation
+				       data with him/her. If you intend to share your notation information
+				       in raw format, then it is recommended that you pick common fonts or
+				       not specify a font.
+	<tr class="mytr">
+	    <td>Point size of font as a number
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12</span> to render
+		the heading using the font Verdana 12 pt size.
+	<tr class="mytr">
+	    <td><span class="syntax2">bold</span>
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12,bold</span> to render
+		the above heading in bold font
+	<tr class="mytr">
+	    <td><span class="syntax2">italic</span>
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12,italic</span> to render
+		the above heading in italic font
+	<tr class="mytr">
+	    <td>One of <span class="syntax2">left</span>, <span class="syntax2">right</span>, <span class="syntax2">center</span> to
+		indicate alignment.
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12,bold,italic,center</span> to render
+		the above heading in bold, italic font and centered.
+	<tr class="mytr">
+	    <td>One of <span class="syntax2">tamil</span>, <span class="syntax2">sanskrit</span>, <span class="syntax2">telugu</span> or
+		<span class="syntax2">kannada</span> 
+	    <td>This indicate that the actual heading text is in the <b>Unified Transliteration
+		Scheme for Carnatic Music Compositions</b> and should be rendered in a Unicode font in the specified language.
+		This language specification also overrides the defaut language specified by the <b>Language Directive</b>.
+	    <p>
+	    For example, <span class="syntax2">Heading: "alai pAyudE kaNNA!",12,bold,italic,center,tamil</span> would 
+	    interpret <i>alai pAyudE kaNNA!</i> to specify a tamil text following the Unified Transliteration 
+	    scheme, and convert it to the appropriate tamil letters and render it.
+	    <p>
+	    Please note that you must have a font that can render in these languages for the heading to appear correct.
+	    Please see the <b>LanguageFont Directive</b> section for specifying different fonts for different languages.
+	    <p>
+	    </td>
+	</tr>
+    </table>
+    <table class="mytable" style="font-size:100%;width:100%;page-break-before:always;">
+	<tr class="mytr">
+	<td>
+	    <td>One of <span class="syntax2">tamil</span>, <span class="syntax2">sanskrit</span>, <span class="syntax2">telugu</span> or
+		<span class="syntax2">kannada</span> (continued)
+	<td>
+	    <b><i>Overriding some Language attributes</i></b>: You can use 
+	    <i>Extra Language Attributes</i> (see <b>Language Directive</b> section) 
+	    to override the attributes that specified (or implied by default) by
+	    the <span class="syntax2">Language</span> directive. For 
+	    example, let us say that the <span class="syntax2">Language</span> Directive was specified as 
+	    <span class="syntax2">Language: Tamil,granthasa</span>, to imply that by 
+	    default text should be rendered in Tamil, should use 
+	    <span style="font-family:Code2000;">&#x0bb6;</span> for <b>Sa</b>, 
+	    and should use qualifiers for non-Tamil sounds like <b>kha</b>, <b>gha</b> etc. 
+	    Then, if you want a specific heading, to be rendered in Tamil, but not use 
+	    grantha sa, and also not use any qualifiers, you can include the 
+	    attribute <span class="syntax2">Tamil:nogranthasa:noqual</span>. 
+	    <p>
+	    <i>Note: Use of the <span class="syntax2">granthasa</span> attribute requires
+	    your system to meet some requirements - please see the the <b>Language Directive</b> section.</i>
+
+    </table>
+    <p>
+    Note that the attributes can be in any order and the values are case-insensitive.
+</ul>
+<p>
+<h4>Specifying advanced formatting using Wiki directives</h4>
+In the above examples, formatting such as bold, italic was specified as a separate directive. You can instead 
+specify much richer format by using special characters in the heading text itself. The syntax here follows the
+popular Wiki style. Here is a summary of some common formatting constructs you may want to use:
+<p>
+    <table class="mytable" style="font-size:100%;width:7.25in;">
+	<tr class="mytr">
+	    <td>*bold text*<td><b>bold text</b><td>Enclose text inside two asterisks to render that part of the heading in bold
+	<tr class="mytr">
+	    <td>_italic text_<td><i>italic text</i><td>Enclose text inside two underscores to render that part of the heading in italic
+	<tr class="mytr">
+	    <td>fif^th^<td>fif<sup>th</sup><td>Enclose a text inside two caret (^) characters to render that part as superscript
+	<tr class="mytr">
+	    <td>h~2~o<td>h<sub>2</sub>o<td>Enclose a text inside two tilde (~) characters to render that part as subscript
+	<tr class="mytr">
+	<td>{c:red}<td><span style="color:red">red colored heading</span><td>
+			The general syntax is<br>
+			   <span class="syntax2">Heading: "{c:color}heading text", where color specifies a color by name or by its RGB value.
+	<tr class="mytr">
+	<td>{c:=}<td>Underlined heading<td>Start the heading with <span class="syntax2">{c:=}</span> to render the heading as underlined
+	<tr class="mytr">
+	    <td>---<td style="padding:10 10 10 10;">&nbsp;<br><hr><br>a horizontal line<td>A heading text like "---" draws a horizontal line across the notation area
+	<tr class="mytr">
+	<td>[img:url]<td>to insert a image<td>Example:<br>
+	<span class="syntax2">
+	Heading:"[img:http://www.mysite.com/mypage/myimage.jpg]"
+	</span>
+	<tr class="mytr">
+	    <td style="width:2.2in;"><pre>
+[|row1_cell1|row1_cell2|\
+|row2_cell1|row2_cell2|]</pre>
+<td colspan="2">A tabular display<p>
+		 You can specify a table to display by adhering to the following rules:
+		     <ul>
+			 <li>The table content must be enclosed in square brackets [ and ]
+			 <li>The content of every cell is specified within two | |, as in |cell1|. 
+			 <ul><li>If you specify a leading space but no trailing space, content is right aligned.
+			     <li>If you specify a trailing space but no leading space, content is left aligned.
+			     <li>Else content is centered
+			 </ul>
+		     <li>Start a new row by first specifying either \\n (backslash character followed by n)
+			 or a backslash character followed by a newline.
+		    </ul>
+		    <p>
+		    </td>
+		    </tr>
+		    </table>
+    <table class="mytable" style="font-size:100%;width:7.25in;page-break-before:always;">
+	<tr class="mytr">
+	    <td style="width:2.2in;"><pre>
+[|row1_cell1|row1_cell2|\
+|row2_cell1|row2_cell2|]</pre>(continued)
+<td colspan="2"> <b>Example:</b><br>
+		    Here is an example of a table with 2 columns, with each row representing a line of a krithi. The
+		    first column indicates section of song as in pallavi, anupallavi etc., which are rendered in
+		    bold.  The entire table is rendered in point size of 10. There are 4 rows. Note that the last row specifies 
+		    an empty first cell (no heading) as just ||.<p>
+		    <span id="theading" class="syntax2">
+Heading: "[|*P:*|nAdalOluDai brahmAnandamandavE manasA|\
+|*A:*|svAdu phalaprada sapta svara rAga nicaya sahita|\
+|*C:*|hariharAtmabhU surapati Sarajanma ganESAdi|\
+||varamaunulu (u)pAsincarE dhara tyAgarAju teliyu|]",10
+</span>
+<p>
+Note that the above formatting for bold, italic, underlined, colored text etc. and be used to change the formatting of individual cells.
+<p>
+Here is how the typesetter would render it:<br>
+<span class="songfragment" id="theading_v">
+<script language="javascript">
+renderSongFragment("theading_v", "theading", "Tala: adi");
+</script>
+</table>
+<p>
+The typesetter uses a 3rd part convertor called <b>Wiky</b> that handles the Wiki formatting. Please refer 
+to the Wiky website at <a href="http://goessner.net/articles/wiky">http://goessner.net/articles/wiky</a> 
+for complete information on the 
+various formatting constructs you can use. Please note that since the formatting is done within the 
+framework of the notation layout, not all of them may work as you may expect.
+<h4>Multi-line heading</h4>
+You can specify a heading that spans multiple lines. Use <span class="syntax2">[br]</span> to introduce
+a line break as illustrated by the following example:
+<p>
+<table class="mytable">
+<tr class="mytr">
+<td>
+<div class="syntax2" id="mheadings">Heading: "First Line[br]Second Line"
+Heading: ""
+Heading: "*bold line*[br]_italic on next line_"
+</div>
+</td>
+<tr class="mytr">
+<td class="songfragment" id="mheadings_v">
+<script language="javascript">
+renderSongFragment("mheadings_v", "mheadings", "Tala:Adi");
+</script>
+</td>
+</table>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.1</b>: Language specifier can include extra language attributes - see <b>Language Directive</b> section</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

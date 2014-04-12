@@ -1,0 +1,134 @@
+<h2>Synopsis</h2>
+The <i>Carnatic Music Notation Typesetter</i> is a web-based application that 
+allows you to create high quality notation sheets for carnatic music. It can 
+generate notations in English, and if appropriate fonts are installed on your 
+computer, it can even generate notation sheets in the following Indic 
+languages: Sanskrit, Telugu, Tamil and Kannada.
+<p>
+The typesetter requires you to specify the notation for the song to be notated
+in a specific input format that is simple, and easy to use. The application 
+converts the input into a graphical layout similar to those you see in 
+carnatic music books. This manual describes the input format in detail.
+<p>
+<hr>
+<i><b>Browser Support:</b> Firefox is currently the preferred browser to run the
+typsetter. However, typesetter should work on Internet Explorer and Opera.
+As indicated above, due to the typesetter being in Beta release, you may 
+still run into problems on these browsers.  It is the intention of the
+author(s) to support the typesetter on Firefox, Opera, IE and Safari (on Mac).</i>
+<hr>
+<p>
+<h3>What's new in this release</h3>
+The 1.5 beta version of typesetter introduces the following new features:
+<ul>
+<li>A <b>Smart Lyric mode</b> which allows you to specify lyrics more easily. See the <b>SmartLyricMode Directive</b> section.
+<li>Enhancements to manual mode in tala - see the <b>Tala Directive</b>, and the <b>LineBreak Directive</b> sections.
+<li>Support for rendering language using Roman diacritics - see the <b>Language Directive</b> section.
+<li><i>Pagination behavior changes</i>: Due to lack of reliable pagination control (as well as 
+browser incompatiblities), starting with v1.5 Beta, the typesetter does not automatically paginate 
+contents like in earlier versions (since that has proven to be very unreliable).
+The typesetter now instead relies on the browser's printing capabilities itself. 
+This may however result in browser inserting a page break at inappropriate places 
+(e.g. between the swara line and the corresponding lyric line). To fix these,
+you can insert the <span class="syntax2">Pagebreak</span> directive to introduce
+a manual pagebreak.  
+<li>Better control over the width and height of margins around the content can be controlled. See the <b>Orientation Directive</b> section.
+<li><span class="syntax2">Title</span> directive to specify the title of the web-page. This can be useful in
+printing as the browser can be directed to put this information in the header/footer sections. See 
+the <b>Title Directive</b> section.
+<li>The release also has some bug fixes with respect to layout and pagination.
+</ul>
+<h2 style="page-break-before:always;">Overview of the User Interface</h2>
+<div style="float:right">
+<center>
+<img style="border: thin solid gray;" src="newsong.png"></img><br><br>
+</div>
+<div style="padding-right: 10;">
+When you open the typesetter application, it should appear as the picture on the left.
+<p>
+The display is divided into two panes
+<ol>
+    <li style="font-size:8pt;">The bottom area is the <i>input area</i>, where you specify the
+    contents of your song.
+    <li style="font-size:8pt;">The top area is the <i>notation display area</i> which shows the
+    notation sheet corresponding to your input
+</ol>
+<p>
+<b><i>Splitter</i></b>: The spacing of the two panes can be adjusted by clicking on the splitter pane in between and
+dragging it up or down: <img style="border: thin solid gray;" src="splitter_small.png"></img>
+<p>
+You type in notation content (in the format described in the chapters below) in the 
+text box in the command area at the bottom below the 
+<i style="color:blue;">Enter/edit notations for your song below:</i> label. 
+<p><b>Command Area Buttons:</b>
+<ul>
+    <li>The <img src="newbutton.png"/> button allows you to get started with a new song from scratch. 
+    Clicking on this button brings up a dialog where you can specify the song name,
+    raga, tala etc. and this will be converted to the appropriate <i>directives</i>
+    (explained below) in the input format.
+    <li>The <img src="openbutton.png"/> button allows you to open a previously saved notation file.
+    Clicking on this button brings up a dialog which allows you to select a previously saved
+    notation file (a plain text file) on your computer. 
+    <li>The <img src="savebutton.png"/> button allows you to save your notation content to a
+    file on your computer. The file is saved as a plain text file. Clicking on this button 
+    brings up a dialog which allows you to specify the name and location of the file to which
+    the contents should be saved to.
+    <li>The <img src="assistbutton.png"/> button helps you in specifying the various directives. Clicking
+    on this button will proviude assistance for enterting new directives as well as
+    editing already specified directives, making it easy to specify the notation
+    information without having to memorize the syntax of the various directives. See the 
+    <b>Assistance in entering directives</b> section for more information.
+    <li>The <img src="updatebutton.png"/> button updates/creates the notation based on the input
+    in  the text area. So ones you have created your song content, or have made changes
+    to it, click on this button to update the notation display area with those changes.
+    <li>The <img src="cmntbutton.png"/> button brings up a web-page containing information
+    about the typesetter and links to examples, and this manual.
+    <li>The <img src="printbutton.png"/> button (not shown in the screenshot above) sends 
+    your notation to the printer.
+</ul>
+</div>
+<h3>Print your notation, saving as a PDF file</h3>
+Once you have typed in your notation content in the input area, and made the typesetter
+generate notation for it by clicking on the <b>Update</b> button, you can print the
+notation by clicking on the <b>Print</b> button. If you want to generate a PDF file,
+you can install a free PDF print driver (there are many available on the internet)
+and make the browser print to a PDF file.
+<p>
+Note that the <b>Print</b> button switches the editor to print view. To get back to
+the editor, click on the <u>Back to Editor</u> hyperlink on the print view.
+<b>Special note for printing with Firefox</b>: On Firefox, make sure the <i>Print 
+Background (colors & images)</i> checkbox in the <i>Page Setup</i> dialog is checked. 
+Otherwise, the notation will not print correctly. This dialog can be accessed by clicking
+on the <i>Page Setup ...</i> button in the Print Preview mode.
+<p>
+<b>Special note for printing with Internet Explorer</b>: If you are using Internet Explorer
+version 7.x, make sure the <i>Print background colors and images</i> checkbox under the
+<i>Printing</i> category in the <i>Advanced</i> Tab of the <i>Internet Options</i> 
+dialog is checked. On Intenet Explorer 6.x, this is not required as the back
+<h3>Saving your notation</h3>
+Click on the <img src="savebutton.png"/> button to save your input to a text file on your computer.
+You can reload and reuse the contents of the file at a later time by clicking on the 
+<img src="openbutton.png"/> button.
+<p>
+<b>Important</b>: <u>Do not hit the refresh/back button of your browser</u> without
+saving your work, otherwise all your contents would be lost!
+<h2 style="page-break-before:always;">Introduction</h2>
+The input format for the typesetter is a simple ASCII based format i.e. which
+uses standard (english) letters and signs available in all keyboards.  This allows 
+for you to create and maintain the input as a simple text file, and import it
+into the typesetter as and when needed.
+<p>
+Each line of the input format contains a <b><i>directive</i></b>.  A directive
+can be specify one of many things:
+<ul>
+<li>Tala of the song
+<li>Headings, which can specify title of the song are be used to indicate separate
+sections of the songs like <i>pallavi</i>, <i>anu-pallavi</i> etc.
+<li>Swaras
+<li>Lyrics
+<li>Color of the text for swaras and lyrics
+<li>Font of the text for swaras and lyrics
+<li>Should lines to mark "second speed" etc. are to drawn below or above a swara
+</ul>
+<p>
+

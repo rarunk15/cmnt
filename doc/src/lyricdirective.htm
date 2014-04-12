@@ -1,0 +1,74 @@
+<h3 style="page-break-before:always;">Lyrics Directive</h3>
+The <span class="syntax2">L</span> (lyrics) directive can be used to the lyrics for the previously
+specified <span class="syntax2">S</span> (swara) directive. Note that for a single <span class="syntax2">S</span>
+directive, mutiple <span class="syntax2">L</span> directives can be specified and these can be
+used e.g. to specify the lyrics for the various <i>charanams</i> of a <i>krithi</i> which
+typically share the same melody (<i>meTTu</i> in Tamil).
+<p>
+The <span class="syntax2">L</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">L: lyrics</span>
+</div>,
+here
+<ul>
+    <li><span class="syntax2">lyrics</span> is a space separated list of text specifying each lyric
+    fragment. Unless <span class="syntax2">SmartLyricMode</span> is specified before any notation
+    content, <b>you must specify a lyric fragment for every swara in the swara directive</b>. So
+    if the swara directive specifies 20 swaras (tala markers do not count), then you must have
+    20 space separate text for the lyrics. 
+</ul>
+<p>
+<b>Empty Lyric</b>: For certain swara, you may not want a lyric to appear in the typeset content.
+This is typical in certain style of notations, and also typical for actual pauses in the melody. For
+these, you can specify just an underscore letter (<span class="syntax2">_</span>) and that will
+translate to an empty lyric. 
+<p>
+Here is an example of use of lyrics:
+<div style="padding-left:0.25in;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">Input Format</span>
+<td>
+<div class="sc">
+<span id="llex1" class="syntax2">Layout:Krithi
+Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO . va _   bhA ra   mA _ ra  ghu rA  ,
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<td width="50%">
+<span class="songfragment" id="llex1_v">
+<script language="javascript">
+renderSongFragment("llex1_v", "llex1");
+</script>
+</span>
+</table>
+</div>
+<p>
+In the above example, there are 14 swara specifiers discounting the tala markers
+<span class="syntax2">|</span> and
+<span class="syntax2">||</span>, and the higher speed specifiers
+<span class="syntax2">(</span> and
+<span class="syntax2">)</span>. As you can see there are exactly 14 lyric specifiers.
+Note that the first two lyric specifiers are underscores, and they translate to
+empty lyrics in the rendered output. 
+<p>
+Please see <span class="syntax2">SmartLyricMode</span> 
+for more flexibility in specifying lyrics.
+</p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.5 Beta</b>: Support for smart lyric mode (<span class="syntax2">SmartLyricMode</span> directive) </li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

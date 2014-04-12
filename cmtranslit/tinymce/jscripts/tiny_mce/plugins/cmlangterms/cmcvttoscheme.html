@@ -1,0 +1,205 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{$lang_cmlang_cvttoscheme_title}</title>
+	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
+<script language="javascript" type="text/javascript">
+function cmCvtToSchemeInit() 
+{
+    var ruleManagers = tinyMCE.getWindowArg("ruleManagers");
+    if( !ruleManagers ) {
+	alert( "internal error: cannot get data to display form!" );
+	return;
+    }
+
+    var f = document.getElementById("cmlangcvttoschemeform");
+    if( !f )  {
+	alert( "internal error: cannot find form!" );
+	return;
+    }
+
+    var rules = document.getElementById("rules");
+    for( i in ruleManagers ) {
+	var mgr = ruleManagers[i];
+	var mr = mgr.getRules();
+	if( mr && mr.length ) {
+	    var og = document.createElement("optgroup");
+	    og.label = mgr.getCategory();
+	    for(j in mr ) {
+		var rule = mr[j];
+		var o = document.createElement("option");
+		o.value = i + ":" + j;
+		//o.text  = rule.getDescription();
+		//if( o.innerHTML )
+		    o.innerHTML  = rule.getDescription();	// needed for IE
+		og.appendChild(o);
+	    }
+	    rules.appendChild(og);
+	}
+    }
+    //if(f.rules.parentNode.offsetWidth)
+	//f.rules.style.width = f.rules.parentNode.offsetWidth + "px";
+    //if(f.rules.offsetWidth)
+	//f.selrules.style.width = f.rules.offsetWidth + "px";
+}
+
+function onOK()
+{
+    var f = document.getElementById("cmlangcvttoschemeform");
+    var ruleManagers = tinyMCE.getWindowArg("ruleManagers");
+    var callback = tinyMCE.getWindowArg("callback");
+    var rules = new Array();
+
+    if( f && ruleManagers ) {
+	for(o = 0; o <  f.selrules.options.length; o++) {
+	    if( f.selrules.options[o] == null ) continue;
+
+	    var val = f.selrules.options[o].value;
+	    var cindex = val.indexOf(':');
+	    if( cindex > 0 ) {
+		var mgridx = val.substring(0,cindex);
+		var rulidx = val.substring(cindex+1);
+		var rule = new Object();
+		rule.manager = ruleManagers[mgridx];
+		rule.rule     = rule.manager.getRules()[rulidx];
+		rules[rules.length] = rule;
+	    }
+	}
+    }
+    if( rules.length == 0 ) {
+	alert( "Please select one or more rules to apply" );
+	return;
+    }
+    tinyMCEPopup.close();
+    if( rules.length && callback )
+	callback.convertToScheme(rules);
+}
+
+function addToRules() 
+{
+    var f = document.getElementById("cmlangcvttoschemeform");
+    if( !f )  return;
+
+    if( f.rules.selectedIndex >= 0 ) {
+	var opt = f.rules.options[f.rules.selectedIndex];
+	if( !opt.disabled ) {
+	    var val = opt.value;
+	    var mgrindex = val.substring(0, val.indexOf(':'));
+
+	    var ruleManagers = tinyMCE.getWindowArg("ruleManagers");
+
+
+	    f.selrules.options[f.selrules.options.length] = new Option( opt.text + 
+		    				" (" + ruleManagers[mgrindex].getCategory() + ")" ,
+		    							opt.value );
+	    opt.disabled = true;
+	}
+    }
+    else {
+	alert( "Please select a rule to add");
+    }
+}
+
+function removeFromRules() 
+{
+    var f = document.getElementById("cmlangcvttoschemeform");
+    if( !f )  return;
+    if( f.selrules.selectedIndex >= 0 ) {
+	f.selrules.options[f.selrules.selectedIndex] = null;
+    }
+    else {
+	alert( "Please select the rule to be removed from the Selected Rules list");
+    }
+}
+
+function ruleChange()
+{
+    var f = document.getElementById("cmlangcvttoschemeform");
+    if( !f )  return;
+    if( f.rules.selectedIndex >= 0 ) {
+	var o = f.rules.selectedIndex;
+	var ruleManagers = tinyMCE.getWindowArg("ruleManagers");
+
+	var val = f.rules.options[o].value;
+	var cindex = val.indexOf(':');
+	if( cindex > 0 ) {
+	    var mgridx = val.substring(0,cindex);
+	    var rulidx = val.substring(cindex+1);
+	    var rule    = ruleManagers[mgridx].getRules()[rulidx];
+
+	    if( rule.getNotes() )
+		document.getElementById("rulenote").innerHTML = rule.getNotes();
+	    else
+		document.getElementById("rulenote").innerHTML = "\xa0";
+	}
+    }
+    else
+	document.getElementById("rulenote").innerHTML = "\xa0";
+}
+
+</script>
+	<base target="_self" />
+</head>
+<body id="cmlangterms_body" onload="tinyMCEPopup.executeOnLoad('cmCvtToSchemeInit();');" style="display: none">
+    <div id="divbody" style="padding-left:10px;padding-right:10px;" align="center">
+	<form id="cmlangcvttoschemeform">
+	<div class="title">{$lang_cmlang_cvttoscheme_title}</div>
+	    <table width="100%" id="formtable" style="padding-top:1em" cellspacing="0" cellpadding="0">
+		<tr>
+		    <td colspan="2"><b>Select one or more fix/conversion rules to apply to the text:</b>
+		<tr>
+		    <td  colspan="2"style="height:0.50em;"></td>
+		<tr>
+		    <td style="padding:0 0 0 0; margin:0 0 0 0;">
+			<select size="10" onchange="ruleChange();" id="rules" style="overflow:scroll;width:40em;font-size:8pt;font-family:Lucida Grande,Verdana,Arial,Sans-Serif;" name="rules">
+			</select>
+		    <td align="center">
+			<input onclick="addToRules();" type="button" value="Add" style="width:6em;padding:2 2 2 2;"></input>
+		</tr>
+		<tr>
+		    <td style="height:1.00em;"></td>
+		    <td style="height:1.00em;"></td>
+		</tr>
+		<tr>
+		    <td style="padding:0 0 0 0;margin 0 0 0 0;font-size:8pt;font-family:Lucida Grande,Verdana,Arial,Sans-Serif;" name="rules">
+			<span style="color:#000080;"><i>Rule Description:</i></span>
+		    </td>
+		</tr>
+		<tr>
+		    <td valign="top" style="padding:0 0 0 0;margin 0 0 0 0;border:thin solid #c0c0c0;width:40em;font-size:8pt;font-family:Lucida Grande,Verdana,Arial,Sans-Serif;" name="rules">
+			<div style="height:6em;overflow:auto" id="rulenote">&nbsp;</div>
+		    <td>
+		</tr>
+		<tr>
+		    <td style="height:1.00em;"></td>
+		    <td style="height:1.00em;"></td>
+		</tr>
+		<tr>
+		    <td colspan="2"><b>Selected rules:</b>
+		<tr>
+		    <td  colspan="2"style="height:0.50em;"></td>
+		<tr>
+		    <td style="padding:0 0 0 0; margin:0 0 0 0;">
+			<select size="6" id="selrules" style="overflow:auto;width:40em;font-size:8pt;white-space:nowrap;font-family:Lucida Grande,Verdana,Arial,Sans-Serif;" name="selrules" value="">
+			</select>
+		    <td align="center">
+		    <input onclick="removeFromRules();" type="button" value="Remove" style="width:6em;padding:2 2 2 2;"></input>
+		</tr>
+		<tr>
+		    <td style="height:1.0em;"></td>
+		    <td style="height:1.0em;"></td>
+		</tr>
+		<tr>
+		    <td colspan="3">
+			<center>
+			    <input style="width:8em;padding:2 2 2 2;" type="button" onclick="onOK();" value="Convert"></input>
+			    &nbsp;&nbsp;
+			    <input style="width:8em;padding:2 2 2 2;" type="button" onclick="tinyMCEPopup.close();" value="Cancel"></input>
+			</center>
+		    </td>
+		</tr>
+	    </table>
+	</div>
+    </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,2998 @@
+<html>
+<head>
+<title>Carnatic Music Notation Typesetter (v1.5 Beta)</title>
+<script type="text/javascript">
+var codeBase = "../"; 
+</script>
+<script type="text/javascript" src="../src/editor.js"></script>
+<script type="text/javascript">
+var fragments = new Array();
+function renderSongFragment(viewTag, modelTag, prefix)
+{
+    var o = new Object();
+    fragments[fragments.length] = o;
+    o.viewTag = viewTag;
+    o.modelTag = modelTag;
+    if( prefix )
+	o.prefix   = prefix;
+}
+
+function renderFragments() 
+{
+    LookAndFeel.init(document.body, editorCodeBase + "src/l_and_f", true);
+    GamakaManager.init(document.getElementById("gamakatester"));
+    setTimeout("_renderFragments()",1000);
+}
+
+function _renderFragments() 
+{
+    var i;
+    useTopPadForSwaras = true;
+    spanNotationTableEntireWidth = false;
+    for( i = 0; i < fragments.length; i++ ) {
+	var o = fragments[i];
+
+	var modelObj = document.getElementById(o.modelTag);
+	var viewObj = document.getElementById(o.viewTag);
+	if( modelObj != null && viewObj ) {
+	    var p = modelObj;
+	    var m = null;
+	    if( p.className && (p.className == "syntax" || p.className == "syntax2") ) {
+		var v = "";
+		if( o.prefix ) {
+		    v = o.prefix;
+		    v += "\n";
+		}
+		v += p.firstChild.nodeValue;
+		var s = Song.prototype.fromRawText(v);
+		if( s != null && s.fResult ) {
+		    var sv = new SongView(s.fResult, 1, false, s.fResult.getSpeedMarksPreference());	// 1 => # of tala cycles per row
+		    sv.fPageWidth = 0;
+		    sv.fPageHeight = 6;
+		    sv.setInteractive(false);
+		    sv.render(viewObj);
+
+		    var fTable = sv.firstPage().fInner.firstChild;
+		    fTable.parentNode.removeChild(fTable);
+		    sv.getContents().parentNode.removeChild(sv.getContents());
+		    viewObj.removeChild(viewObj.firstChild);
+		    viewObj.appendChild(fTable);
+		    fTable.style.padding = "0 0 0 0";
+		    if( fTable.rows[0].className == "guiderow" )
+			    fTable.deleteRow(0);	/* delete the guide row */
+		}
+	    }
+	}
+    }
+}
+</script>
+<style type="text/css" media="print">
+.mytr > td
+{
+    border: thin solid #c0c0c0;
+}
+</style>
+<style type="text/css" media="screen">
+.mytr > td
+{
+    border: thin solid;
+}
+</style>
+<style type="text/css">
+.mytable
+{
+    border-collapse: collapse;
+}
+
+.mytable > tr > td
+{
+    border: thin solid;
+}
+
+
+.sc {
+    margin-left: 0.25in;
+    margin-right: 0.25in;
+    margin-top: 0.1in;
+    margin-bottom: 0.1in;
+    page-break-inside: avoid;
+}
+.songfragment {
+    margin-left: 0.25in;
+    margin-top: 0.1in;
+    margin-bottom: 0.1in;
+    display:table-cell;
+}
+.syntax {
+    /*border: thin solid #f0f0f0;*/
+    font-family: monospace;
+    font-size: 11;
+    vertical-align: bottom;
+    color: #000080;
+    padding-top: 5;
+    padding-bottom: 5;
+    padding-left: 5;
+    padding-right: 5;
+    white-space: pre;
+    display: table-cell;
+    page-break-inside: avoid;
+}
+
+.syntax2 {
+    font-family: monospace;
+    font-size: 11;
+    color: #000080;
+    white-space: pre;
+}
+
+.songfragment {
+    padding: 0 0 0 0;
+    display: table-cell;
+}
+</style>
+</head>
+
+<body onLoad="renderFragments();" style="font-family:'Lucida Grande',Verdana,Arial,Sans-Serif;font-size:10pt;">
+<div id="gamakatester"></div>
+<center>
+    <h2>Carnatic Music Notation Typesetter (v1.5 Beta)</h2>
+</center>
+<div style="font-size:85%">
+<h2>Synopsis</h2>
+The <i>Carnatic Music Notation Typesetter</i> is a web-based application that 
+allows you to create high quality notation sheets for carnatic music. It can 
+generate notations in English, and if appropriate fonts are installed on your 
+computer, it can even generate notation sheets in the following Indic 
+languages: Sanskrit, Telugu, Tamil and Kannada.
+<p>
+The typesetter requires you to specify the notation for the song to be notated
+in a specific input format that is simple, and easy to use. The application 
+converts the input into a graphical layout similar to those you see in 
+carnatic music books. This manual describes the input format in detail.
+<p>
+<hr>
+<i><b>Browser Support:</b> Firefox is currently the preferred browser to run the
+typsetter. However, typesetter should work on Internet Explorer and Opera.
+As indicated above, due to the typesetter being in Beta release, you may 
+still run into problems on these browsers.  It is the intention of the
+author(s) to support the typesetter on Firefox, Opera, IE and Safari (on Mac).</i>
+<hr>
+<p>
+<h3>What's new in this release</h3>
+The 1.5 beta version of typesetter introduces the following new features:
+<ul>
+<li>A <b>Smart Lyric mode</b> which allows you to specify lyrics more easily. See the <b>SmartLyricMode Directive</b> section.
+<li>Enhancements to manual mode in tala - see the <b>Tala Directive</b>, and the <b>LineBreak Directive</b> sections.
+<li>Support for rendering language using Roman diacritics - see the <b>Language Directive</b> section.
+<li><i>Pagination behavior changes</i>: Due to lack of reliable pagination control (as well as 
+browser incompatiblities), starting with v1.5 Beta, the typesetter does not automatically paginate 
+contents like in earlier versions (since that has proven to be very unreliable).
+The typesetter now instead relies on the browser's printing capabilities itself. 
+This may however result in browser inserting a page break at inappropriate places 
+(e.g. between the swara line and the corresponding lyric line). To fix these,
+you can insert the <span class="syntax2">Pagebreak</span> directive to introduce
+a manual pagebreak.  
+<li>Better control over the width and height of margins around the content can be controlled. See the <b>Orientation Directive</b> section.
+<li><span class="syntax2">Title</span> directive to specify the title of the web-page. This can be useful in
+printing as the browser can be directed to put this information in the header/footer sections. See 
+the <b>Title Directive</b> section.
+<li>The release also has some bug fixes with respect to layout and pagination.
+</ul>
+<h2 style="page-break-before:always;">Overview of the User Interface</h2>
+<div style="float:right">
+<center>
+<img style="border: thin solid gray;" src="src/newsong.png"></img><br><br>
+</div>
+<div style="padding-right: 10;">
+When you open the typesetter application, it should appear as the picture on the left.
+<p>
+The display is divided into two panes
+<ol>
+    <li style="font-size:8pt;">The bottom area is the <i>input area</i>, where you specify the
+    contents of your song.
+    <li style="font-size:8pt;">The top area is the <i>notation display area</i> which shows the
+    notation sheet corresponding to your input
+</ol>
+<p>
+<b><i>Splitter</i></b>: The spacing of the two panes can be adjusted by clicking on the splitter pane in between and
+dragging it up or down: <img style="border: thin solid gray;" src="src/splitter_small.png"></img>
+<p>
+You type in notation content (in the format described in the chapters below) in the 
+text box in the command area at the bottom below the 
+<i style="color:blue;">Enter/edit notations for your song below:</i> label. 
+<p><b>Command Area Buttons:</b>
+<ul>
+    <li>The <img src="src/newbutton.png"/> button allows you to get started with a new song from scratch. 
+    Clicking on this button brings up a dialog where you can specify the song name,
+    raga, tala etc. and this will be converted to the appropriate <i>directives</i>
+    (explained below) in the input format.
+    <li>The <img src="src/openbutton.png"/> button allows you to open a previously saved notation file.
+    Clicking on this button brings up a dialog which allows you to select a previously saved
+    notation file (a plain text file) on your computer. 
+    <li>The <img src="src/savebutton.png"/> button allows you to save your notation content to a
+    file on your computer. The file is saved as a plain text file. Clicking on this button 
+    brings up a dialog which allows you to specify the name and location of the file to which
+    the contents should be saved to.
+    <li>The <img src="src/assistbutton.png"/> button helps you in specifying the various directives. Clicking
+    on this button will proviude assistance for enterting new directives as well as
+    editing already specified directives, making it easy to specify the notation
+    information without having to memorize the syntax of the various directives. See the 
+    <b>Assistance in entering directives</b> section for more information.
+    <li>The <img src="src/updatebutton.png"/> button updates/creates the notation based on the input
+    in  the text area. So ones you have created your song content, or have made changes
+    to it, click on this button to update the notation display area with those changes.
+    <li>The <img src="src/cmntbutton.png"/> button brings up a web-page containing information
+    about the typesetter and links to examples, and this manual.
+    <li>The <img src="src/printbutton.png"/> button (not shown in the screenshot above) sends 
+    your notation to the printer.
+</ul>
+</div>
+<h3>Print your notation, saving as a PDF file</h3>
+Once you have typed in your notation content in the input area, and made the typesetter
+generate notation for it by clicking on the <b>Update</b> button, you can print the
+notation by clicking on the <b>Print</b> button. If you want to generate a PDF file,
+you can install a free PDF print driver (there are many available on the internet)
+and make the browser print to a PDF file.
+<p>
+Note that the <b>Print</b> button switches the editor to print view. To get back to
+the editor, click on the <u>Back to Editor</u> hyperlink on the print view.
+<b>Special note for printing with Firefox</b>: On Firefox, make sure the <i>Print 
+Background (colors & images)</i> checkbox in the <i>Page Setup</i> dialog is checked. 
+Otherwise, the notation will not print correctly. This dialog can be accessed by clicking
+on the <i>Page Setup ...</i> button in the Print Preview mode.
+<p>
+<b>Special note for printing with Internet Explorer</b>: If you are using Internet Explorer
+version 7.x, make sure the <i>Print background colors and images</i> checkbox under the
+<i>Printing</i> category in the <i>Advanced</i> Tab of the <i>Internet Options</i> 
+dialog is checked. On Intenet Explorer 6.x, this is not required as the back
+<h3>Saving your notation</h3>
+Click on the <img src="src/savebutton.png"/> button to save your input to a text file on your computer.
+You can reload and reuse the contents of the file at a later time by clicking on the 
+<img src="src/openbutton.png"/> button.
+<p>
+<b>Important</b>: <u>Do not hit the refresh/back button of your browser</u> without
+saving your work, otherwise all your contents would be lost!
+<h2 style="page-break-before:always;">Introduction</h2>
+The input format for the typesetter is a simple ASCII based format i.e. which
+uses standard (english) letters and signs available in all keyboards.  This allows 
+for you to create and maintain the input as a simple text file, and import it
+into the typesetter as and when needed.
+<p>
+Each line of the input format contains a <b><i>directive</i></b>.  A directive
+can be specify one of many things:
+<ul>
+<li>Tala of the song
+<li>Headings, which can specify title of the song are be used to indicate separate
+sections of the songs like <i>pallavi</i>, <i>anu-pallavi</i> etc.
+<li>Swaras
+<li>Lyrics
+<li>Color of the text for swaras and lyrics
+<li>Font of the text for swaras and lyrics
+<li>Should lines to mark "second speed" etc. are to drawn below or above a swara
+</ul>
+<p>
+
+<h3>Quick Start through an example</h3>
+To understand and quickly become familiar with the input format, let us look at 
+an example. Here is a short snippet of a song specified using an input format, and
+how it is rendered by the typesetter:
+<p>
+<div style="padding-left:0.25in;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">Input Format</span>
+<td>
+<div class="sc">
+<span id="ex1" class="syntax2">Tala: Adi
+DefaultSpeed: 1
+Heading: "brOva bhAramA - bahudAri - Adi - tyAgarAja",bold,italic,14,center
+Heading: ""
+Heading: "pallavi:",bold,left,12
+S: "1)" ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: "2)" m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L:      mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<td width="50%">
+<span class="songfragment" id="ex1_v">
+<script language="javascript">
+renderSongFragment("ex1_v", "ex1");
+</script>
+</span>
+</table>
+</div>
+<p>
+Let us now look at the input line by line.
+<p>
+<hr>
+<span class="syntax">#1: <span class="syntax2">Tala: Adi</span></span><br>
+This line contains a <i>Tala directive</i> that specifies catuSra gati Adi 
+tala as the tala for the song. Specifying the tala also controls how the 
+typesetter should layout the notation of the song and when and where 
+tala markers need to be placed. Check out the <b>Tala Directive</b> section 
+below for more information on the the various talas that can be specified 
+using the tala directive.
+<p>
+<hr>
+<span class="syntax"><span class="syntax2">#2: Heading: "brOva bhAramA - bahudAri - Adi - tyAgarAja",bold,italic,14,center</span><br>
+<span class="syntax2">#3: Heading: ""</span><br>
+<span class="syntax2">#4: Heading: "pallavi:",bold,left,12</span></span><br>
+These line contain <i>Heading directives</i>. Line #2 directs the typesetter 
+to place the text <i>brOva bhArama - bahudAri - Adi - tyAgarAja</i> in 
+14 point size, bold, and italic and centered on the notation display area.
+You can see in the typesetter output area above that this is how the heading 
+appears.
+<p>
+Line #3 specifies an heading directive with an empty heading. This simply results
+in an empty line in the typeset output, and can be used to introduce empty 
+vertical space wherever needed. 
+<p>
+Finally, Line #4 directs the typesetter to place a heading <i>pallavi:</i> in 12 
+point size, bold and aligned at the left edge of the display. 
+<p>
+Check out the <b>Heading Directive</b> section below for more information on
+the heading directive. The above examples are very simple and basic. There is a
+lot of power and flexibility available in specifying a heading, which 
+you can use to specify mixed bold, italic and underlined,  text in various 
+colors,  text that is tabular (i.e. rendered as a table), or text that is
+translated to an Indic language, or even insert an image!
+<p>
+<hr>
+<span class="syntax">#5: <span class="syntax2">S: "1)" ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||</span><br><br>...<br>
+#7: <span class="syntax2">S: "2)" m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||</span></span><br>
+These lines start with <span class="syntax2">S:</span>, a <i>Swara directive</i>,
+which specifies notation i.e. swaras for the song. Here are some key points to note
+in the syntax used to specify swaras:
+<ul>
+<li><i>Swara Labels</i>:
+<span class="syntax2">s</span>, 
+<span class="syntax2">r</span>, <span class="syntax2">g</span>, 
+<span class="syntax2">m</span> etc. indicate swaras, and 
+<span class="syntax2">sa</span>, <span class="syntax2">ri</span>, 
+<span class="syntax2">ga</span>, <span class="syntax2">ma</span> etc. indicate
+dhIrgha or elongated swaras. You can also specify a dhIrgha swara as 
+<span class="syntax2">n</span>, instead of <span class="syntax2">ni</span>. 
+<li>
+<li><i>Tara/Mandra Stayi Swaras</i>:
+To indicate a swara in tara stayi, use the forward-tick character as a suffix 
+as in <span class="syntax2">s<b>'</b></span> (as in Line #7) or 
+<span class="syntax2">sa<b>'</b></span>.  Similarly to indicate a swara in mandra 
+stayi, use the backward-tick character as <span class="syntax2">p<b>`</b></span> or 
+<span class="syntax2">pa<b>`</b></span>.
+<li><i>Pauses, Continuations</i>: The comma (<span class="syntax2"><b>,</b></span>), and 
+semi-colon (<span class="syntax2"><b>;</b></span>) are pauses/continuations, with the 
+latter being twice as long in duration as the former.
+<li><i>Switching speed/kAlam</i>:
+The parenthesis characters <span class="syntax2"><b>(</b></span>, and 
+<span class="syntax2"><b>)</b></span> are used to switch from normal speed to 
+higher speeds. But what is the normal speed? Since the above example did not 
+explicitly specify a layout (see <b>Layout Directive</b> below), the default
+layout is <i>krithi layout</i>. In the krithi layout, for catuSra gati (i.e. as
+per tala specified), swaras by default are in second speed i.e. 2 swaras per 
+akshara. So in the above example, the swaras outside of paranthese are in
+the default, second speed. However, phrases <span class="syntax2">p d n , </span>
+on line #5, and <span class="syntax2">p d n s' n pa ; </span> on line #7 are in
+third speed, and thus are rendered as such in the output. Note that the paranthesis
+must be separated by spaces on either side.
+<li><i>Tala Markers</i>:
+The special characters <span class="syntax2">|</span>, and 
+<span class="syntax2">||</span> indicate tala markers but they are only for
+clarity in the input for you as the user. They are simply skipped by the 
+typesetter which automatically determines where tala markers fall for the 
+current tala based on the duration of the swaras. In other words, you dont have
+to specify these in the input, their presence/absence has no effect on the 
+typeset output, but having them there may allow the input to be
+more understandable.
+<li><i>Sangati Labels</i>:
+Both the above swara directives here begin with a quoted string,
+which is a special indicator telling the typesetter to attach a label to the 
+left of the swara lines (and their associated lyric lines). The labels here are
+<i>1)</i> and <i>2)</i> respectively, and in this example are used to indicate
+the first and second sangatis of the pallavi. 
+<li><i>Gamaka specifiers</i>:
+Following the swara and the stayi suffix, certain characters or patterns are 
+allowed to indicate standard gamakas. In the example above, on Line #7, the 
+<span class="syntax2">m~</span>, with the tilde/wavy-line character (~) after m, 
+indicates the <i>kampita</i> gamaka for that madhyama swara. You can see in 
+the rendition that the gamaka is rendered as a glyph above the swara as shown
+in the typesetter output area above.
+<ul>
+<li>See the <b>Swara Directive</b> section below for more information on how to 
+specify gamakas. You can use special characters like ~ that map to specific 
+predefined glyphs, and also specify anuswaras.
+</ul>
+</ul>
+Check out the <b>Swara Directive</b> section below for more information.
+<p>
+Let us move on to the next couple of lines in the input.
+<p>
+<hr>
+<span class="syntax">#6: <span class="syntax2">L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,</span><br><br>...<br>
+#8: <span class="syntax2">L:      mA . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,</span><br></span><p>
+These lines starts with <span class="syntax2">L:</span>, a <i>lyric 
+directive</i>, which specifies lyrics associated with the swaras for the
+previous <i>swara directive</i> seen. Lyrics for the swaras are separated by 
+one or more spaces. It is important to note that you <b>must</b> specify 
+one lyric for every swara (including pauses) in the swara line. An empty 
+lyric can be specified using the underscore character 
+(<span class="syntax2">_</span>) as employed in this example. 
+It is also not uncommon to use a period (<span class="syntax2">.</span>)
+instead, particularly if the corresponding swara/continuation should be emphasized
+as with gamaka.
+<p>
+<i>It is not necessary to align the lyrics</i> against the swaras in the corresponding
+swara directive as done in the example above. The typesetter will automaticallly
+align them in the typeset output as shown above. Of course it makes the input a
+lot more readable if the lyrics are aligned against the swaras using spaces. Note
+also that in the typesetter program has a button that can automatically align the
+raw input itself automatically for you.
+<p>
+Check out the <b>Lyric Directive</b> section below for more information.
+<h2 style="page-break-before:always;">Assistance in entering directives</h2>
+As mentioned earlier, the input area of the typesetter application has an <b>Assist</b> button
+that can assist you in entering new directives, and editing already specified directives making
+it easy to specify the notation information without having to memorize the syntax of the various
+directives.  There are two kinds of assistance:
+<ul>
+    <li><b>Directive specific dialogs/forms:</b> Here assistance is provided via dialogs/forms
+    specific to a directive. 
+    <p>
+    In the example below, the <b>Assist</b> button is pressed when the cursor on an empty line:
+	<p><center><img src="src/select_directive.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;padding-bottom:5;">Fig A1</b></center>
+    <p>
+    As shown above, a dialog that asks you to select a directive that you wish to add is shown.
+    Pick a directive and click OK, and a dialog specific to that directive will be displayed. 
+    <p>
+    In the second example below, after "Heading: " was typed on a new line, the <b>
+	Assist</b> button was pressed:
+	<p><center><img src="src/newheading.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;padding-bottom:5;">Fig A1</b></center>
+    <p>As shown above, a form for entering the heading is shown. Here you can specify the 
+    heading text, the alignment, the formatting etc. After entering that, if you click "ok", 
+    then the contents of heading directive is appropriately constructed and placed in the
+    text area as shown below:
+	<p><center><img src="src/newheading2.png"/>
+	    <br><b style="font-size: 10pt;padding-top:5;padding-bottom:5;">Fig A2</b></center>
+    <p>
+    You can bring up the assistance dialogs when the line where the cursor is in the input 
+    area is one of the foollowing:
+    <ul>
+	<li>An empty line. In this case, as explained above a dialog that lets you firsy
+	pick a directive would be shown.
+	<li>Contains just the directive name: The dialog specific to the directive would be
+	shown and you can specify all the parameters for the directive.
+	<li>Contains a complete valid directive: Again, the dialog specific to the directive 
+	would be shown, and you can change the already specified parameters.
+    </ul>
+    <p>
+    <li><b>Inline assistance (TAB completion):</b> Once you get familiar with the syntax 
+    of the directives, some may find it faster to type in the raw directives rather than 
+    use the forms. You can press the tab key while typing in the directive, and the application
+    should complete the directive information wherever appropriate. For example, if on
+    a new line, you enter just the letter "t" and than press the TAB key (see Fig A3 below), 
+    the application will immediately fill "Tala: " as a beginning of a tala directive (see Fig
+    A4 below). Then for the value for the tala directive, if for example, you enter "k" and 
+    press TAB (Fig A5 below), the application will fill in "KhandaCapu" (Fig A6 below).
+    <p>
+    <table>
+	<tr>
+	    <td align="center"><img src="src/inlineassist1.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A3</b>
+	    <td>&nbsp;
+	    <td align="center"><img src="src/inlineassist2.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A4</b>
+	<tr>
+	    <td>&nbsp;
+	    <td>&nbsp;
+	    <td>&nbsp;
+	<tr>
+	    <td align="center"><img src="src/inlineassist3.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A5</b>
+	    <td>&nbsp;
+	    <td align="center"><img src="src/inlineassist4.png"/>
+		<br><b style="font-size: 10pt;padding-top:5;">Fig A6</b>
+	</tr>
+    </table>
+</ul>
+<h2 style="page-break-before:always;">Directives - in detail</h2>
+Each line of the input format contains a directive. The syntax of a directive 
+is the directive name, followed by a colon, which is then followed by the 
+directive value:<br>
+<div class="sc"><span class="syntax">directive_name:directive_value</span></div>
+<p>
+For example:
+<div class="sc">
+<span class="syntax">Tala: Adi
+S: s r g m | p d | n s
+</span>
+</div>
+<p>
+<b><i>Directive names are case insensitive</i></b>. There can be spaces around the colon 
+separating the directive name and the value. Also in most places, more than
+one space is <=> one space. So all the following <i>Tala</i> and <i>S</i> 
+(for swaras) directives are equivalent to each other:
+<div class="sc">
+<span class="syntax">tala: Adi
+	tALa: Adi
+	Tala: Adi
+	Tala : Adi
+	Tala:                      Adi
+	Tala            :     Adi
+
+	S: s r g m | p d | n s
+	S: s   r   g   m | p d |   n s
+</span>
+</div>
+Spacing is flexible so that you can give whatever spacing that is needed to make the input format
+itself readable.
+<p>
+<b><i>Header vs. Body section</i></b>: The specification of the song in this format 
+is roughly divided into 2 sections: <ul>
+<li>The header portion where you specify overall attributes for the song. Certain
+<i>directives</i> must appear in the header portion only.
+<li>The main body where you specify the swaras and the associated lyrics. You
+can also specify headings for different portions of the song here. Certain
+<i>directives</i> cannot appear in the body portion and must appear only in
+the header portion
+</ul>
+<p>
+There is no clear demarcation between the header and the body portion. Basically the
+first heading or swara or lyric signals the start of the body portion.
+<h3 style="page-break-before:always;">DefaultSpeed Directive</h3>
+The <span class="syntax2">DefaultSpeed</span> directive controls what the default speed
+of the swaras in a Swara Directive are. The speed here implies the duration of the swara.
+The typesetter current supports 3 speeds:
+<ul>
+<li><b>0</b> - which implies what is colloquially known as first speed, where each swara spans
+a full akshara.
+<li><b>1</b> - which implies what is colloquially known as second speed, where e.g. in 
+catusra gati, each swara spans half an aksara, or 2 swaras taken up an akshara. Note that
+in this speed for tIsra gati, 3 swaras take up 1 akshara. Similarly for khaNDa, miSra
+and sankIrNa gati, it would be 5, 7 and 9 swaras per akshara respectively.
+<li><b>2</b> - which implies what is colloquially known as third speed, where e.g. in 
+catusra gati, each swara spans quarter of an aksara, or 4 swaras taken up an akshara.
+For tiSra, khaNDa, miSra and sankIrNa gati it would be  6, 10, 14 and 19 swaras.
+</ul>
+<p>
+Note that depending on the layout (see Layout directive), an appropriate default speed
+is automatically set for you. The DefaultSpeed directive can be used to override that
+default. The value of the DefaultSpeed directive must be one of the above speeds. This
+implies that swaras at higher speeds will be shown with speed lines (above or below -
+see SpeedMarks directive). Note that there is no way to specify a speed that is
+<i>slower</i> than the default, and so e.g. if you pick a default speed as 1, then
+there is no way to specify swaras of speed 0. Hence you should pick such a speed
+only if there is no such need.
+<p>
+Here are some examples of usage of the DefaultSpeed directive. The varnam layout (see <b>Layout
+Directive</b>, while it may not be most appropriate to show various speeds, is used
+here for illustrative purposes, as it makes the typesetter show each akshara clearly:
+<p>
+<table class="mytable">
+<tr class="mytr">
+<td>
+<div class="syntax2" id="speed0">DefaultSpeed: 0 
+Layout: varnam
+Tala: Adi
+S: s r ( s r ( g m p d ) ) r g ( r g ( m p d n ) )
+</div>
+<td>
+<span class="songfragment" id="speed0_v">
+<script language="javascript">
+renderSongFragment("speed0_v", "speed0");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td>
+<div class="syntax2" id="speed1">DefaultSpeed: 1 
+Layout: varnam
+Tala: Adi
+S: sa ri s r ( g m p d ) ri ga r g ( m p d n )
+</div>
+<td>
+<span class="songfragment" id="speed1_v">
+<script language="javascript">
+renderSongFragment("speed1_v", "speed1");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td>
+<div class="syntax2" id="speed2">DefaultSpeed: 2 
+Layout: varnam
+Tala: Adi
+S: sa ; ri ; sa ri g m p d ri ; ga ; ri ga m p d n
+</div>
+<td>
+<span class="songfragment" id="speed2_v">
+<script language="javascript">
+renderSongFragment("speed2_v", "speed2");
+</script>
+</span>
+</td>
+</tr>
+</table>
+
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Heading Directive</h3>
+The <span class="syntax2">heading</span> directive can be used to specify text labels to include
+in your notation. These can be used to represent headings such as title of the song, raga, and
+also headings of portions of song as pallavi, anupallavi. Empty headings can be used to
+add empty space.
+<p> 
+The <span class="syntax2">heading</span> directive has the following syntax:
+<div class="sc"><span class="syntax">Heading:"Heading_text",attributes</span></div>
+where, 
+<ul>
+    <li><i>Heading_text</i> (which <u>must</u> be enclosed in double-quotes as shown above) is the
+    text of the heading. This text will be displayed as-is unless the typesetter has been
+    asked to translate to another language via either the <b>Language Directive</b> or via
+    a language specified as one the heading attributes (see below).
+    <li><i>attributes</i> is a comma separated list of one or more of the following:<p>
+    <table class="mytable" style="font-size:100%;width:100%;">
+	<tr class="mytr">
+	<td>font name <td>For example,<br><span class="syntax2">Heading: "taLa: Adi",Arial</span><br>
+				       <span class="syntax2">Heading: "taLa: Adi",MS Sans Serif</span><p>
+				       If you do not specify a font name, the current default font in
+				       your browser is picked. Note that the font name must match a 
+				       font installed on your computer and hence may not render the 
+				       same way on your friend's computer if you shared the notation
+				       data with him/her. If you intend to share your notation information
+				       in raw format, then it is recommended that you pick common fonts or
+				       not specify a font.
+	<tr class="mytr">
+	    <td>Point size of font as a number
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12</span> to render
+		the heading using the font Verdana 12 pt size.
+	<tr class="mytr">
+	    <td><span class="syntax2">bold</span>
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12,bold</span> to render
+		the above heading in bold font
+	<tr class="mytr">
+	    <td><span class="syntax2">italic</span>
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12,italic</span> to render
+		the above heading in italic font
+	<tr class="mytr">
+	    <td>One of <span class="syntax2">left</span>, <span class="syntax2">right</span>, <span class="syntax2">center</span> to
+		indicate alignment.
+	    <td>For example, <span class="syntax2">Heading: "rAga: AbhOgi",Verdana,12,bold,italic,center</span> to render
+		the above heading in bold, italic font and centered.
+	<tr class="mytr">
+	    <td>One of <span class="syntax2">tamil</span>, <span class="syntax2">sanskrit</span>, <span class="syntax2">telugu</span> or
+		<span class="syntax2">kannada</span> 
+	    <td>This indicate that the actual heading text is in the <b>Unified Transliteration
+		Scheme for Carnatic Music Compositions</b> and should be rendered in a Unicode font in the specified language.
+		This language specification also overrides the defaut language specified by the <b>Language Directive</b>.
+	    <p>
+	    For example, <span class="syntax2">Heading: "alai pAyudE kaNNA!",12,bold,italic,center,tamil</span> would 
+	    interpret <i>alai pAyudE kaNNA!</i> to specify a tamil text following the Unified Transliteration 
+	    scheme, and convert it to the appropriate tamil letters and render it.
+	    <p>
+	    Please note that you must have a font that can render in these languages for the heading to appear correct.
+	    Please see the <b>LanguageFont Directive</b> section for specifying different fonts for different languages.
+	    <p>
+	    </td>
+	</tr>
+    </table>
+    <table class="mytable" style="font-size:100%;width:100%;page-break-before:always;">
+	<tr class="mytr">
+	<td>
+	    <td>One of <span class="syntax2">tamil</span>, <span class="syntax2">sanskrit</span>, <span class="syntax2">telugu</span> or
+		<span class="syntax2">kannada</span> (continued)
+	<td>
+	    <b><i>Overriding some Language attributes</i></b>: You can use 
+	    <i>Extra Language Attributes</i> (see <b>Language Directive</b> section) 
+	    to override the attributes that specified (or implied by default) by
+	    the <span class="syntax2">Language</span> directive. For 
+	    example, let us say that the <span class="syntax2">Language</span> Directive was specified as 
+	    <span class="syntax2">Language: Tamil,granthasa</span>, to imply that by 
+	    default text should be rendered in Tamil, should use 
+	    <span style="font-family:Code2000;">&#x0bb6;</span> for <b>Sa</b>, 
+	    and should use qualifiers for non-Tamil sounds like <b>kha</b>, <b>gha</b> etc. 
+	    Then, if you want a specific heading, to be rendered in Tamil, but not use 
+	    grantha sa, and also not use any qualifiers, you can include the 
+	    attribute <span class="syntax2">Tamil:nogranthasa:noqual</span>. 
+	    <p>
+	    <i>Note: Use of the <span class="syntax2">granthasa</span> attribute requires
+	    your system to meet some requirements - please see the the <b>Language Directive</b> section.</i>
+
+    </table>
+    <p>
+    Note that the attributes can be in any order and the values are case-insensitive.
+</ul>
+<p>
+<h4>Specifying advanced formatting using Wiki directives</h4>
+In the above examples, formatting such as bold, italic was specified as a separate directive. You can instead 
+specify much richer format by using special characters in the heading text itself. The syntax here follows the
+popular Wiki style. Here is a summary of some common formatting constructs you may want to use:
+<p>
+    <table class="mytable" style="font-size:100%;width:7.25in;">
+	<tr class="mytr">
+	    <td>*bold text*<td><b>bold text</b><td>Enclose text inside two asterisks to render that part of the heading in bold
+	<tr class="mytr">
+	    <td>_italic text_<td><i>italic text</i><td>Enclose text inside two underscores to render that part of the heading in italic
+	<tr class="mytr">
+	    <td>fif^th^<td>fif<sup>th</sup><td>Enclose a text inside two caret (^) characters to render that part as superscript
+	<tr class="mytr">
+	    <td>h~2~o<td>h<sub>2</sub>o<td>Enclose a text inside two tilde (~) characters to render that part as subscript
+	<tr class="mytr">
+	<td>{c:red}<td><span style="color:red">red colored heading</span><td>
+			The general syntax is<br>
+			   <span class="syntax2">Heading: "{c:color}heading text", where color specifies a color by name or by its RGB value.
+	<tr class="mytr">
+	<td>{c:=}<td>Underlined heading<td>Start the heading with <span class="syntax2">{c:=}</span> to render the heading as underlined
+	<tr class="mytr">
+	    <td>---<td style="padding:10 10 10 10;">&nbsp;<br><hr><br>a horizontal line<td>A heading text like "---" draws a horizontal line across the notation area
+	<tr class="mytr">
+	<td>[img:url]<td>to insert a image<td>Example:<br>
+	<span class="syntax2">
+	Heading:"[img:http://www.mysite.com/mypage/myimage.jpg]"
+	</span>
+	<tr class="mytr">
+	    <td style="width:2.2in;"><pre>
+[|row1_cell1|row1_cell2|\
+|row2_cell1|row2_cell2|]</pre>
+<td colspan="2">A tabular display<p>
+		 You can specify a table to display by adhering to the following rules:
+		     <ul>
+			 <li>The table content must be enclosed in square brackets [ and ]
+			 <li>The content of every cell is specified within two | |, as in |cell1|. 
+			 <ul><li>If you specify a leading space but no trailing space, content is right aligned.
+			     <li>If you specify a trailing space but no leading space, content is left aligned.
+			     <li>Else content is centered
+			 </ul>
+		     <li>Start a new row by first specifying either \\n (backslash character followed by n)
+			 or a backslash character followed by a newline.
+		    </ul>
+		    <p>
+		    </td>
+		    </tr>
+		    </table>
+    <table class="mytable" style="font-size:100%;width:7.25in;page-break-before:always;">
+	<tr class="mytr">
+	    <td style="width:2.2in;"><pre>
+[|row1_cell1|row1_cell2|\
+|row2_cell1|row2_cell2|]</pre>(continued)
+<td colspan="2"> <b>Example:</b><br>
+		    Here is an example of a table with 2 columns, with each row representing a line of a krithi. The
+		    first column indicates section of song as in pallavi, anupallavi etc., which are rendered in
+		    bold.  The entire table is rendered in point size of 10. There are 4 rows. Note that the last row specifies 
+		    an empty first cell (no heading) as just ||.<p>
+		    <span id="theading" class="syntax2">
+Heading: "[|*P:*|nAdalOluDai brahmAnandamandavE manasA|\
+|*A:*|svAdu phalaprada sapta svara rAga nicaya sahita|\
+|*C:*|hariharAtmabhU surapati Sarajanma ganESAdi|\
+||varamaunulu (u)pAsincarE dhara tyAgarAju teliyu|]",10
+</span>
+<p>
+Note that the above formatting for bold, italic, underlined, colored text etc. and be used to change the formatting of individual cells.
+<p>
+Here is how the typesetter would render it:<br>
+<span class="songfragment" id="theading_v">
+<script language="javascript">
+renderSongFragment("theading_v", "theading", "Tala: adi");
+</script>
+</table>
+<p>
+The typesetter uses a 3rd part convertor called <b>Wiky</b> that handles the Wiki formatting. Please refer 
+to the Wiky website at <a href="http://goessner.net/articles/wiky">http://goessner.net/articles/wiky</a> 
+for complete information on the 
+various formatting constructs you can use. Please note that since the formatting is done within the 
+framework of the notation layout, not all of them may work as you may expect.
+<h4>Multi-line heading</h4>
+You can specify a heading that spans multiple lines. Use <span class="syntax2">[br]</span> to introduce
+a line break as illustrated by the following example:
+<p>
+<table class="mytable">
+<tr class="mytr">
+<td>
+<div class="syntax2" id="mheadings">Heading: "First Line[br]Second Line"
+Heading: ""
+Heading: "*bold line*[br]_italic on next line_"
+</div>
+</td>
+<tr class="mytr">
+<td class="songfragment" id="mheadings_v">
+<script language="javascript">
+renderSongFragment("mheadings_v", "mheadings", "Tala:Adi");
+</script>
+</td>
+</table>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.1</b>: Language specifier can include extra language attributes - see <b>Language Directive</b> section</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">HeadingPrefs Directive</h3>
+The <span class="syntax2">HeadingPrefs</span> directive can be set the default preferences for
+subsequent Heading directives such as the default font size, and default font/text color. The
+syntax of the <span class="syntax2">HeadingPrefs</span> directive is as follows:
+<div class="sc"><span class="syntax2">HeadingPrefs: attributes</span></div>
+where <i>attributes</i> is a comma separated list of one or more of the following:<ul>
+<li><i>font size</i>: The default point size of the headings as a number
+<li><i>color</i>: The color of the text of the headings. This can either be a color name 
+such as <i>green</i>, <i>blue</i> or a RGB (red, green, blue) combination.
+</ul>
+<p>
+Here are some examples of usages of the <span class="syntax2">HeadingPrefs</span> directive:
+<p>
+<table class="mytable" style="font-size:100%;width:100%;">
+<tr class="mytr">
+<td>
+<span class="syntax2">HeadingPrefs: 12</span>
+<td>
+Sets the default point size for headings to 12pt.
+<tr class="mytr">
+<td>
+<span class="syntax2">HeadingPrefs: 12,red</span>
+<td>
+Sets the default point size for headings to 12pt and color to red.
+<tr class="mytr">
+<td>
+<span class="syntax2">HeadingPrefs: 12,rgb(64,100,125)</span>
+<td>
+Sets the default point size for headings to 12pt, and the color to a a color 
+whose red-component is 64, blue component is 100, and green component is 125. 
+The <i>rgb(red,green.blue)</i> of color specification takes a value between
+0 and 255 for each of the red, green and blue component. The maximum value
+of 255 for all three i.e. rgb(255,255,255) is white, the minimum value of 0
+for all three i.e. rgb(0,0,0) is black. All the colors of the spectrum fall
+between these two and take varying values for these three components.
+</table>
+<p>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">GamakaPrefs Directive</h3>
+The <span class="syntax2">GamakaPrefs</span> directive can be used to set the default preferences for
+subsequent gamaka markers in Swara directives. Currently, the preferences apply only to
+text based gamakas i.e. <span class="syntax2">g(w)</span>, which results in the text within
+the parenthesis <span class="syntax2">w</span> here, to be used as gamaka markers. The 
+preferences allow you to specify the size of font, and font/text color. The
+syntax of the <span class="syntax2">GamakaPrefs</span> directive is as follows:
+<div class="sc"><span class="syntax2">GamakaPrefs: attributes</span></div>
+where <i>attributes</i> is a comma separated list of one or more of the following:<ul>
+<li><i>font size</i>: The default point size of the font of the text based gamakas as a number
+<li><i>color</i>: The color of the text of the text based gamakas. This can either be a color name 
+such as <i>green</i>, <i>blue</i> or a RGB (red, green, blue) combination.
+</ul>
+<p>
+Here are some examples of usages of the <span class="syntax2">GamakaPrefs</span> directive:
+<p>
+<table class="mytable" style="font-size:100%;width:100%;">
+<tr class="mytr">
+<td>
+<span class="syntax2">GamakaPrefs: 12</span>
+<td>
+Sets the default point size of the font of text based gamaka specifiers to 12pt.
+<tr class="mytr">
+<td>
+<span class="syntax2">GamakaPrefs: 12,red</span>
+<td>
+Sets the default point size for the font of text based gamaka specifiers 12pt and color to red.
+<tr class="mytr">
+<td>
+<span class="syntax2">GamakaPrefs: 12,rgb(64,100,125)</span>
+<td>
+Sets the default point size of the font for text based gamakas to 12pt, and the color to a a color 
+whose red-component is 64, blue component is 100, and green component is 125. 
+The <i>rgb(red,green.blue)</i> of color specification takes a value between
+0 and 255 for each of the red, green and blue component. The maximum value
+of 255 for all three i.e. rgb(255,255,255) is white, the minimum value of 0
+for all three i.e. rgb(0,0,0) is black. All the colors of the spectrum fall
+between these two and take varying values for these three components.
+</table>
+<p>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Gati Directive</h3>
+The <span class="syntax2">Gati</span> directive can be used to
+switch <i>gati</i>/<i>nadai</i> (gait) of the song. There five different gatis in carnatic music: the ubiquitous <i>catusra</i>, <i>tiSra</i>, <i>khaNDa</i>, 
+<i>miSra</i>, <i>sankIrNa</i>. In the typesetter, the default <i>gati</i>
+is <i>catusra</i> unless you are using a tala like <i>Tisra Gati Adi</i>.
+<p>
+The <span class="syntax2">S</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">Gati: gati</span>
+</div>
+where, <span class="syntax2">gati</span> is one of <span class="syntax2">tisra catusra khanda misra sankirna</span>
+<p>
+Gati switches can at the start of an akshara and thus can be at the following:
+<ul>
+<li> start of a tala cycle i.e. <i>avarthanam</i>.
+<li> start of a tala anga within a tala cycle.
+<li> start of an <i>akshara</i> within a tala anga.
+</ul>
+<p>
+Here is an example showing gati switches. Note that the Varnam layout allows us to see the # of swaras per akshara clearly for the speed setting of 1.
+<p>
+<table style="width:5.5in;"  class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="gatis">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 2
+S: s r g m   p  d   n s'  s'  n  d p | m g  r  s |
+Gati: Tisra
+S:  s r g  r g m  g m p m p d ||
+Gati: Khanda
+S: s r s r g  r g r g m
+Gati: Misra
+S: s r g s r g m 
+Gati: Sankirna
+S: s r s r g s r g m |
+Gati: catusra
+S: s r g m   p  d   n s'  |  s'  n  d p  m g  r  s ||
+</span>
+</div>
+<tr class="mytr">
+<td width="50%">
+    <span class="songfragment" id="gatis_v">
+	<script language="javascript">
+	    renderSongFragment("gatis_v", "gatis");
+	</script>
+    </span>
+</table>
+<h4>Implicit Default Speed change associated with gati switches</h4>
+(<i><b>Note</b>: New to 1.3</i>)<br>
+On encountering a gati switch, the notation typesetter sometimes may 
+switch the default speed of swaras (see <b>DefaultSpeed Directive</b>).
+<p>
+For example, if the default speed is 2, and the gati switches from 
+<i>catusra</i> gati to any other gati, then default speed changes to 1. When this 
+happens, four swaras per akshara (<i>catusra</i> gati for speed 2), switches to
+three, five, seven or nine i.e <i>tisra</i>, <i>khanda</i>, <i>miSra</i>, <i>sankIrna</i> 
+gatis at speed of 1. 
+<p>
+This is done to match what typically happens in practice, where on a 
+gati switch, for the same speed, <i>tiSra</i> packs the least number of swaras 
+per akshara (3), followed by <i>catusra</i> (4), then <i>khaNDa</i> (5), then 
+<i>miSra</i> (7), and then <i>sankIrNa</i>. The automatic implicit change of 
+default speed thus allows the gati switches in the typesetter to be more inline 
+with their natural usage in practice.
+<p>
+Conversely when switching from non-<i>catusra</i> gati at a speed of 1, to
+<i>catusra</i> gati, the default speed is increased to 1. It should also
+be noted that when the gati switches back to the default gati of the song, the 
+default speed is always restored to the original default speed of the song.
+<h4>Caveat</h4>
+The above speed change is done for the specific cases mentioned. If a gati
+switch is specified for a song in <i>catusra</i> gati with a default speed
+of 1 (rather than 2), then no speed change is done. This can result in
+<i>tisram</i> packing more swaras than <i>catusra</i>, which does not match with the 
+natural usage of these <i>gatis</i>.
+<p>
+One way to get around this and achieve a switch of four swaras per akshara in 
+<i>catusra gati</i> to three swaras per akshara in <i>tisra gati</i> (for speed = 2) 
+is by using the special <i>Empty Swara Indicator</i> i.e.  _ (underscore - 
+see <b>Swara Directive</b>) to "blank out" half the swaras. This is illustrated in 
+the following example:
+<p>
+<table style="width:5.5in;"  class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="gatis2">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 1
+S: s r g m   r g m p
+Gati: Tisra
+S: s _ r _ g _   r _ g _ m _
+</span>
+</div>
+<!-- <tr class="mytr"> -->
+<td width="50%">
+    <span class="songfragment" id="gatis2_v">
+	<script language="javascript">
+	    renderSongFragment("gatis2_v", "gatis2");
+	</script>
+    </span>
+</table>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+Due to this caveat, it is recommended that for notations involving
+gati switches, the default speed be set to 2.
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.1</b>: Introduced</li>
+	<li><b>v1.3</b>: Introduced implicit speed changes</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Language Directive</h3>
+The <span class="syntax2">Language</span> directive specifies two things:
+<ol>
+<li> The language in which to render the swaras (specified by Swara Directives) 
+and lyrics (specified by Lyric Directives). 
+<li> The <i>default</i> language in which to render the headings and other
+text specified by the Heading Directives. Note that <i>default</i> here
+implies that this is the language that will be in effect for an heading
+unless the Heading directive overrides it. Hence it is possible to include
+headings in different languages.
+</ol>
+<p>
+Using this directive you can tell the typesetter to show your notations 
+and headings in English with diacritics, Sanskrit, Telugu, Tamil or Kannada. Note that for 
+Lyric and Heading Directives, the typesetter would presume that lyrics are 
+specified in the <b>Unified Transliteration Scheme for Carnatic Music Compositions</b>, 
+and translate to the specified language for rendering.
+<p>
+If no Language directive is specified, swaras and lyrics are rendered as
+specified in input i.e. in English.
+<p>
+Here are some examples:<p>
+<table class="mytable" style="width:7in;">
+<tr class="mytr">
+<td>
+<span class="syntax2" id="diacritics">Tala: Adi
+Language: Diacritics
+Heading: "bRova bhAramA",12,center
+Heading: "(brOva bhAramA)",english,italic,9,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="diacritics_v" style="font-family:Lucida Grande;">
+<script language="javascript">
+renderSongFragment("diacritics_v", "diacritics");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="sanskrit">Tala: Adi
+Language: sanskrit
+Heading: "bRova bhAramA",12,center
+Heading: "(brOva bhAramA)",english,italic,9,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="sanskrit_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("sanskrit_v", "sanskrit");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="telugu">Tala: Adi
+Language: telugu
+Heading: "brOva bhAramA",12,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="telugu_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("telugu_v", "telugu");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="tamil">Tala: Adi
+Language: tamil
+Heading: "brOva bhAramA",12,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="tamil_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("tamil_v", "tamil");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<span class="syntax2" id="kannada">Tala: Adi
+Language: kannada
+Heading: "brOva bhAramA",12,center
+S:      ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="kannada_v" style="font-family:Akshar Unicode;">
+<script language="javascript">
+renderSongFragment("kannada_v", "kannada");
+</script>
+</span>
+</td>
+</table>
+<h4>Extra language attributes</h4>
+The <span class="syntax2">Language</span> directive allows you to specify certain
+extra attributes in the language value, which control how the content in that
+language is rendered. A language directive with attribute values has the
+following syntax:
+<div class="sc">
+<span class="syntax2">Language: your_language:attr1:attr2</span>
+</div>
+where, 
+<ul>
+    <li><span class="syntax2">your_language</span> is one of 
+	<span class="syntax2">Sanskrit Telugu Tamil Kannada English</span>
+    <li><span class="syntax2">attr1</span> is the first attribute, and
+	    <span class="syntax2">attr2</span> is the second attribute etc.
+</ul>
+<p>
+Currently the following attributes are supported:
+<ul>
+    <li>One of <span class="syntax2">noqual nohard</span> to specify a Tamil
+    qualifier scheme - see <b>Tamil Qualifier Scheme</b> below for more information.
+    <li><span class="syntax2">granthasa,nogranthasa</span>, which is applicable only to
+    Tamil. It directs the typesetter to use or not use the 
+    <span style="font-family:code2000;">&#x0bb6;</span> character for 
+    <b>Sa</b> (as in Siva, Sakthi). The default is to not use, which implies 
+    <span style="font-family:Code2000;">&#x0bb8;<sub>2</sub></span> is used for <b>Sa</b>. 
+    Note however that the <span style="font-family:Code2000;">&#x0bb6;</span> character is 
+    a fairly recent addition to Unicode (in 2006) and hence it is supported only in a few
+    systems at this time. So you should use the <span class="syntax2">granthasa</span> specifier only
+    if your system can support it. Here are the current known configurations in which this character
+    is supported:
+    <ul>
+	<li>On Microsoft Vista, there is support at the system level for this character.
+	The Latha font that is part of the OS supports this font.  The system support is
+	by the Unicode rendering engine called <i>Uniscribe</i>, which is in the dll 
+	<i>usp10.dll</i>. The version of the dll that ships with Vista has this support
+	<li>On Microsoft XP, if Office 2007 is installed then the Unicode
+	rendering engine that is part of the Office 2007 at this time. However,
+	the rendering engine that is in use for the rest of the system is an older
+	version and does <i>not</i> support it. To make say <i>FireFox</i>
+	or <i>Opera</i> browsers to use the Office 2007's rendering engine, find
+	the <i>usp10.dll</i> under the Office 2007 installation directory tree, 
+	and copy the it into into the FireFox, Opera installation directory.
+	<p>
+	You would still need a Unicode font that supports the character. One such
+	font is <i>Code2000</i>, which is a shareware font available for download
+	at www.code2000.net.
+    </ul>
+    <li>A percentage value in the form <span class="syntax2">n%</span>
+    This controls the size of the qualifiers shown for languages like Tamil 
+    when displaying sounds not natural to the language. The qualifiers are shown 
+    as sup-scripted numbers and normally are shown in a point size that is 
+    closest 70% of the current font size. This may be too small or too big for
+    some fonts depending on user preference. In such cases, the size of the
+    qualifiers can be adjusted using this attribute in the <span class="syntax2">Language</span> directive.
+</ul>
+<p>
+For example <span class="syntax2">Language: Tamil:granthasa:90%</span> asks the
+typesetter to use <span style="font-family:Code2000;">&#x0bb6;</span> for <b>Sa</b>,
+and also show qualifiers (e.g. for <b>kha</b>, <b>gha</b> etc.) with a font 
+whose size is closest to 90% of the current font size for the Tamil language.
+<h4>Need for explicit specifiers in Lyric directives</h4>
+It would be common for lyric fragments (syllables) belonging to a word 
+to be specified as separate entities separated by spaces if they are 
+assigned to different swaras (as would be very common) - e.g. 
+<span class=syntax2">ninnukOri</span> would appear as <span class="syntax2">nin nu kO ri</span>.
+As a result, when applying interpreting a text in the Unified scheme
+for translation to a language, the typesetter cannot rely on spaces
+to imply word delimitors, and you may have to explicitly qualify 
+certain letters so that the typesetter renders them properly. This is
+explained in this expection.
+<p>
+<h4>Tamil: <span style="font-family:Code2000">&#x0ba8;</span> vs.  
+    <span style="font-family:Code2000">&#x0ba9;</span>.</h4>
+The Tamil script has two characters for the "na" sound - 
+<span style="font-family:Code2000">&#x0ba8;</span> 
+and 
+<span style="font-family:Code2000">&#x0ba9;</span>.
+The latter 
+<span style="font-family:Code2000">&#x0ba9;</span>.
+cannot appear at the beginning of the word. A phrase like say <i>manam nOgi</i> 
+is written as <span style="font-family:Code2000">
+&#x0BAE;&#x0BA9;&#x0BAE;&#x0BCD; &#x0BA8;&#x0BCB;&#x0B95;&#x0BBF;
+</span>, wherein both characters figure. 
+Note that at a word start like nOgi,
+<span style="font-family:Code2000">&#x0ba8;</span> figures. 
+Usually, in the Unified scheme,
+if specify <i>manam nOgi</i> (say in a Heading Directive), the translator
+will correctly translate as it would rely on space as word delimitor,
+and know that for nO, it should use <span style="font-family:Code2000">&#x0ba8;</span>.
+However, when appearing as lyrics in a notation as in a Lyric Directive, this phrase 
+could appear as <span class="syntax2">L: ma na m nO gi</span> where the syllables are sung as 
+separate swaras. Here, the typesetter cannot rely on spaces to determine
+word breaks - as that would result in the incorrect conclusion that each
+syllable is a separate word! Hence when interpreting lyric text, the 
+typesetter <u>always</u> assumes <span class="syntax2">na</span> stands for 
+<span style="font-family:Code2000">&#x0ba9;</span>, and to specify
+<span style="font-family:Code2000">&#x0ba8;</span>, you need to explicitly
+specify it as <span class="syntax2">^n</span> as in <span class="syntax2">ma na m ^nO gi</span>.
+<p>
+<h5>Use n2 as opposed to n^</h5>
+Note that there are two was of specifying 
+<span style="font-family:Code2000">&#x0ba8;</span>:  <span class="syntax2">n2</span> 
+or <span class="syntax2">n^</span>. However, since the caret character 
+(<span class="syntax2">^</span>) would be interpret as superscript indicator by
+<b>Wiky</b>, it is safer to always use <span class="syntax2">n2</span> in Heading directives
+<p>
+<h4>Tamil Qualifier Schemes</h4>
+As implied earlier, if you specify the language as <span class="syntax2">Tamil:noqual</span> then 
+no numeric subscript qualifiers (to distinguish ka, ga etc.) would be used. 
+Similarly <span class="syntax2">Tamil:nohard</span> would specify a qualifier scheme, where 
+qualifiers are used for the softer ga (but not for ka), and of course for gha, and kha, 
+which do not exist in tamil.
+<p>
+Note that <span class="syntax2">Tamil:natural</span> does exist for specifying a qualifier
+scheme where qualifiers are used only when sounds deviate from natural tamil language rules
+(e.g. gAnam where the soft gA occurs at the beginning of word and is not typical of native
+tamil words), this scheme's effectiveness is nullified in the lyric line. This is because
+the scheme relies on being able to reliably detect word beginnings, and as mentioned above,
+that is not possible in the lyric line. However, you should be able use it in the Heading directives.
+<p>
+For more information in Tamil Qualifier schemes, please refer to <a href="http://arunk.freepgs.com/cmtranslit/legend.html">
+The Unified Carnatic Music Transliteration Scheme - the legend</a>
+<p>
+<h4>Anuswara</h4>
+In languages like kannada and telugu, the anuswara character 
+<span style="font-family:Code2000">&#x200d;&#x0c82;</span>  is used instead #n, ~n, n, N and m
+in certain contexts. For example, in contexts shown in words <i>sa#ngIta</i>, 
+<i>pa~nca</i>, <i>candra</i>, <i>khaNDa</i>, <i>amba</i> etc. the anuswara character is 
+used instead of the #n, ~n, n and N respectively. Usually, in the Unified scheme, you can 
+specify these words as their fair phoenetic representation rather than as 
+<i>saMgIta, paMca, caMdra, khaMDa</i> and <i>aMba</i>. In fact, that is the recommended 
+way as it facilitates easy translation to other languages which may have different 
+anuswara rules. For example, Sanskrit has these same words but does not use the 
+anuswara in every case.
+<p>
+When specifying lyrics, as indicated above, a single word may appear as multiple fragments 
+separated by spaces. This means that you have to be careful as to whether the #n, ~n, n, N and m
+is specified in a separate fragment from its trailing consonant, which actually determines
+whether anuswara should be used. the translator will display the anuswara <u>only</u> if 
+both are together. So while <span class="sc2">L: ca ndra</span> will still be rendered 
+correctly with anuswara (<i>n</i> and the subsequent consonant <i>d</i> are
+still together), <span class="syntax2">L: ca n dra</span>,  <span class="syntax2">L: ca n . d ra</span>
+etc. will not. In such cases, you would need to explicitly specify the anuswara as in
+<span class="syntax2">L: ca M dra</span>,  <span class="syntax2">L: ca M . dra</span>. 
+Note however that this does compromise the ability to easily switch a notation to a 
+different language.
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.1</b>: Introduced extra language attributes - support for tamil 
+	<span style="font-family:Code2000;">&#x0bb6;</span>, qualifier size control</li>
+	<li><b>v1.5 beta</b>: Support for English with diacritics</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">LanguageFont Directive</h3>
+The <span class="syntax2">LanguageFont</span> directive can be used to direct the
+typesetter to use a specific default font for all notation content that are rendered
+in a specific language. If your swaras and lyrics are in telugu, and you have a mixture
+of headings in english, telugu and sanskrit - you can specify multiple LanguageFont
+directives to ask the typesetter to use a specific telugu font, sanskrit font and an
+english font. Note that the LanguageFont is optional, and if not specified the browser
+simply picks an appropriate font if available. Also whatever font you specify must be
+available on your system in order for the typesetter to be able to render the content
+properly.
+<p>
+The syntax of the <span class="syntax2">LanguagFont</span> directive is as follows:
+<div class="sc"><span class="syntax2">LanguagFont: attributes</span></div>
+where <i>attributes</i> is a comma separated list of one or more of the following:<ul>
+    <li><i>language</i>: The language whose font is being specified by this directive. This is
+     one of English, Sanskrit, Telugu, Tamil or Kannada. Note that for English with diacritics
+     some fonts may display better than others.
+    <li><i>font name</i>: The name of the font 
+</ul>
+<p>
+<p>
+Here are some examples of usages of the <span class="syntax2">LanguageFont</span> directive:
+<p>
+<table class="mytable" style="font-size:100%;width:100%;">
+<tr class="mytr">
+<td>
+<span class="syntax2">LanguageFont: Sanskrit,Akshar Unicode</span>
+<td>
+Sets the font to use for all Sanskrit content to the <i>Akshar Unicode</i> font.
+<tr class="mytr">
+<td>
+<span class="syntax2">LanguageFont: English,Courier</span>
+<td>
+Sets the font to use for all english content to the <i>Courier</i> font.
+</table>
+<p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.5</b>: Support for English with diacritics</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Layout Directive</h3>
+The <span class="syntax2">Layout</span> directive indicates the type of song that
+is being notated which in turn plays a part in determining the layout of the
+notation. It <u>must</u> be specified in the header section so that the tala for the 
+song is known when the first swara line is encountered.
+<p>
+The <span class="syntax2">tala</span> directive has the following syntax:
+<div class="sc"><span class="syntax">Layout: layout_value</span></div>
+The value is one of the following pre-defined layout values:
+<ul>
+<li><span class="syntax2">gitam</span> or <span class="syntax2">geetam</span> to
+indicate a <i>gItam layout</i>
+<li><span class="syntax2">varnam</span> to indicate a <i>varnam layout</i>
+<li><span class="syntax2">kriti</span> or <span class="syntax2
+">krithi</span> to indicate a <i>krithi layout</i>. Note that if no Layout directive
+is specified, the typesetter presumes a krithi layout.
+</ul>
+<p>
+Please refer to the individual sections below for more information on these layouts.
+<h4>Geetam Layout</h4>
+If you specify the value of the Layout directive as <span class="syntax2">gitam</span> or 
+<span class="syntax2">geetam</span>, then it
+indicates that the typesetter should layout the notations as if for a geetham.  
+<div class="sc"><span class="syntax">Layout: gitam</span></div>
+The gItam layout implies the following:
+<ul>
+    <li>The default speed of swaras would be what is colloquially called "first
+    speed", where each swara would span one akshara as it is for a 
+    <i>gItam</i>. (<i>Note that this can be overriden with <b>DefaultSpeed</b> 
+    directive</i>)
+    <li>An extra space (or tala marker) is provided between each akshara of a 
+    tala so that each akshara stands out clearly, and notations across lines (avarthanas)
+    are aligned at each akshara. This is in contrast to the krithi format, where any 
+    extra space would appear only at tala anga ends and aksharas within an anga 
+    "run together".
+</ul>
+<p>
+Here is an example of a gItam layout of the most popular gItam:<p>
+<table style="width:5.5in;"  class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="lambodara">Layout: gitam
+Tala: rupaka
+S: m   p d  s' s' r' r'  s' d  p m   p
+L: sRi . ga Na nA ta sin du ra . var na
+S: r   m p  d  m  p  d  p  m  g  r  s
+L: ka ru Na sA ga ra ka ri va da na .
+</span>
+</div>
+<div style="font-size:7;">
+<i>(Note: "Tala" specifies the tala, and "S" and "L" specify Swaras and Lyrics. See Tala directive,
+	Swara Directive and Lyric Directive sections for more information)</i>
+</div>
+<tr class="mytr">
+<td width="50%">
+    <span class="songfragment" id="lambodara_v">
+	<script language="javascript">
+	    renderSongFragment("lambodara_v", "lambodara");
+	</script>
+    </span>
+</table>
+<h4>Varnam Layout</h4>
+If you specify the value of the Layout directive as <span class="syntax2">varnam</span>,
+then it indicates that the typesetter should layout the notations as if for a varnam.  
+<div class="sc"><span class="syntax">Layout: varnam</span></div>
+The varnam layout implies the following:
+<ul>
+    <li>The default speed of swaras would be what is colloquially called "second
+    speed", where each swara would span two aksharas as it is for a 
+    <i>varnam</i>. (<i>Note that this can be overriden with <b>DefaultSpeed</b> 
+    directive</i>)
+    <li>An extra space (or tala marker) is provided between each akshara of a 
+    tala so that each akshara stands out clearly, and notations across lines (avarthanas)
+    are aligned at each akshara. This is in contrast to the krithi format, where any 
+    extra space would appear only at tala anga ends and aksharas within an anga 
+    "run together".
+</ul>
+<p>
+Here is an example of a varnam layout of the one more popular varnams:<p>
+<table class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="ninnukori">Layout: varnam
+Tala: Adi
+S: g  , g   , r   , , , s  s r r g g r r s  r g r s   r s d` s  r g p g  r s r
+L: ni _ nnu _ kO  . . . ri . . . . . . . yu . . . nnA . . .  nu . . . ra . . .
+</span>
+</div>
+<div style="font-size:7;">
+<i>(Note: "Tala" specifies the tala, and "S" and "L" specify Swaras and Lyrics. See Tala directive,
+	Swara Directive and Lyric Directive sections for more information)</i>
+</div>
+<tr class="mytr">
+<td width="100%">
+    <div class="songfragment" id="ninnukori_v" style="width:100%;">
+	<script language="javascript">
+	    renderSongFragment("ninnukori_v", "ninnukori");
+	</script>
+    </div>
+</table>
+<h4>Krithi Layout</h4>
+If you specify the value of the Layout directive as <span class="syntax2">krithi</span>,
+then it indicates that the typesetter should layout the notations as if for a krithi.  
+<div class="sc"><span class="syntax">Layout: krithi</span></div>
+<p>
+Note that krithi layout is the default and hence there is no need for an explicit layout
+directive for it.
+<p>
+The krithi layout implies:
+<ul>
+    <li>The default speed of swaras would be what is colloquially called "second
+    speed", where each swara would span two aksharas as it is for a 
+    <i>krithi</i>. (<i>Note that this can be overriden with <b>DefaultSpeed</b> 
+    directive</i>)
+    <li>The notations across lines would typically be aligned at tala angas for clarity.
+    This is in contrast to the varnam/gitam layout, where alignment is achieved at
+    each akshara.
+</ul>
+<p>
+Here is an example of a krithi layout:<p>
+<table style="width:5in;" class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span id="krithilayout" class="syntax2">Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: m   , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L: mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+</span>
+</div>
+<div style="font-size:7;">
+<i>(Note: "Tala" specifies the tala, and "S" and "L" specify Swaras and Lyrics. See Tala directive,
+	Swara Directive and Lyric Directive sections for more information)</i>
+</div>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="krithilayout_v">
+<script language="javascript">
+renderSongFragment("krithilayout_v", "krithilayout");
+</script>
+</span>
+</table>
+</div>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Linebreak Directive</h3>
+The <span class="syntax2">Linebreak</span> directive has an effect
+<i>only</i> in <b>manual</b> tala layouts specified in the <span 
+class="syntax2">Tala</span> directive as <span class="syntax2">Tala: &lt;talaname&gt;,Manual</span>
+(where <span class="syntax2">&lt;talaname&gt;</span> is a predefined tala).
+In such modes, the typesetter knows where the various notations fall within
+the tala cycle but since the layout is manual, it will not start a new notation
+line unless explicitly directed. The <span class="syntax2">SongBreak</span> directive can
+be used starts a new notation, however it also resets the tala cycle. The
+<span class="syntax2">LineBreak</span> directive can be used to break the 
+current notation line and start a new notation line <i>but not reset the tala cycle</i>
+<p>
+There is no value for the directive and so its syntax is as follows:
+<p>
+<span class="syntax2">LineBreak</span>
+</p>
+<p>
+Note also that the <span class="syntax2">Linebreak</span> directive is ignored for
+usual, non-manual tala layouts.
+</p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.5 Beta</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Lyrics Directive</h3>
+The <span class="syntax2">L</span> (lyrics) directive can be used to the lyrics for the previously
+specified <span class="syntax2">S</span> (swara) directive. Note that for a single <span class="syntax2">S</span>
+directive, mutiple <span class="syntax2">L</span> directives can be specified and these can be
+used e.g. to specify the lyrics for the various <i>charanams</i> of a <i>krithi</i> which
+typically share the same melody (<i>meTTu</i> in Tamil).
+<p>
+The <span class="syntax2">L</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">L: lyrics</span>
+</div>,
+here
+<ul>
+    <li><span class="syntax2">lyrics</span> is a space separated list of text specifying each lyric
+    fragment. Unless <span class="syntax2">SmartLyricMode</span> is specified before any notation
+    content, <b>you must specify a lyric fragment for every swara in the swara directive</b>. So
+    if the swara directive specifies 20 swaras (tala markers do not count), then you must have
+    20 space separate text for the lyrics. 
+</ul>
+<p>
+<b>Empty Lyric</b>: For certain swara, you may not want a lyric to appear in the typeset content.
+This is typical in certain style of notations, and also typical for actual pauses in the melody. For
+these, you can specify just an underscore letter (<span class="syntax2">_</span>) and that will
+translate to an empty lyric. 
+<p>
+Here is an example of use of lyrics:
+<div style="padding-left:0.25in;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">Input Format</span>
+<td>
+<div class="sc">
+<span id="llex1" class="syntax2">Layout:Krithi
+Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO . va _   bhA ra   mA _ ra  ghu rA  ,
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<td width="50%">
+<span class="songfragment" id="llex1_v">
+<script language="javascript">
+renderSongFragment("llex1_v", "llex1");
+</script>
+</span>
+</table>
+</div>
+<p>
+In the above example, there are 14 swara specifiers discounting the tala markers
+<span class="syntax2">|</span> and
+<span class="syntax2">||</span>, and the higher speed specifiers
+<span class="syntax2">(</span> and
+<span class="syntax2">)</span>. As you can see there are exactly 14 lyric specifiers.
+Note that the first two lyric specifiers are underscores, and they translate to
+empty lyrics in the rendered output. 
+<p>
+Please see <span class="syntax2">SmartLyricMode</span> 
+for more flexibility in specifying lyrics.
+</p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.5 Beta</b>: Support for smart lyric mode (<span class="syntax2">SmartLyricMode</span> directive) </li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">LyricPrefs Directive</h3>
+The <span class="syntax2">LyricPrefs</span> directive can be set the default preferences for
+subsequent Lyric directives such as the default font size, and default font/text color. The
+syntax of the <span class="syntax2">LyricPrefs</span> directive is as follows:
+<div class="sc"><span class="syntax2">LyricPrefs: attributes</span></div>
+where <i>attributes</i> is a comma separated list of one or more of the following:<ul>
+<li><i>font size</i>: The default point size of the lyrics as a number
+<li><i>color</i>: The color of the text of the lyrics. This can either be a color name 
+such as <i>green</i>, <i>blue</i> or a RGB (red, green, blue) combination.
+</ul>
+<p>
+Here are some examples of usages of the <span class="syntax2">LyricPrefs</span> directive:
+<p>
+<table class="mytable" style="font-size:100%;width:100%;">
+<tr class="mytr">
+<td>
+<span class="syntax2">LyricPrefs: 12</span>
+<td>
+Sets the default point size for lyrics to 12pt.
+<tr class="mytr">
+<td>
+<span class="syntax2">LyricPrefs: 12,red</span>
+<td>
+Sets the default point size for lyrics to 12pt and color to red.
+<tr class="mytr">
+<td>
+<span class="syntax2">LyricPrefs: 12,rgb(64,100,125)</span>
+<td>
+Sets the default point size for lyrics to 12pt, and the color to a a color 
+whose red-component is 64, blue component is 100, and green component is 125. 
+The <i>rgb(red,green.blue)</i> of color specification takes a value between
+0 and 255 for each of the red, green and blue component. The maximum value
+of 255 for all three i.e. rgb(255,255,255) is white, the minimum value of 0
+for all three i.e. rgb(0,0,0) is black. All the colors of the spectrum fall
+between these two and take varying values for these three components.
+</table>
+<p>
+Note that if no LyricPrefs directive is given, the default font size is
+taken to be 10pt, and color to be black.
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Orientation Directive</h3>
+The <span class="syntax2">Orientation</span> directive controls whether the typesetter
+should layout the notation in portrait (8 inches width by 11 inches height) or in
+landscape (11 inches width by 8 inches height) mode. The default is portrait mode,
+and should serve well for most situations. However, if your notations are too wide
+(e.g. long tala cycles) you may want to use the Landscape mode.
+<p>
+You can also specify to override the default page margins value which is 0.25 inches 
+on all sides (left, right, top and bottom).
+<p>
+The <span class="syntax2">Orientation</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">Orientation: &lt;value&gt;</span>
+<br><br>(or)<br><br>
+<span class="syntax2">Orientation: &lt;value&gt;&lt;margin-specifiers&gt;</span>
+</div>
+where,
+<ul>
+    <li><span class="syntax2">&lt;value&gt;</span> must be either <span class="syntax2">portrait</span> or
+        <span class="syntax2">landscape</span>.
+    <li><span class="syntax2">&lt;margin-specifiers&gt;</span> is a comma separated list of one or more of the
+        following:
+        <ul>
+            <li><span class="syntax2">left:&lt;margin-value&gt;</span> to specify a value (in inches) for
+	    the left margin (e.g. <span class="syntax2">left:0.15</span> for 0.15 inches left margin)
+            <li><span class="syntax2">right:&lt;margin-value&gt;</span>, to specify a value (in inches) for
+	    the right margin.
+            <li><span class="syntax2">top:&lt;margin-value&gt;</span>, to specify a value (in inches) for
+	    the top margin.
+            <li><span class="syntax2">bottom:&lt;margin-value&gt;</span>, to specify a value (in inches) for
+	    the bottom margin.
+        </ul>
+</ul>
+<p>
+As mentioned above, the default setting is to portrait, and so an explicit
+<span class="syntax2">Orientation: portrait</span> is not strictly needed.
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.5 Beta</b>: Introduced page margin overrides</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Pagebreak Directive</h3>
+Due to lack of reliable pagination control (as well as browser incompatiblities),
+starting with v1.5 Beta, the typesetter does not automatically paginate contents like
+in earlier versions (since that has proven to be very unreliable).
+<p>
+The typesetter now instead relies on the browser's printing capabilities itself. 
+This may however result in browser inserting a page break at inappropriate places 
+(e.g. between the swara line and the corresponding lyric line). To fix these,
+you can insert the <span class="syntax2">Pagebreak</span> directive to introduce
+a manual pagebreak.  
+<p>
+To check how the browser has applied page breaks and where
+if necessary <span class="syntax">Pagebreak</span> directives are needed, you need 
+to either use the print preview capabilities of the browser (if available) or
+print your notation.
+<p>
+There is no value for the directive and so its syntax is as follows:
+<p>
+<span class="syntax2">Pagebreak</span>
+</p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.5 Beta</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">PhraseEnds Directive</h3>
+<p>
+The <span class="syntax2">PhraseEnds</span> directive controls the display of
+the phrase end markers (<span class="syntax2">-</span>, i.e. dash/hyphen),
+which can be used at the end of a swara specified in the Swara Directive. This marker
+is used to group swaras i.e. as in indicate sub-phrases within a phrase, or where a
+pause or breath should be taken while singing.
+<p>
+The <span class="syntax2">PhraseEnds</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">PhraseEnds: &lt;style&gt;</span>
+<br>(or)<br>
+<span class="syntax2">PhraseEnds: &lt;style&gt;,&lt;trailing_space&gt;</span>
+</div>
+where, 
+<ul>
+<li><span class="syntax2">&lt;style&gt;</span> specifies the style of the phrase ends in the typeset
+notation. It can be one of
+<ul>
+<li><span class="syntax2">Hide</span> - to make the phrase ends invisible
+in the display.
+<li><span class="syntax2">Show</span> - to make the phrase ends show as-is i.e. as
+hyphens.
+<li><span class="syntax2">Handle</span> - to make the phrase ends show as a handle
+in the form of a <img src="../src/l_and_f/phrase_end_handle.PNG"> glyph, aligned to 
+the bottom right of the swara that is at the phrase end.
+<li><span class="syntax2">HandleThick</span> - to make the phrase ends show as a thick
+handle in the form of a <img src="../src/l_and_f/phrase_end_handle_thicker.PNG"> glyph, 
+aligned to the bottom right of the swara that is at the phrase end.
+</ul>
+<li><span class="syntax2">&lt;trailing_space&gt;</span> specifies the amount of trailing space to introduce
+after the phrase (thus separate phrases in the display making them stand out). This can be
+specified in two ways:
+<ul>
+<li>A number <span class="syntax2">n</span>, where <span class="syntax2">n</span> is 0 or greater. This
+will apply a trailing space of <span class="syntax2">n</span> pixels
+<li>In terms of inches. For example <span class="syntax2">0.15in</span> for a spacing of 0.15 inches.
+</ul>
+</ul>
+<p>
+Note that the default style is <span class="syntax2">Hide</span>, and default spacing is 0 (i.e. no spacing)
+Also that the speed marks are always broken at phrase ends to show phrasing.
+<p>
+Here are some examples:
+<p>
+<center>
+<table class="mytable" style="width:7in;">
+<tr class="mytr">
+<td style="font-size:80%">Invisible, no spacing (default)</td>
+<td>
+<div class="syntax2" id="pehide">Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pehide_v">
+<script language="javascript">
+renderSongFragment("pehide_v", "pehide");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">Show as hyphens, no spacing</td>
+<td style="width:2in;">
+<div class="syntax2" id="peshow">PhraseEnds: show
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="peshow_v">
+<script language="javascript">
+renderSongFragment("peshow_v", "peshow");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">Invisible , spacing of 15 pixels</td>
+<td style="width:2in;">
+<div class="syntax2" id="pehide15">PhraseEnds: Hide,15
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pehide15_v">
+<script language="javascript">
+renderSongFragment("pehide15_v", "pehide15");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">As hyphens, spacing of 10 pixels</td>
+<td style="width:2in;">
+<div class="syntax2" id="peshow10">PhraseEnds: Show,10
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="peshow10_v">
+<script language="javascript">
+renderSongFragment("peshow10_v", "peshow10");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">As handle, spacing of 10 pixels</td>
+<td style="width:2in;">
+<div class="syntax2" id="pehandle10">PhraseEnds: Handle,10
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pehandle10_v">
+<script language="javascript">
+renderSongFragment("pehandle10_v", "pehandle10");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">As thick handle, spacing of 0.15 inches</td>
+<td style="width:2in;">
+<div class="syntax2" id="pethandlein">PhraseEnds: HandleThick,0.15in
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pethandlein_v">
+<script language="javascript">
+renderSongFragment("pethandlein_v", "pethandlein");
+</script>
+</span>
+</td>
+</tr>
+</table>
+</center>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+    <li><b>v1.1</b>: Added <span class="syntax2">Handle</span>, <span class="syntax2">HandleThick</span> styles; Also added spacing control</li>
+</ul>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Songbreak Directive</h3>
+The <span class="syntax2">Songbreak</span> directive is used to force a
+break in the current notation line and start a new tala cycle. It is 
+generally not needed as a break is introduced automatically whenever a 
+heading directive is seen.  However, there may be situations where 
+you want to explicitly break a notation in the middle of a tala cycle.
+Also when using "Manual" tala (see <b>Tala Directive</b>), this directive
+is the only way to force the typesetter to start a new line of notations.
+<p>
+There is no value for the directive and so its syntax is as follows:
+<p>
+<span class="syntax2">SongBreak</span>
+</p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.4</b>: (Officially) Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">SmartLyricMode Directive</h3>
+The <span class="syntax2">SmartLyricMode</span> directive asks
+the typesetter to intelligently match lyrics in lyric lines  
+(<span class="syntax2">L</span> directive) against the swaras in the 
+corresponding swara lines (<span class="syntax2">S</span> directive).
+<p>
+By default, the typesetter mandates that you specify a lyric entry in the
+lyric line for every swara entry in the swara line - for swaras as well
+as pauses. It also mandates that when a lyric line is specified, it 
+must have as many entries as swaras in swara line - no more, no less.
+<p>
+In smart lyric mode, the typesetter allows for the following conveniences:
+<ul>
+   <li>For a swara that is a pause or an empty placeholder i.e. one of 
+   <span class="syntax2">,</span> (comma), 
+   <span class="syntax2">;</span> (semicolon),
+   <span class="syntax2">-</span> (dash),
+   <span class="syntax2">_</span> (underscore), and
+   <span class="syntax2">__</span> (double-underscore),
+   , the typesetter will take the corresponding
+   lyric only if it is a one of <span class="syntax2">-</span> (dash), 
+   <span class="syntax2">.</span> (dash), <span class="syntax2">_</span> (underscore).
+   Thus if the typesetter encounters any other lyric (e.g. a real lyric syllable) when
+   trying to find an associated lyric for a pause/empty swara, it inserts an empty 
+   lyric for that swara, and advances to the next swara. It will match the real 
+   lyric when it encounters a non-pause swara in the swara line. 
+   <p>
+   This can be used to avoid having to specify lyrics for pauses and
+   specify lyrics (syllables or <span class="syntax2">.</span> i.e. dots) for
+   non-pauses.
+   </li>
+   <li>In smart lyric mode, the typesetter is also lenient in that it allows
+   you to not specify lyrics for all swaras in the swara line. For those 
+   (non-pause) swaras that dont have associated lyrics, the typesetter inserts
+   a <span class="syntax2">?</span> for the associated lyric to indicate that
+   </li>
+   you have a mismatch between the swara and lyric lines.
+   <li>Note however that typesetter will error if you have more lyrics in
+   a lyric line than there are swaras in a swara lines, just line in 
+  </li>
+</ul>
+<p>
+There is no value for the directive and so its syntax is as follows:
+<p>
+<span class="syntax2">SmartLyricMode</span>
+</p>
+<p>
+This directive <b>must</b> be specified before any notation content i.e.
+<span class="syntax2">Heading</span>, 
+<span class="syntax2">S</span> or
+<span class="syntax2">L</span> directives. 
+</p>
+<p>
+Here is an example of use of the <span class="syntax2">SmartLyricMode</span> directive. First, 
+consider the following notation where lyrics are in the default mode of the typesetter.
+</p>
+<p>
+<div style="padding-left:0.25in;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">Input Format</span>
+<td>
+<div class="sc">
+<span id="sllex1" class="syntax2">Layout:Krithi
+Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO . va _   bhA ra   mA _ ra  ghu rA  ,
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<td width="50%">
+<span class="songfragment" id="sllex1_v">
+<script language="javascript">
+renderSongFragment("sllex1_v", "sllex1");
+</script>
+</span>
+</table>
+</div>
+<p>
+In the above example, there are 14 swara specifiers discounting the tala markers
+<span class="syntax2">|</span> and
+<span class="syntax2">||</span>, and the higher speed specifiers
+<span class="syntax2">(</span> and
+<span class="syntax2">)</span>. As you can see there are exactly 14 lyric specifiers.
+Note that the first two lyric specifiers are underscores, and they translate to
+empty lyrics in the rendered output.  Underscores are also used to match against 
+pauses and note elongations, and they are necessary above so that the number of lyric
+specifiers match the swara specifiers. 
+<p>
+Now the same notation can be expressed in smart lyric node with a much simpler
+lyric line where the underscores used above are not needed:
+<div style="padding-left:0.25in;page-break-before:always;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+    <td style="padding:5 5 5 5;">
+    <span style="font-size:8pt;">Input Format</span>
+    <td>
+<div class="sc">
+<span id="sllex2" class="syntax2">Layout:Krithi
+Tala: Adi
+SmartLyricMode
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L:      brO .   va    bhA ra   mA   ra  ghu rA 
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<td width="50%">
+    <span class="songfragment" id="sllex2_v">
+	<script language="javascript">
+	renderSongFragment("sllex2_v", "sllex2");
+	</script>
+    </span>
+</table>
+</div>
+<p>
+As you can see, the lyric directive does not contain underscores that were required
+in the default mode to match a lyric against the pauses. Note that although in the
+above example extra spaces are given in the lyric line to match the lyrics against
+their corresponding swaras for clarity sake, that is not necessary.
+</p>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.5 Beta</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">SpeedMarks Directive</h3>
+The <span class="syntax2">SpeedMarks</span> directive controls whether the typesetter
+should draw the lines for higher speeds (mEl kAlam) below the swaras or over the swaras.
+The value of the directive must be either <span class="syntax2">below</span> or
+<span class="syntax2">above</span>. 
+<p>
+The default setting is to draw the lines above the swaras, and so an explicit
+<span class="syntax2">SpeedMarks: above</span> is not strictly needed.
+</p>
+Here are examples of usage of SpeedMarks directive:
+<p>
+<table class="mytable">
+<tr class="mytr">
+<td style="width:3.75in;">
+<div class="syntax2" id="smabove">SpeedMarks: above
+Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+</td>
+<td>
+<span class="songfragment" id="smabove_v">
+<script language="javascript">
+renderSongFragment("smabove_v", "smabove");
+</script>
+</span>
+</td>
+<tr class="mytr">
+<td>
+<div class="syntax2" id="smbelow">SpeedMarks: below
+Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+</div>
+<td>
+<span class="songfragment" id="smbelow_v">
+<script language="javascript">
+renderSongFragment("smbelow_v", "smbelow");
+</script>
+</span>
+</table>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Swara Directive</h3>
+The <span class="syntax2">S</span> (swara) directive can be used to specify notations for the song. You
+can specify as many such directives as you want - and the typesetter will combine the notations 
+specified in all such directives and lay them out as per the tala specified by the <b>Tala directive</b>
+<p>
+The <span class="syntax2">S</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">S: notations</span>
+<br>(or)<br>
+<span class="syntax2">S: "Label" notations</span>
+</div>
+where, 
+<ul>
+    <li><span class="syntax2">notations</span> is a space separated list of notations (swaras), whose
+    syntax is described in detail below.
+    <ul>
+	<li><i>swara</i>: Indicates a swara using the syntax indicated below
+	<li><i>tala marker</i>: One of | or || for tala markers. Note however that are 
+	only for clarity in the input for you as the user. They are simply skipped by the 
+	typesetter which automatically determines where tala markers fall for the 
+	current tala based on the duration of the swaras. In other words, you dont have
+	to specify these in the input, their presence/absence has no effect on the 
+	typeset output, but having them there may allow the input to be
+	more understandable. For example, you can specify <span class="syntax2">s r g m | p m | g r ||</span>
+	f
+    </ul>
+    <li><span class="syntax2">label</span> is a label that is applied to the swara (and associated
+    lyric line) and appears on the left. This can be used to be specify sangati numbers.
+</ul>
+<h3>Specifying Notations in a Swara directive</h3>
+Notations are specified in the swara directive as a space separated list of the following: 
+<i>Swaras</i>, <i>Pauses</i>, <i>Speed Change indicators</i> and <i>tala markers</i>. 
+<h4>Swaras</h4>
+The syntax of a <i>Swara</i> can be one of the following:<p>
+<span class="syntax2">	&lt;swara_indicator&gt;&lt;optional_stayi_indicator&gt;&lt;optional_gamaka_indicator&gt;&lt;optional_phrase_end_indicator&gt;</span><br><br>
+<span class="syntax2">	&lt;pause_or_continuation_indicator&gt;&lt;;optional_phrase_end_indicator&gt;</span><br>
+Where,
+<ul>
+<li><b><i>swara_indicator</i></b> is one of <span class="syntax2">s r g m p d n</span> to indicate
+normal swaras than span one mAtra in the current speed, or 
+<span class="syntax2">sa ri ga ma pa da ni</span> to indicate elongated or 
+dhIrga swaras that span two mAtras in the current speed.
+<li><b><i>pause_or_continuation_indicator</i></b> is either a comma (<span class="syntax2">,</span>)
+or a semicolon (<span class="syntax2">;</span>), which can be used to indicate a real pause,
+or a continuation of a swara when following it (and thus can be an alternate way of representing
+a dhIrga swara). The comma spans one mAtra in the current speed, and the semicolon spans two
+mAtras in the current speed.
+<li><b><i>Empty swara indicator</i></b> simply occupies space without a visual swara. It is 
+specified as either a single underscore (<span class="syntax2">_</span>) or two underscores 
+together (<span class="syntax2">__</span>). This can be useful for certain styles of
+notation where you want to indent the swaras by the eDuppu or start of point instead 
+of visually indicating pauses. One use is in Ata tala varnams which typically do not
+start at the tala cycle (i.e. not at <i>samam</i>). The pallavi will have 2 avarthanas
+where the line extends beyond the end of tala into the duration of the eduppu. While
+typically, people notate both the lines (spanning 2 avathanas plus eduppu) as a single 
+block. However, some may prefer to notate the first line (i.e. avarthana plus eduppu)
+as a block, introduce a break, and then notate the secnond line (indented to eduppu).
+This allows for the sahitya integriry to be better reflected in the notation. In such
+cases, for the second line you can use the empty swara indicators for the indent to
+the eduppu. Here is an example of usage of the empty swara indicators (although the
+context in which they are used may not be most appropriate):
+<p>
+<center>
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td>
+<center><b style="font-size:80%;">Explicit pause indicators before eduppu</b></center><br>
+<span id="ed1" class="syntax2">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 1
+Heading: "pallavi:",bold,left,12
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L: mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+S: m~  , ,
+L: mA  . .
+
+</span>
+</td>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="ed1_v">
+<script language="javascript">
+renderSongFragment("ed1_v", "ed1");
+</script>
+</span>
+</td>
+</tr>
+</table>
+<br>
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+<td>
+<center><b style="font-size:80%;">Empty swara indicators before eduppu</b></center><br>
+<span id="ed2" class="syntax2">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 1
+Heading: "pallavi:",bold,left,12
+S: __ _ ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: m~  , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L: mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+S: m~  , ,
+L: mA  . .
+</span>
+</td>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="ed2_v">
+<script language="javascript">
+renderSongFragment("ed2_v", "ed2");
+</script>
+</span>
+</td>
+</tr>
+</table>
+</center>
+<p>
+<li><b><i>optional_stayi_indicator</i></b> is used to indicate the stAyi (octave) of the swara. It 
+	is optional and so if not provided, the swara is taken to in the madya (middle) stayi. 
+	If specified, it should be either the forward tick (<span class="syntax2">'</span>)
+	for the tara (upper) stAyi (e.g. <span class="syntax2">s'</span> for the tara shadjam), or
+	the backward tick (<span class="syntax2">`</span>) to indicate the mandra (lower) stAyi
+	(e.g. <span class="syntax2">p`</span> for the mandra pancamam). Following standards
+	used in carnatic music books, the typesetter shows tara stAyi swaras by showing 
+	a dot above the swara, and mandra stAyi swaras by showing a dot below the swara. For example
+	<span class="syntax2" id="stayi">S: s' n d p m g r s n`</span> will be rendered as follows:
+	<center>
+	    <span id="stayi_v">
+		<script language="javascript">
+		    renderSongFragment("stayi_v", "stayi","Tala: Adi\nSpeedMarks: below");
+		</script>
+	    </span>
+	</center>
+	<li><b><i>optional_gamaka_indicator</i></b> is used to indicate a gamaka for the swara. This can be one 
+	of the following:
+	<ul>
+	    <li>A pre-defined symbol which corresponds on a pre-defined glyph (image) that is displayed
+	    above the swara. Currently, the following pre-defined swaras are supported:
+	    <p>
+	    <table class="mytable" style="position:relative;left:100;font-size:100%;width:75%">
+		<tr class="mytr">
+		    <td><b>Gamaka Indicator</b><td><b>Glyph</b><td><b>Example</b>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">~</span> (tilde)</span>
+		    <td style="text-align:center;">
+			<img src="../src/l_and_f/kampitam2.png">
+		    <td>
+			<table>
+			<td>
+		        <span id="kampitam" class="syntax2">S: m~</span>
+			<td>
+			&#x21d4;
+			<td valign="top">
+			<span id="kampitam_v">
+			    <script language="javascript">
+				renderSongFragment("kampitam_v", "kampitam","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">~~</span> (two tilde)</span>
+		    <td style="text-align:center;">
+			<img src="../src/l_and_f/kampitam3.png">
+		    <td>
+			<table>
+			<td>
+		        <span id="kampitam3" class="syntax2">S: ma~~ ,</span>
+			<td>
+			&#x21d4;
+			<td valign="top">
+			<span id="kampitam3_v">
+			    <script language="javascript">
+				renderSongFragment("kampitam3_v", "kampitam3","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">^</span> (caret)</span>
+		    <td style="text-align:center;">
+			<img src="../src/l_and_f/tick.png">
+			<td>
+			<table>
+			<td>
+			<span id="tick" class="syntax2">S: r g^ m</span>
+			<td>
+			 &#x21d4;
+			 <td valign="top">
+			    <span id="tick_v">
+				<script language="javascript">
+				    renderSongFragment("tick_v", "tick","Tala: Adi\nSpeedMarks: below");
+				</script>
+			    </span>
+			</table>
+		 </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">/</span> (forward slash)</span>
+		    <td style="text-align:center;">
+			<img src="../src/l_and_f/quickup.png">
+		    <td>
+		    	<table>
+			<td>
+		        <span id="qu" class="syntax2">S: s m/ g r</span>
+			<td>
+			 &#x21d4;
+			 <td valign="top">
+			<span id="qu_v">
+			    <script language="javascript">
+				renderSongFragment("qu_v", "qu","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">//</span> (two forward slashes)</span>
+		    <td style="text-align:center;">
+			<img src="../src/l_and_f/slowup.png">
+		    <td>
+		    	<table>
+			<td>
+		        <span id="su" class="syntax2">S: s ma// g r</span>
+			<td>
+			 &#x21d4;
+			 <td valign="top">
+			<span id="su_v">
+			    <script language="javascript">
+				renderSongFragment("su_v", "su","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">\</span> (backslash)</span>
+		    <td style="text-align:center;">
+			<img src="../src/l_and_f/quickdn.png">
+		    <td>
+		    <table>
+		    <td>
+		    <span id="qd" class="syntax2">S: n d\ p m</span> 
+		    <td>
+		    &#x21d4;
+		    <td valign="top">
+			<span id="qd_v">
+			    <script language="javascript">
+				renderSongFragment("qd_v", "qd","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+		    </td>
+		    </table>
+	        </tr>
+		<tr class="mytr">
+		    <td>
+			<span class="syntax2"><span style="font-weight:bold;font-size:14pt;">\\</span> (two backslashes)</span>
+		    <td style="text-align:center;">
+			<img src="../src/l_and_f/slowdn.png">
+		    <td>
+		    	<table>
+			<td>
+			<span id="sd" class="syntax2">S: n da\\ p</span>
+			<td>
+			&#x21d4;
+			<td valign="top">
+			<span id="sd_v">
+			    <script language="javascript">
+				renderSongFragment("sd_v", "sd","Tala: Adi\nSpeedMarks: below");
+			    </script>
+			</span>
+			</table>
+	        </tr>
+	    </table>
+	    <li>Any text enclosed in parenthesis as in <span id="tgamaka" class="syntax2">S: s' n(w) n d</span>, which will make that text appear above the swara as follows:
+	<center>
+	    <span id="tgamaka_v">
+		<script language="javascript">
+		    renderSongFragment("tgamaka_v", "tgamaka","Tala: Adi\nSpeedMarks: below");
+		</script>
+	    </span>
+	</center>
+	</ul>
+	<li><b><i>optional_phrase_end_indicator</i></b> is the minus/hypen <span class="syntax2">-</span> character, and is used to 
+	group swaras i.e. as in phrasing. For example, in 
+	<span id="phrasing" class="syntax2">S: ( s' n' d p- n d p m )</span>, 
+	the hyphen is used after the the panchamam to indicate that the phrase is divided 
+	internally into two sub-phrases <span>s' n d p</span>, and <span class="syntax2">n d p m</span> and
+	should be sung/played as such (<i>Note: the parantheses are speed change markers discussed below</i>). In many cases, phrasing indicators are used to indicate  where 
+	a pause for breath should be taken (vocal). The above example would be rended as follows:
+	<center>
+	    <span id="phrasing_v">
+		<script language="javascript">
+		    renderSongFragment("phrasing_v", "phrasing","Tala: Adi\nSpeedMarks: below");
+		</script>
+	    </span>
+	</center>
+	<p>
+	Note that the <b>PhraseEnds</b> directive can control whether the hyphen itself is to be displayed
+	or not.
+    </ul>
+<h4>Speed Change Indicators</h4>
+In the swara directive, the default speed is <b>always</b> predetermined. For
+krithis, this defaults speed is known colloquially as "second speed" where 
+in catusra gati, you can fit 2 swaras in an akshara. If you want to swaras 
+in "third speed" or mEl kAlam, you must enclose them in parantheses as shown 
+below:<br>
+<span id="schange" class="syntax2">
+S: g , m , ( p m g r s n` ) s , , ,
+</span>
+<p>
+In the above example the first 3 swaras <span class="syntax2">g - -</span> are
+in second speed. The swaras <span class="syntax2">p m g r s n`</span> is in 
+third speed, and the swaras following it are in second speed again. The above 
+notation would be rendered as follows:
+	<center>
+	    <span id="schange_v">
+		<script language="javascript">
+		    renderSongFragment("schange_v", "schange","Tala: Adi");
+		</script>
+	    </span>
+	</center>
+<h4>Tala Markers</h4>
+You can also use the special characters <span class="syntax2">|</span> and 
+<span class="syntax2">||</span> in the notations of a swara directive to serve
+as tala markers. However, you should note that these characters are 
+there for clarity in the input for you as the user. They are simply skipped by the 
+typesetter which automatically determines where tala markers fall for the 
+current tala based on the duration of the swaras. In other words, you dont have
+to specify these in the input, their presence/absence has no effect on the 
+typeset output, but having them there may allow the input to be
+more understandable.
+<h4>The equal sign (=), "same as previous sangati" indicator</h4>
+In notation, often you will find a need to simply indicate that a certain
+section of the avarthanam is simply the same as the last one. This is 
+especially true in sangatis where each sangati is a minor variation of the
+previous one. You can use the equal sign character 
+(<span class="syntax2">=</span>) for these purposes.
+<p>
+The equal sign is in reality a swara that takes up a full akshara. This
+means that if you want to indicate that the first half of the Adi tala
+in a certain notation line is the same as previous, you need to specify
+four separate equal signs for the four aksharas as illustrated in the
+following example:<br>
+<span id="eq" class="syntax2">
+DefaultSpeed: 1
+Tala: Adi
+S: p ; ( s' n d n ) p d n | s' , , , | , , , , ||
+S: =   =   =      =           | =    =   | ( d n s' ,- d n s' , ) ||
+</span>
+<p>
+The above example uses 6 equal signs for to indicate that the notation
+for the first 6 aksharas of Adi tala simply follows the previous line.
+It would be rendered as follows:
+	<center>
+	    <span id="eq_v">
+		<script language="javascript">
+		    renderSongFragment("eq_v", "eq");
+		</script>
+	    </span>
+	</center>
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">SwaraPrefs Directive</h3>
+The <span class="syntax2">SwaraPrefs</span> directive can be set the default preferences for
+subsequent Swara directives such as the default font size, and default font/text color. The
+syntax of the <span class="syntax2">SwaraPrefs</span> directive is as follows:
+<div class="sc"><span class="syntax2">SwaraPrefs: attributes</span></div>
+where <i>attributes</i> is a comma separated list of one or more of the following:<ul>
+<li><i>font size</i>: The default point size of the swaras as a number
+<li><i>color</i>: The color of the text of the swaras. This can either be a color name 
+such as <i>green</i>, <i>blue</i> or a RGB (red, green, blue) combination.
+</ul>
+<p>
+Here are some examples of usages of the <span class="syntax2">SwaraPrefs</span> directive:
+<p>
+<table class="mytable" style="font-size:100%;width:100%;">
+<tr class="mytr">
+<td>
+<span class="syntax2">SwaraPrefs: 12</span>
+<td>
+Sets the default point size for swaras to 12pt.
+<tr class="mytr">
+<td>
+<span class="syntax2">SwaraPrefs: 12,red</span>
+<td>
+Sets the default point size for swaras to 12pt and color to red.
+<tr class="mytr">
+<td>
+<span class="syntax2">SwaraPrefs: 12,rgb(64,100,125)</span>
+<td>
+Sets the default point size for swaras to 12pt, and the color to a a color 
+whose red-component is 64, blue component is 100, and green component is 125. 
+The <i>rgb(red,green.blue)</i> of color specification takes a value between
+0 and 255 for each of the red, green and blue component. The maximum value
+of 255 for all three i.e. rgb(255,255,255) is white, the minimum value of 0
+for all three i.e. rgb(0,0,0) is black. All the colors of the spectrum fall
+between these two and take varying values for these three components.
+</table>
+<p>
+Note that if no SwaraPrefs directive is given, the default font size is
+taken to be 10pt, and color to be black.
+
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Tala Directive</h3>
+The <span class="syntax2">Tala</span> directive specifies the tala for the 
+song and this is one of the parameters that determines how the notations 
+should be laid out. The tala anga markers are also deteremined based on this 
+and automatically placed by the typesetter. The tala directive <u>must</u> be 
+specified in the header section so that the tala for the song is known when 
+the first swara line is encountered.
+<p> 
+The <span class="syntax2">tala</span> directive has the following syntax:
+<div class="sc"><span class="syntax">Tala: Tala_Name</span></div>
+The value is one of the following pre-defined tala names as listed in the table below:
+<p>
+<center>
+<table class="mytable" style="font-size:100%;width:80%;">
+    <tr class="mytr">
+    <td align="center"><b>Tala<b><td  align="center" width="50%"><b>How to specify</b><br><br>
+    <i>(Note: Tala Names are case insensitive)</i>
+    <tr class="mytr">
+	<td>Adi
+	<td>
+	    <span class="syntax2">Tala: Adi</span> (catusra gati)
+	    <br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: Tisra_Adi</span> (triSra/tiSra gati)<br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: Adi2Kalai</span> (Adi 2-kalai)<br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: adi</span>
+    </tr>
+    <tr class="mytr">
+	<td>Roopaka (cApu)
+	<td>
+	    <span class="syntax2">Tala: Roopakacapu</span><br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: Rupakacapu</span><br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: rUpakacApu</span>
+    </tr>
+    <tr class="mytr">
+	<td>Roopaka
+	<td>
+	<span class="syntax2">Tala: Roopaka</span> (catuSra jAti roopaka)<br><br>
+	<span class="syntax2">Tala: Tisra_Roopaka</span> (tiSra jAti roopaka)<br>
+	<span class="syntax2">Tala: Catusra_Roopaka</span> (catuSra jAti roopaka)<br>
+	<span class="syntax2">Tala: Khanda_Roopaka</span> (khaNDa jAti roopaka)<br>
+	<span class="syntax2">Tala: Misra_Roopaka</span> (catusra jAti roopaka)<br>
+	<span class="syntax2">Tala: Sankirna_Roopaka</span> (sankIrna jAti roopaka)<br>
+	    <br><i style="font-size:90%;">(Note: You can specify Rupaka instead of Roopaka in the above)</i>
+    </tr>
+    <tr class="mytr">
+	<td>khaNDa cApu
+	<td><span class="syntax2">Tala: KhandaCapu</span>  (laid out as 4 avarthanams per row) <br>&nbsp;&nbsp;or<br>
+	    <span class="syntax2">Tala: KhandaCapu2</span> (laid out as 2 avarthanams per row)
+    <tr class="mytr">
+	<td>miSra cApu
+	<td><span class="syntax2">Tala: MisraCapu</span>
+    <tr class="mytr">
+	<td>Eka
+	<td>
+	<span class="syntax2">Tala: Eka</span> (catuSra jAti eka)<br><br>
+	<span class="syntax2">Tala: Tisra_Eka</span> (tiSra jAti eka)<br>
+	<span class="syntax2">Tala: Catusra_Eka</span> (catuSra jAti eka)<br>
+	<span class="syntax2">Tala: Khanda_Eka</span> (khaNDa jAti eka)<br>
+	<span class="syntax2">Tala: Misra_Eka</span> (catusra jAti eka)<br>
+	<span class="syntax2">Tala: Sankirna_Eka</span> (sankIrna jAti eka)<br>
+</table>
+<table class="mytable" style="font-size:100%;width:80%;page-break-before:always;">
+    <tr class="mytr">
+    <td align="center"><b>Tala<b><td  align="center" width="50%"><b>How to specify</b><br><br>
+    <i>(Note: Tala Names are case insensitive)</i>
+    <tr class="mytr">
+	<td>Triputa
+	<td>
+	<span class="syntax2">Tala: Triputa</span> (tiSra jAti tripuTa)<br><br>
+	<span class="syntax2">Tala: Tisra_Triputa</span> (tiSra jAti tripuTa)<br>
+	<span class="syntax2">Tala: Catusra_Triputa</span> (catuSra jAti tripuTa)<br>
+	<span class="syntax2">Tala: Khanda_Triputa</span> (khaNDa jAti tripuTa)<br>
+	<span class="syntax2">Tala: Misra_Triputa</span> (catusra jAti tripuTa)<br>
+	<span class="syntax2">Tala: Sankirna_Triputa</span> (sankIrna jAti tripuTa)<br>
+    <tr class="mytr">
+	<td>Dhruva
+	<td><span class="syntax2">Tala: Dhruva</span> (catusra jAti dhruva laid out as 1 avarthanam per row)<br>
+	    <span class="syntax2">Tala: Dhruva2</span> (catusra jAti dhruva laid out as 1 avarthanam over 2 rows)<br><br>
+	    <span class="syntax2">Tala: Tisra_Dhruva</span> (tiSra jAti dhruva)<br>
+	    <span class="syntax2">Tala: Catusra_Dhruva</span> (catuSra jAti dhruva)<br>
+	    <span class="syntax2">Tala: Khanda_Dhruva</span> (khaNDa jAti dhruva)<br>
+	    <span class="syntax2">Tala: Misra_Dhruva</span> (catusra jAti dhruva)<br>
+	    <span class="syntax2">Tala: Sankirna_Dhruva</span> (sankIrna jAti dhruva)<br>
+    <tr class="mytr">
+	<td>Matya
+	<td><span class="syntax2">Tala: Matya</span> (catuSra jAti maTya)<br><br>
+	<span class="syntax2">Tala: Tisra_Matya</span> (tiSra jAti maTya)<br>
+	<span class="syntax2">Tala: Catusra_Matya</span> (catuSra jAti maTya)<br>
+	<span class="syntax2">Tala: Khanda_Matya</span> (khaNDa jAti maTya)<br>
+	<span class="syntax2">Tala: Misra_Matya</span> (catusra jAti maTya)<br>
+	<span class="syntax2">Tala: Sankirna_Matya</span> (sankIrna jAti maTya)<br>
+    <tr class="mytr">
+	<td>Khanda Ata
+	<td><span class="syntax2">Tala: Ata</span> (khaNDa jAti aTa)<br><br>
+	<span class="syntax2">Tala: Tisra_Ata</span> (tiSra jAti aTa)<br>
+	<span class="syntax2">Tala: Catusra_Ata</span> (catuSra jAti aTa)<br>
+	<span class="syntax2">Tala: Khanda_Ata</span> (khaNDa jAti aTa)<br>
+	<span class="syntax2">Tala: Misra_Ata</span> (catusra jAti aTa)<br>
+	<span class="syntax2">Tala: Sankirna_Ata</span> (sankIrna jAti aTa)<br>
+    <tr class="mytr">
+	<td>Misra Jhampa
+	<td><span class="syntax2">Tala: Jhampa</span> (miSra jAti jhampa)<br><br>
+	<span class="syntax2">Tala: Tisra_Jhampa</span> (tiSra jAti jhampa)<br>
+	<span class="syntax2">Tala: Catusra_Jhampa</span> (catuSra jAti jhampa)<br>
+	<span class="syntax2">Tala: Khanda_Jhampa</span> (khaNDa jAti jhampa)<br>
+	<span class="syntax2">Tala: Misra_Jhampa</span> (catusra jAti jhampa)<br>
+	<span class="syntax2">Tala: Sankirna_Jhampa</span> (sankIrna jAti jhampa)<br>
+    <tr class="mytr">
+	<td>Manual Mode #1
+	<td><br><span class="syntax2">Tala: &lt;talaname_as_above&gt;,Manual</span><br><br>
+			(or)
+	    <span class="syntax2">Tala: &lt;talaname_as_above&gt;,Manual,InlineTalaMarkers</span><br><br>
+	    In this manual mode, the typesetter will <u>not</u> start a new 
+	    notation line unless explicitly directed so via the 
+	    <span class="syntax2">Songbreak</span> or 
+	    <span class="syntax2">Linebreak</span> directive.</i> It
+	    also does not align successive notation lines at tala angas like
+	    in non-manual modes. 
+	</td>
+    </tr>
+</table>
+<table class="mytable" style="font-size:100%;width:80%;page-break-before:always;">
+    <tr class="mytr">
+    <td align="center"><b>Tala<b><td  align="center" width="50%"><b>How to specify</b><br><br>
+    <i>(Note: Tala Names are case insensitive)</i>
+    <tr class="mytr">
+	<td>
+	   Manual mode #1 (continued)
+	<td>
+	    In this manual mode, the typesetter keeps track of the tala and thus
+	    renders tala markers automatically. They can be rendered separately
+	    on the swara line as usual or they can be rendered "inline" above 
+	    the swaras if <span class="syntax2">,InlineTalaMarkers</span> follows the
+	    <span class="syntax2">Manual</span> as indicated in the second form
+	    above.
+    <tr class="mytr">
+	<td>Manual Mode #2
+	<td><br><span class="syntax2">Tala: Manual</span><br><br>
+			(or)
+	    <span class="syntax2">Tala: Manual,InlineTalaMarkers</span><br><br>
+	    In this manual mode, you control everything. Like Manual Mode #1, 
+	    the typesetter will <u>not</u> start a new notation line unless 
+	    explicitly directed. This can be done via the 
+	    <span class="syntax2">Songbreak</span> directive (note that 
+	    the <span class="syntax2">Linebreak</span> directive is not 
+	    applicable in this mode and will be ignored).
+	    <p>
+	    In this manual mode, the typesetter does not track tala and 
+	    so will not render tala markers unless they are indicated 
+	    explicitly on the swara line via | or ||.  These tala markers
+	    can be rendered separately on the swara line as usual or they 
+	    can be rendered "inline" above.
+	    <p>
+	    This manual mode is useful for laying out notations for snippets of 
+	    ragas (i.e. with no tala), and also for songs whose layout is 
+	    more complex than what the typesetter can handle. 
+</table>
+</center>
+<p>
+Here are some examples of usage of tala.
+<p>
+<div style="padding-left:0.25in;">
+<table class="mytable" style="width:5in;">
+<!-- adi tala -->
+<tr class="mytr">
+<td>
+<span id="aditala" class="syntax2">Tala: Adi
+DefaultSpeed: 1
+S: s r g m p d n s' s n d p m g r s
+</span>
+</td>
+<td>
+<span class="songfragment" id="aditala_v">
+<script language="javascript">
+renderSongFragment("aditala_v", "aditala")
+</script>
+</span>
+</tr>
+<!--  misra capu -->
+<tr class="mytr">
+<td>
+<span id="mchapu" class="syntax2">Tala: MisraCapu
+DefaultSpeed: 1
+S: s , n d m d n d , m g m d m
+</span>
+</td>
+<td>
+<span class="songfragment" id="mchapu_v">
+<script language="javascript">
+renderSongFragment("mchapu_v", "mchapu")
+</script>
+</span>
+</tr>
+<!--  khaNDa capu -->
+<tr class="mytr">
+<td>
+<span id="kchapu" class="syntax2">Tala: KhandaCapu
+DefaultSpeed: 1
+S: s g s g m g m g m p
+</span>
+</td>
+<td>
+<span class="songfragment" id="kchapu_v">
+<script language="javascript">
+renderSongFragment("kchapu_v", "kchapu")
+</script>
+</span>
+</tr>
+</table>
+<div style="padding-left:0.25in;page-break-before:always;">
+<table class="mytable" style="width:5in;">
+<!-- roopaka capu -->
+<tr class="mytr">
+<td>
+<span id="rc3" class="syntax2">Tala: RupakaCapu
+DefaultSpeed: 1
+S: s r g r g m g m p m p d p d n d n s'
+</span>
+</td>
+<td>
+<span class="songfragment" id="rc3_v">
+<script language="javascript">
+renderSongFragment("rc3_v", "rc3")
+</script>
+</span>
+</tr>
+<!-- adi tisra gati -->
+<tr class="mytr">
+<td>
+<span id="tisraaditala" class="syntax2">Tala: Tisra_Adi
+DefaultSpeed: 1
+S: s r g m p  d n s' s' n d m 
+S: p g r s s' n d p  m  g r s
+</span>
+</td>
+<td>
+<span class="songfragment" id="tisraaditala_v">
+<script language="javascript">
+renderSongFragment("tisraaditala_v", "tisraaditala")
+</script>
+</span>
+</tr>
+<!-- catusra roopaka -->
+<tr class="mytr">
+<td>
+<span id="rupaka" class="syntax2">Tala: Rupaka
+DefaultSpeed: 0
+S: m  p d s' s' r | r' s d p  m  p
+S: r  m p d  m  p | d  p m g  r  s 
+</span>
+</td>
+<td>
+<span class="songfragment" id="rupaka_v">
+<script language="javascript">
+renderSongFragment("rupaka_v", "rupaka")
+</script>
+</span>
+</tr>
+</table>
+</div>
+<p>
+<h3>Use of Manual Mode (with inline tala markers)</h3>
+Manual mode can be quite useful in helping with easy interpretation of
+the underlying melody of the notation particularly if inline tala markers
+are used. This results in a notation layout where tala markers dont
+intefere with the grouping of musical phrasing. 
+<p>
+As an example, consider the following example of a charanam of the 
+nATa pancharatna krithi by tyAgarAja - jagadAnandakAraka.
+<p>
+<div style="padding-left:0;">
+<table class="mytable" style="width:6in;">
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">Input Format</span>
+<tr class="mytr">
+<td style="padding:0 0 0 0;">
+<div class="sc" style="padding:0 0 0 0;">
+<span id="lex1" class="syntax2">Layout:Krithi,FullWidth
+Tala: Adi
+DefaultSpeed: 2
+SwaraPrefs: 12
+LyricPrefs: 12
+HeadingPrefs: 12
+LanguageFont: English,Fixed
+Heading: "jagadAnandakAraka - nATa - tyAgarAja - caraNam #5",bold,center
+S: sa    pa   ma  ri- s  pa  m r s- p  m ga- m  p  n   p  ga- m  pa m  ri- p   m
+L: sR.Sh Tis  dit yan da kA ra kA . mi ta kA mi ta pha la dA  sa mA na gA  tra Sa
+S: ri- n  p  m  ri- s'  n  p  m  ri- r' sa'- p  sa'- m pa- r  g  m  pa- s' , n p m
+L: ci  pa ti nu tA  pti ma ta ha ra  nu rA   ga rA  ga rA  ji ta ka tA  sA _ ra hi ta
+</span>
+</div>
+<tr class="mytr">
+<td style="padding:5 5 5 5;">
+<span style="font-size:8pt;">
+Typesetter Output
+</span>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="lex1_v">
+<script language="javascript">
+renderSongFragment("lex1_v", "lex1");
+</script>
+</span>
+</table>
+</div>
+<p style="page-break-before:always;">
+In the above, the melody is made up of the following musical phrases:
+<p>
+<div style="padding-left:0.25in;">
+<table class="mytable" style="border:thin solid;width:5in;">
+<tr><td>
+<span class="syntax2">
+ [sa pa ma ri]  [s pa m r s]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [p m ga] [m p n p m ga]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [m pa m ri] [p m ri] [n p m ri] [s' n p m ri]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [ri' sa'] [p sa] [m pa] [r g m pa]<br>
+</span>
+</td><tr><td>
+<span class="syntax2">
+ [s' n p m]
+ <br>
+</span>
+</td>
+</table>
+</div>
+<p>
+The reason for the musical phrasings are:
+<ul>
+<li>
+The second line has two phrases with similar endings (<span class="syntax2">m ga</span>). 
+<li>
+Similarly, in the third line there are 4 phrases that end with same swara combination, 
+and the last three phrases follow a certain iterative pattern - i.e. a descending pattern with an 
+extra (high) swara being added in each iteration (<span class="syntax2">[p m ri] [n p m ri] [s' n p m ri]</span>)
+<li>The fourth line has patterns with similar endings - although they do not end in the same swara,
+the ending swaras have a consonent (<i>samvAdi</i> relationship.
+</ul>
+<h4>Inadequacy of standard/default notation layout scheme</h4>
+In the standard notation layout followed by almost all carnatic music notation books
+(and also the default layout of the typesetter as shown earlier above), this grouping often gets lost
+due to tala markers, in particular due to the alignment of successive 
+notation lines along anga markers. This alignment helps make the notation look 
+neat and attractive from an aesthetic sense, however it is at the expense of 
+lost clarity in actual interpretation of the underlying melody. The underlying
+melody may not be as easily discernible since the swaras that make up the 
+various musical phrases may not be shown grouped together, and different 
+phrases may not be separated.
+<p>
+<i>Note that even with the use of phrase ending markers (</i><span class="syntax2">-</span>
+<i>at the end of swaras), and with phrase end spacing specifiers (e.g. </i>
+<span class="syntax2">PhraseEnds:&lt;show_or_hide&gt;,0.45in</span>
+<i>)does not truly help as tala markers may be <u>within</u> a phrase.</i>
+<h4>A better alternative</h4>
+A better layout from a carnatic music practioneer's perspective may be one that
+a layout which respects the musical phrasing. A challenge though is that quite
+often the swaras that make up a musical phrase straddle across a tala anga 
+boundary, as well as tala cycle boundary. For example, in the above, the 
+<span class="syntax2">p m ri</span> in the phrasing part of the second set 
+straddles a tala boundary. Thus any layout in which the tala markers are 
+rendered separately along with swaras (like we see in almost all carnatic music
+notation books), will have the problem of tala markers appearing in the midde
+of musical phrases and thus affecting their grouping. 
+<p>
+This is the reason why the typesetter supports inline tala markers. It allows 
+the tala markers to be still notated so that the practioneer easily can discern
+how the melody lays against the tala, but yet render them in a away that they
+do not interfere with groupings of swaras that make up the various musical
+phrases in the melody intact. 
+<p>
+Of course it is impossible to do this as well as maintain alignment at tala 
+anga boundarie across notation lines since they are contradictory requirements).
+Thus there is some loss in aesthetics but the gain can outweigh this loss.
+<p>
+Below is an example of how the above melody can be notated using manual mode #1
+and with inline tala markers:
+<p>
+<div style="padding-left:0;padding-right:0;">
+<table class="mytable" style="width:5in;">
+<tr class="mytr">
+  <td style="padding:5 5 5 5;">
+    <span style="font-size:8pt;">Input Format</span>
+<tr class="mytr">
+  <td style="padding:0 0 0 0;">
+    <div class="sc">
+      <span id="lex2" class="syntax2">Layout:Krithi
+PhraseEnds: Hide,0.45in
+Tala: Adi,Manual,InlineTalaMarkers
+DefaultSpeed: 2
+SwaraPrefs: 12
+LyricPrefs: 12
+HeadingPrefs: 12
+LanguageFont: English,Fixed
+Heading: "jagadAnandakAraka - nAta - tyAgarAja - caraNam #5",bold,center
+S: sa    pa   ma  ri- s  pa  m r s- p  m ga- m  p  n   p  ga- m  pa m  ri- p   m  ri-
+L: sR.Sh Tis  dit yan da kA ra kA . mi ta kA mi ta pha la dA  sa mA na gA  tra Sa ci
+LineBreak
+S: n  p  m  ri- s'  n  p  m  ri- r' sa'- p  sa'- m pa- r  g  m  pa- s' , n p m
+L: pa ti nu tA  pti ma ta ha ra  nu rA   ga rA  ga rA  ji ta ka tA  sA _ ra hi ta
+      </span>
+    </div>
+  </td>
+</tr>
+<tr class="mytr">
+  <td style="padding:5 5 5 5;">
+    <span style="font-size:8pt;">Typesetter Output</span>
+<tr class="mytr">
+  <td>
+    <span class="songfragment" id="lex2_v">
+      <script language="javascript">renderSongFragment("lex2_v", "lex2");</script>
+    </span>
+  </td>
+</tr>
+</table>
+</div>
+<p>
+As shown above, the swaras in the various musical phrases that make up the melody of
+that charanam are grouped together, and the phrases themselves are adequately
+separated from each other (using <span class="syntax2">PhraseEnds:Hide 0.45in</span>,
+both of which allow us to discern the phrases easily. Tala markers are rendered inline
+above the swaras, so that it is easy to know which swara starts an anga (in this
+mode the <span class="syntax2">*</span> indicate start of an <i>akshara</i>. 
+<p>
+Of course, the alignment of notation at tala anga boundaries between the two 
+notation lines is no longer maintanable because that priority is given to
+the musical phrases.
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+	<li><b>v1.2</b>: Added support for Khanda Triputa Tala</li>
+	<li><b>v1.4</b>: Added support for all 35 talas (catusra gati only), and Manual tala</li>
+	<li><b>v1.5 Beta</b>: Introduced Manual mode #2 and inline tala markers in manual mode</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+<h3 style="page-break-before:always;">Title Directive</h3>
+The <span class="syntax2">Title</span> directive can be used to specify
+the title of the web-page that the typesetter is rendering the notation in. By
+itself, it has no effect on the actual notation content itself. However, the
+browser can be instructed to place the web-page title (and hence the value
+you specify for this directive) in the header/footer sections of each printed
+page. Thus this directive can be used to make the title of the song appear
+in the header/footer sections of each printed page.
+<p>
+The syntax for this directive is as follows:
+<p>
+<span class="syntax2">Title:"&lt;the title of your song&gt;"</span>
+</p>
+<p>
+Note that the title must be enclosed within double-quotes as shown above.
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.5 Beta</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->
+</div>
+</body>
+</html>

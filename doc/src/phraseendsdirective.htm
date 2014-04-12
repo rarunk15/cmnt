@@ -1,0 +1,152 @@
+<h3 style="page-break-before:always;">PhraseEnds Directive</h3>
+<p>
+The <span class="syntax2">PhraseEnds</span> directive controls the display of
+the phrase end markers (<span class="syntax2">-</span>, i.e. dash/hyphen),
+which can be used at the end of a swara specified in the Swara Directive. This marker
+is used to group swaras i.e. as in indicate sub-phrases within a phrase, or where a
+pause or breath should be taken while singing.
+<p>
+The <span class="syntax2">PhraseEnds</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">PhraseEnds: &lt;style&gt;</span>
+<br>(or)<br>
+<span class="syntax2">PhraseEnds: &lt;style&gt;,&lt;trailing_space&gt;</span>
+</div>
+where, 
+<ul>
+<li><span class="syntax2">&lt;style&gt;</span> specifies the style of the phrase ends in the typeset
+notation. It can be one of
+<ul>
+<li><span class="syntax2">Hide</span> - to make the phrase ends invisible
+in the display.
+<li><span class="syntax2">Show</span> - to make the phrase ends show as-is i.e. as
+hyphens.
+<li><span class="syntax2">Handle</span> - to make the phrase ends show as a handle
+in the form of a <img src="../src/l_and_f/phrase_end_handle.PNG"> glyph, aligned to 
+the bottom right of the swara that is at the phrase end.
+<li><span class="syntax2">HandleThick</span> - to make the phrase ends show as a thick
+handle in the form of a <img src="../src/l_and_f/phrase_end_handle_thicker.PNG"> glyph, 
+aligned to the bottom right of the swara that is at the phrase end.
+</ul>
+<li><span class="syntax2">&lt;trailing_space&gt;</span> specifies the amount of trailing space to introduce
+after the phrase (thus separate phrases in the display making them stand out). This can be
+specified in two ways:
+<ul>
+<li>A number <span class="syntax2">n</span>, where <span class="syntax2">n</span> is 0 or greater. This
+will apply a trailing space of <span class="syntax2">n</span> pixels
+<li>In terms of inches. For example <span class="syntax2">0.15in</span> for a spacing of 0.15 inches.
+</ul>
+</ul>
+<p>
+Note that the default style is <span class="syntax2">Hide</span>, and default spacing is 0 (i.e. no spacing)
+Also that the speed marks are always broken at phrase ends to show phrasing.
+<p>
+Here are some examples:
+<p>
+<center>
+<table class="mytable" style="width:7in;">
+<tr class="mytr">
+<td style="font-size:80%">Invisible, no spacing (default)</td>
+<td>
+<div class="syntax2" id="pehide">Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pehide_v">
+<script language="javascript">
+renderSongFragment("pehide_v", "pehide");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">Show as hyphens, no spacing</td>
+<td style="width:2in;">
+<div class="syntax2" id="peshow">PhraseEnds: show
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="peshow_v">
+<script language="javascript">
+renderSongFragment("peshow_v", "peshow");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">Invisible , spacing of 15 pixels</td>
+<td style="width:2in;">
+<div class="syntax2" id="pehide15">PhraseEnds: Hide,15
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pehide15_v">
+<script language="javascript">
+renderSongFragment("pehide15_v", "pehide15");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">As hyphens, spacing of 10 pixels</td>
+<td style="width:2in;">
+<div class="syntax2" id="peshow10">PhraseEnds: Show,10
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="peshow10_v">
+<script language="javascript">
+renderSongFragment("peshow10_v", "peshow10");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">As handle, spacing of 10 pixels</td>
+<td style="width:2in;">
+<div class="syntax2" id="pehandle10">PhraseEnds: Handle,10
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pehandle10_v">
+<script language="javascript">
+renderSongFragment("pehandle10_v", "pehandle10");
+</script>
+</span>
+</td>
+</tr>
+<tr class="mytr">
+<td style="font-size:80%;">As thick handle, spacing of 0.15 inches</td>
+<td style="width:2in;">
+<div class="syntax2" id="pethandlein">PhraseEnds: HandleThick,0.15in
+Tala: Adi
+S: ( s' n' d p- n d p m ) pa
+</div>
+</td>
+<td style="width:2.5in;">
+<span class="songfragment" id="pethandlein_v">
+<script language="javascript">
+renderSongFragment("pethandlein_v", "pethandlein");
+</script>
+</span>
+</td>
+</tr>
+</table>
+</center>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+    <li><b>v1.1</b>: Added <span class="syntax2">Handle</span>, <span class="syntax2">HandleThick</span> styles; Also added spacing control</li>
+</ul>
+<!-- END_REVISION_HISTORY !-->

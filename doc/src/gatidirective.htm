@@ -1,0 +1,116 @@
+<h3 style="page-break-before:always;">Gati Directive</h3>
+The <span class="syntax2">Gati</span> directive can be used to
+switch <i>gati</i>/<i>nadai</i> (gait) of the song. There five different gatis in carnatic music: the ubiquitous <i>catusra</i>, <i>tiSra</i>, <i>khaNDa</i>, 
+<i>miSra</i>, <i>sankIrNa</i>. In the typesetter, the default <i>gati</i>
+is <i>catusra</i> unless you are using a tala like <i>Tisra Gati Adi</i>.
+<p>
+The <span class="syntax2">S</span> directive has the following syntax:
+<div class="sc">
+<span class="syntax2">Gati: gati</span>
+</div>
+where, <span class="syntax2">gati</span> is one of <span class="syntax2">tisra catusra khanda misra sankirna</span>
+<p>
+Gati switches can at the start of an akshara and thus can be at the following:
+<ul>
+<li> start of a tala cycle i.e. <i>avarthanam</i>.
+<li> start of a tala anga within a tala cycle.
+<li> start of an <i>akshara</i> within a tala anga.
+</ul>
+<p>
+Here is an example showing gati switches. Note that the Varnam layout allows us to see the # of swaras per akshara clearly for the speed setting of 1.
+<p>
+<table style="width:5.5in;"  class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="gatis">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 2
+S: s r g m   p  d   n s'  s'  n  d p | m g  r  s |
+Gati: Tisra
+S:  s r g  r g m  g m p m p d ||
+Gati: Khanda
+S: s r s r g  r g r g m
+Gati: Misra
+S: s r g s r g m 
+Gati: Sankirna
+S: s r s r g s r g m |
+Gati: catusra
+S: s r g m   p  d   n s'  |  s'  n  d p  m g  r  s ||
+</span>
+</div>
+<tr class="mytr">
+<td width="50%">
+    <span class="songfragment" id="gatis_v">
+	<script language="javascript">
+	    renderSongFragment("gatis_v", "gatis");
+	</script>
+    </span>
+</table>
+<h4>Implicit Default Speed change associated with gati switches</h4>
+(<i><b>Note</b>: New to 1.3</i>)<br>
+On encountering a gati switch, the notation typesetter sometimes may 
+switch the default speed of swaras (see <b>DefaultSpeed Directive</b>).
+<p>
+For example, if the default speed is 2, and the gati switches from 
+<i>catusra</i> gati to any other gati, then default speed changes to 1. When this 
+happens, four swaras per akshara (<i>catusra</i> gati for speed 2), switches to
+three, five, seven or nine i.e <i>tisra</i>, <i>khanda</i>, <i>miSra</i>, <i>sankIrna</i> 
+gatis at speed of 1. 
+<p>
+This is done to match what typically happens in practice, where on a 
+gati switch, for the same speed, <i>tiSra</i> packs the least number of swaras 
+per akshara (3), followed by <i>catusra</i> (4), then <i>khaNDa</i> (5), then 
+<i>miSra</i> (7), and then <i>sankIrNa</i>. The automatic implicit change of 
+default speed thus allows the gati switches in the typesetter to be more inline 
+with their natural usage in practice.
+<p>
+Conversely when switching from non-<i>catusra</i> gati at a speed of 1, to
+<i>catusra</i> gati, the default speed is increased to 1. It should also
+be noted that when the gati switches back to the default gati of the song, the 
+default speed is always restored to the original default speed of the song.
+<h4>Caveat</h4>
+The above speed change is done for the specific cases mentioned. If a gati
+switch is specified for a song in <i>catusra</i> gati with a default speed
+of 1 (rather than 2), then no speed change is done. This can result in
+<i>tisram</i> packing more swaras than <i>catusra</i>, which does not match with the 
+natural usage of these <i>gatis</i>.
+<p>
+One way to get around this and achieve a switch of four swaras per akshara in 
+<i>catusra gati</i> to three swaras per akshara in <i>tisra gati</i> (for speed = 2) 
+is by using the special <i>Empty Swara Indicator</i> i.e.  _ (underscore - 
+see <b>Swara Directive</b>) to "blank out" half the swaras. This is illustrated in 
+the following example:
+<p>
+<table style="width:5.5in;"  class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="gatis2">Layout: Varnam
+Tala: Adi
+DefaultSpeed: 1
+S: s r g m   r g m p
+Gati: Tisra
+S: s _ r _ g _   r _ g _ m _
+</span>
+</div>
+<!-- <tr class="mytr"> -->
+<td width="50%">
+    <span class="songfragment" id="gatis2_v">
+	<script language="javascript">
+	    renderSongFragment("gatis2_v", "gatis2");
+	</script>
+    </span>
+</table>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+Due to this caveat, it is recommended that for notations involving
+gati switches, the default speed be set to 2.
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.1</b>: Introduced</li>
+	<li><b>v1.3</b>: Introduced implicit speed changes</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

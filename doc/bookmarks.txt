@@ -1,0 +1,27 @@
+    Manual :: 1
+    Synopsis :: 1
+    Overview of the user interface :: 2
+    Introduction :: 4
+        Quick start through an example :: 4
+        Assistance in entering directives :: 7
+    Directives :: 9
+        DefaultSpeed :: 10
+        Heading :: 11
+        HeadingPrefs :: 14
+        GamakaPrefs :: 15
+        Gati :: 16
+        Language :: 18
+        LanguageFont :: 21
+        Layout :: 22
+        LineBreak :: 24
+        Lyrics :: 25
+        LyricPrefs :: 26
+        PageBreak :: 28
+        PhraseEnds :: 29
+        SongBreak :: 30
+        SmartLyricMode :: 31
+        SpeedMarks :: 33
+        Swara :: 34
+        SwaraPrefs :: 38
+        Tala :: 39
+	Title: 45

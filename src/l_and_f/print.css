@@ -1,0 +1,51 @@
+.ToolBar {
+    display: none;
+}
+.Menu {
+    display: none;
+}
+.WorkSpace {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}
+.WorkspaceOuter {
+    height: 100%;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}
+.Page {
+    /* commenting allows overflow to be printed (sometimes we are too strict) */
+    /*overflow: hidden;*/
+    display: block;
+}
+.Song {
+    display: block;
+    /* commenting allows overflow to be printed (sometimes we are too strict) */
+    /*overflow: hidden;*/
+}
+.Editor {
+}
+.NormalViewLink {
+	display: none;
+}
+.SongBreak {
+    /* height: 0.05in; */
+}
+.PageOverFlow {
+    display: none;
+}
+.CmdArea {
+    display: none;
+}
+.Audio {
+    display: none;
+}
+.sliderControls {
+    display: none;
+}
+.AppHeading {
+    display: none;
+}
+#Splitter {
+    display: none;
+}

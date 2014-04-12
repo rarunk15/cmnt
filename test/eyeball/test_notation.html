@@ -1,0 +1,126 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../../";</script>
+<script type="text/javascript" src="../../../src/editor.js"></script>
+<script type="text/javascript" src="../testfw.js"></script>
+<script type="text/javascript">
+function getHeading(songView) 
+{
+   var page = songView.fFirstPart;
+   var r = null;
+   if( page ) {
+       r = page.fFirstPart;
+       while( r ) {
+	   if( r.isSelectable() ) {
+	       break;
+	   }
+	   r = r.next;
+       }
+   }
+   if( !r || r.partType() != PAGEVIEWPART_HEADING ) return null;
+   return r;
+}
+
+function sendTextToSwaraLabelBox(lblBox, txt) 
+{
+    lblBox.getTextBox().value = "";
+
+    var l = txt.length;
+    for( var i = 0; i < l; i++ ) {
+	var c = txt.charAt(i);
+	var kc = txt.charCodeAt(i);
+	if( c == '+' ) kc = 187;
+	else if( c == ',' ) kc = 188;
+	else if( c == '-' ) kc = 189;
+	else if( c == '.' ) kc = 190;
+	else if( c == '`' ) kc = 192;
+	else if( c == '\'' ) kc = 222;
+
+	var evt = new Object();
+	evt.keyCode = kc;
+	evt.shiftKey = false;
+	evt.altKey   = false;
+	evt.metaKey  = false;
+	var handled = !lblBox.keydown(evt);
+	if( !handled ) {
+	   var ltxt = lblBox.getTextBox().value;
+	   ltxt += c;
+	   lblBox.getTextBox().value = ltxt;
+	}
+        lblBox.keyup(evt);
+    }
+}
+
+
+
+function testSteps() 
+{
+   var songView = loadEditor( 'songdata' );
+
+   var h = getHeading(songView);
+   if( !h ) 
+       return "test error: cannot locate heading";
+   songView.selectObject(h);
+   var defaultSpeed = songView.getSong().getDefaultSpeed();
+
+   var stb = toolBarsManager.getSwaraToolBarManager();
+
+   mainMenu.doAction(mainMenu, mainMenu.ACTION_INSERT_NOTATIONS_AFTER);
+   sendTextToSwaraLabelBox(stb.getLabelBox(), "g'");
+
+   err = validateSwaraView(songView.getSelected(), 1, 0, "g",true,true);
+   if( err != null ) return err;
+
+   sendTextToSwaraLabelBox(stb.getLabelBox(), "g`");
+   err = validateSwaraView(songView.getSelected(), -1, 0, "g",true,true);
+   if( err != null ) return err;
+
+   return null;	// all steps ran
+}
+
+function runTestEx()
+{
+    var err = null;
+    var checkMsg = "check if heading is changed to ninnuKori varnam, and is selected"
+    try
+    {
+	err = testSteps();
+    }
+    catch(e)
+    {
+	err = "got exception trying to run test: " + e;
+    }
+    //if( err ) 
+	//top.testDriver.document.eyeballTestFailed(checkMsg, err);
+    //else
+    	//top.testDriver.document.eyeballTestComplete(checkMsg);
+    alert(err);
+}
+
+function runTest() 
+{
+    window.setTimeout( "runTestEx();", 1000 );
+}
+
+function cleanup() 
+{
+    window.setTimeout = null;
+    unloadEditor();
+}
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="runTest();" onunload="cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="2">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="true" italic="true" text="ninnukOri varnam" align="center"></HEADING>
+</PARTS>
+</SONG>
+</XML>
+<div id="testresult" style="display:none">
+</div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<h3 style="page-break-before:always;">Layout Directive</h3>
+The <span class="syntax2">Layout</span> directive indicates the type of song that
+is being notated which in turn plays a part in determining the layout of the
+notation. It <u>must</u> be specified in the header section so that the tala for the 
+song is known when the first swara line is encountered.
+<p>
+The <span class="syntax2">tala</span> directive has the following syntax:
+<div class="sc"><span class="syntax">Layout: layout_value</span></div>
+The value is one of the following pre-defined layout values:
+<ul>
+<li><span class="syntax2">gitam</span> or <span class="syntax2">geetam</span> to
+indicate a <i>gItam layout</i>
+<li><span class="syntax2">varnam</span> to indicate a <i>varnam layout</i>
+<li><span class="syntax2">kriti</span> or <span class="syntax2
+">krithi</span> to indicate a <i>krithi layout</i>. Note that if no Layout directive
+is specified, the typesetter presumes a krithi layout.
+</ul>
+<p>
+Please refer to the individual sections below for more information on these layouts.
+<h4>Geetam Layout</h4>
+If you specify the value of the Layout directive as <span class="syntax2">gitam</span> or 
+<span class="syntax2">geetam</span>, then it
+indicates that the typesetter should layout the notations as if for a geetham.  
+<div class="sc"><span class="syntax">Layout: gitam</span></div>
+The gItam layout implies the following:
+<ul>
+    <li>The default speed of swaras would be what is colloquially called "first
+    speed", where each swara would span one akshara as it is for a 
+    <i>gItam</i>. (<i>Note that this can be overriden with <b>DefaultSpeed</b> 
+    directive</i>)
+    <li>An extra space (or tala marker) is provided between each akshara of a 
+    tala so that each akshara stands out clearly, and notations across lines (avarthanas)
+    are aligned at each akshara. This is in contrast to the krithi format, where any 
+    extra space would appear only at tala anga ends and aksharas within an anga 
+    "run together".
+</ul>
+<p>
+Here is an example of a gItam layout of the most popular gItam:<p>
+<table style="width:5.5in;"  class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="lambodara">Layout: gitam
+Tala: rupaka
+S: m   p d  s' s' r' r'  s' d  p m   p
+L: sRi . ga Na nA ta sin du ra . var na
+S: r   m p  d  m  p  d  p  m  g  r  s
+L: ka ru Na sA ga ra ka ri va da na .
+</span>
+</div>
+<div style="font-size:7;">
+<i>(Note: "Tala" specifies the tala, and "S" and "L" specify Swaras and Lyrics. See Tala directive,
+	Swara Directive and Lyric Directive sections for more information)</i>
+</div>
+<tr class="mytr">
+<td width="50%">
+    <span class="songfragment" id="lambodara_v">
+	<script language="javascript">
+	    renderSongFragment("lambodara_v", "lambodara");
+	</script>
+    </span>
+</table>
+<h4>Varnam Layout</h4>
+If you specify the value of the Layout directive as <span class="syntax2">varnam</span>,
+then it indicates that the typesetter should layout the notations as if for a varnam.  
+<div class="sc"><span class="syntax">Layout: varnam</span></div>
+The varnam layout implies the following:
+<ul>
+    <li>The default speed of swaras would be what is colloquially called "second
+    speed", where each swara would span two aksharas as it is for a 
+    <i>varnam</i>. (<i>Note that this can be overriden with <b>DefaultSpeed</b> 
+    directive</i>)
+    <li>An extra space (or tala marker) is provided between each akshara of a 
+    tala so that each akshara stands out clearly, and notations across lines (avarthanas)
+    are aligned at each akshara. This is in contrast to the krithi format, where any 
+    extra space would appear only at tala anga ends and aksharas within an anga 
+    "run together".
+</ul>
+<p>
+Here is an example of a varnam layout of the one more popular varnams:<p>
+<table class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span class="syntax2" id="ninnukori">Layout: varnam
+Tala: Adi
+S: g  , g   , r   , , , s  s r r g g r r s  r g r s   r s d` s  r g p g  r s r
+L: ni _ nnu _ kO  . . . ri . . . . . . . yu . . . nnA . . .  nu . . . ra . . .
+</span>
+</div>
+<div style="font-size:7;">
+<i>(Note: "Tala" specifies the tala, and "S" and "L" specify Swaras and Lyrics. See Tala directive,
+	Swara Directive and Lyric Directive sections for more information)</i>
+</div>
+<tr class="mytr">
+<td width="100%">
+    <div class="songfragment" id="ninnukori_v" style="width:100%;">
+	<script language="javascript">
+	    renderSongFragment("ninnukori_v", "ninnukori");
+	</script>
+    </div>
+</table>
+<h4>Krithi Layout</h4>
+If you specify the value of the Layout directive as <span class="syntax2">krithi</span>,
+then it indicates that the typesetter should layout the notations as if for a krithi.  
+<div class="sc"><span class="syntax">Layout: krithi</span></div>
+<p>
+Note that krithi layout is the default and hence there is no need for an explicit layout
+directive for it.
+<p>
+The krithi layout implies:
+<ul>
+    <li>The default speed of swaras would be what is colloquially called "second
+    speed", where each swara would span two aksharas as it is for a 
+    <i>krithi</i>. (<i>Note that this can be overriden with <b>DefaultSpeed</b> 
+    directive</i>)
+    <li>The notations across lines would typically be aligned at tala angas for clarity.
+    This is in contrast to the varnam/gitam layout, where alignment is achieved at
+    each akshara.
+</ul>
+<p>
+Here is an example of a krithi layout:<p>
+<table style="width:5in;" class="mytable">
+<tr class="mytr">
+<td>
+<div class="sc">
+<span id="krithilayout" class="syntax2">Tala: Adi
+S: ; , ( p   d  n , ) pa  m  | ga , g | m   pa  , ||
+L: _ _   brO _ va _   bhA ra   mA _ ra  ghu rA  ,
+S: m   , , ( p   d  n  s' n p   ; ) m  | ga , g | m   pa  , ||
+L: mA  . .   brO _  vA .  . bhA _   ra   mA _ ra  ghu rA  ,
+</span>
+</div>
+<div style="font-size:7;">
+<i>(Note: "Tala" specifies the tala, and "S" and "L" specify Swaras and Lyrics. See Tala directive,
+	Swara Directive and Lyric Directive sections for more information)</i>
+</div>
+<tr class="mytr">
+<td width="50%">
+<span class="songfragment" id="krithilayout_v">
+<script language="javascript">
+renderSongFragment("krithilayout_v", "krithilayout");
+</script>
+</span>
+</table>
+</div>
+<!-- BEGIN_REVISION_HISTORY !-->
+<p>
+<hr>
+<h4>Revision History</h4>
+<ul>
+	<li><b>v1.0</b>: Introduced</li>
+</ul>
+</p>
+<!-- END_REVISION_HISTORY !-->

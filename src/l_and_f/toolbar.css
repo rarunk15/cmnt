@@ -1,0 +1,23 @@
+.toolbartop {
+    background-image:url("bkgnd_top.png");
+    background-repeat:repeat;
+    height:4px;
+    width:100%;
+    overflow: hidden;
+}
+
+.toolbarbot {
+    background-image:url("bkgnd_bot.png");
+    background-repeat:repeat;
+    height:4px;
+    width:100%;
+    overflow: hidden;
+}
+
+.toolbar {
+    background-image:url("bkgnd.png");
+    background-repeat:repeat;
+    width:100%;
+    overflow: hidden;
+}
+

@@ -1,0 +1,42 @@
+<html>
+<head>
+<script type="text/javascript">var codeBase= "../../";</script>
+<script type="text/javascript" src="../../src/editor.js"></script>
+<script type="text/javascript" src="testfw.js"></script>
+<script type="text/javascript">
+var testCases = new Array();
+
+function testSteps() 
+{
+   var songView = loadEditor( 'songdata' );
+
+   var h = TestUtils.getHeading(songView);
+   if( !h ) 
+       return "test error: cannot locate heading";
+   songView.selectObject(h);
+
+
+   if( !TestUtils.selectHeadingAlignment(ALIGN_RIGHT)) 
+       return "test error: unable to make heading right aligned";
+   if( !TestUtils.selectHeadingFontFamily("Courier")) 
+       return "test error: unable to change heading font to courier";
+
+   return TestUtils.validateHeadingView(h, null, true, ALIGN_RIGHT, "Courier", null, false, false );
+}
+testCases[testCases.length] = new SimpleAutoTestCase("Heading Format Test","Make heading aligned right, courier font", testSteps);
+
+</script>
+</head>
+<body id="mybody" style="padding:0 0 0 0;" onload="TestUtils.runScript(testCases);" onunload="TestUtils.cleanup();">
+<!-- initial data -->
+<XML id="songdata">
+<SONG speed="2">
+<TALA predefined="Adi-2"></TALA>
+<PARTS>
+<TALA predefined="Adi-2"></TALA>
+<HEADING font="" fontsize="18" bold="false" italic="false" text="ninnukOri varnam" align="center"></HEADING>
+</PARTS>
+</SONG>
+</XML>
+</body>
+</html>
